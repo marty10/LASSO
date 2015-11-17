@@ -306,7 +306,7 @@ class modifiedShooting(Algorithm):
             print(' iter | loss ')
             history = [0.0] * self.max_iter
 
-        for it in xrange(self.max_iter):
+        for it in range(self.max_iter):
             beta_old = np.copy(model.beta)
             for j in active_set:
                 beta_j = model.beta[j]
@@ -410,7 +410,7 @@ class modifiedShooting2(Algorithm):
             print(' iter | loss ')
             history = [0.0] * self.max_iter
 
-        for it in xrange(self.max_iter):
+        for it in range(self.max_iter):
             beta_old = np.copy(model.beta)
             for j in active_set:
                 beta_j = model.beta[j]
