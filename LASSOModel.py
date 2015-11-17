@@ -272,6 +272,7 @@ class modifiedShooting(Algorithm):
         #self.lambda_max = lambda_max
 
     def fit(self, x, y, model, verbose, **params):
+        print("START")
         lasso_lambda = model.lambda_lasso
 
         mse = linear_model.LinearRegression(fit_intercept=False)
