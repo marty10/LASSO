@@ -280,9 +280,8 @@ class modifiedShooting(Algorithm):
 
         t_1 = timeit.default_timer()
         hsic = HSIC()
-        hsic.computeKernels(x,y)
-        HSIC_KK = hsic.HSIC_Measure_KK()
-        HSIC_KL = hsic.HSIC_Measure_KL()
+        HSIC_KK, HSIC_KL = hsic.HSIC_Measures(x,y)
+
 
         print("measure computed", timeit.default_timer()-t_1)
 
