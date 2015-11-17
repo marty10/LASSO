@@ -1,6 +1,6 @@
 from sklearn.externals import joblib
 from ExtractDataset import Dataset
-from LASSOModel import LASSOEstimator, ISTA, FISTA, ADMM, Shooting, modifiedShooting
+from LASSOModel import LASSOEstimator, ISTA, FISTA, ADMM, Shooting, modifiedShooting, modifiedShooting2
 from Transformation import PolinomialTransformation
 from sklearn.metrics import mean_squared_error
 import numpy as np
@@ -25,7 +25,7 @@ XTestTransf = dataset.XTestTransf
 lambda_opt = {"alpha": 67.1590893061}
 
 #model_list = {ISTA(), FISTA(), Shooting(), ADMM()}
-model_list = {modifiedShooting()}
+model_list = {modifiedShooting2()}
 ext_data = ".npz"
 ext_model = ".pkl"
 folder = "AlgorithmResults/"

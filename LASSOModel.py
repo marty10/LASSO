@@ -8,8 +8,9 @@ import timeit
 import numpy.linalg as li
 from sklearn.linear_model.base import center_data
 import scipy
-from FeatureSelectionRules import FeatureSelectionRule, HSIC_Criterion
+from FeatureSelectionRules import FeatureSelectionRule, HSIC_Criterion, dist_corr_Criterion
 from HSIC import HSIC
+from Distance_correlation import DistanceCorrelation
 
 
 class LASSOEstimator(BaseEstimator):
@@ -269,7 +270,7 @@ class modifiedShooting(Algorithm):
         self.t = 0
         self.tol = tol
         self.max_iter = max_iter
-        #self.lambda_max = lambda_max
+        # self.lambda_max = lambda_max
 
     def fit(self, x, y, model, verbose, **params):
         print("START")
@@ -282,24 +283,126 @@ class modifiedShooting(Algorithm):
         print("Beta initialization done")
         t_1 = timeit.default_timer()
         hsic = HSIC()
-        HSIC_KK, HSIC_KL = hsic.HSIC_Measures(x,y)
+        HSIC_KK, HSIC_KL = hsic.HSIC_Measures(x, y)
 
-
-        print("measure computed", timeit.default_timer()-t_1)
+        print("measure computed", timeit.default_timer() - t_1)
 
         active_set = set()
         t_3 = timeit.default_timer()
         feat_select = HSIC_Criterion(active_set)
-        j_max= feat_select.apply_wrapper_rule(HSIC_KK, HSIC_KL, model.beta)
+        j_max = feat_select.apply_wrapper_rule(HSIC_KK, HSIC_KL, model.beta)
 
         active_set.add(j_max)
         t_2 = timeit.default_timer()
-        print("tempo HSIC criterion", t_2-t_3)
+        print("tempo HSIC criterion", t_2 - t_3)
 
         XY = np.dot(x.transpose(), y)
         X2 = np.dot(x.transpose(), x)
         X2B = np.dot(X2, model.beta)
         XBeta = np.dot(x, model.beta)
+
+        history = None
+        if verbose:
+            print(' iter | loss ')
+            history = [0.0] * self.max_iter
+
+        for it in xrange(self.max_iter):
+            beta_old = np.copy(model.beta)
+            for j in active_set:
+                beta_j = model.beta[j]
+                if beta_j != 0:  #####126000 vs 138
+
+                    x_j2 = X2[j, j]
+                    s_j = XY[j] - X2B[j] + x_j2 * beta_j
+                    if s_j - lasso_lambda > 0:
+                        beta_j = (s_j - lasso_lambda) / x_j2
+                    elif s_j + lasso_lambda < 0:
+                        beta_j = (s_j + lasso_lambda) / x_j2
+                    else:
+                        beta_j = 0
+                    model.beta[j] = beta_j
+                    X2B += X2[:, j] * (model.beta[j] - beta_old[j])
+            # if it % 1 == 0 and verbose:
+            if verbose:
+                history[it] = model.evaluate_loss(x, y)
+                print(' %3d  | %.8f ' % (it + 1, history[it]))
+                # if sum(abs(model.beta)) == 0 or sum(abs(beta_old - model.beta)) / sum(abs(model.beta)) < self.tol:
+                # break
+            if len(active_set) == x.shape[1]:
+                active_set.clear()
+                print("clear fatto")
+
+            j_max = feat_select.apply_wrapper_rule(HSIC_KK, HSIC_KL, model.beta)
+            active_set.add(j_max)
+            if len(active_set) == 100:
+                n_informative_zero = [a for a in active_set if a <= 100]
+                print("numero_informative", len(n_informative_zero))
+
+        t_2 = timeit.default_timer() - t_1
+        self.t = t_2
+        self.num_iter = it
+
+    def dpp_rule(self, x, y, model, X2B, X2, beta_old):
+        p = x.shape[1]
+        lambda_lasso_max = np.empty([p])
+        XBeta = np.dot(x, model.beta)
+        for j in range(p):
+            lambda_lasso_max[j] = abs(np.dot(x[:, j].transpose(), y - XBeta))
+            print("lambda_lasso_max", lambda_lasso_max[j])
+            if lambda_lasso_max[j] < self.lambda_max - li.norm(x[:, j]) * li.norm(y) * (
+                        self.lambda_max - model.lambda_lasso) / model.lambda_lasso:
+                model.beta[j] = 0
+                print("", self.lambda_max - li.norm(x[:, j]) * li.norm(y) * (
+                    self.lambda_max - model.lambda_lasso) / model.lambda_lasso)
+                X2B += X2[:, j] * (model.beta[j] - beta_old[j])
+
+                # def estimate_lambda_max(self,x,y,XBeta):
+                #      p = x.shape[1]
+                #      for j in range(p):
+                #          """"""
+                # lambda_lasso_max[j] = abs(np.dot(x[:, j].transpose(), y - XBeta))
+
+
+class modifiedShooting2(Algorithm):
+    def __init__(self, tol=1e-4, max_iter=10000000):
+        self.num_iter = 0
+        self.t = 0
+        self.tol = tol
+        self.max_iter = max_iter
+        # self.lambda_max = lambda_max
+
+    def fit(self, x, y, model, verbose, **params):
+        print("START")
+        lasso_lambda = model.lambda_lasso
+
+        mse = linear_model.LinearRegression(fit_intercept=False)
+        mse.fit(x, y)
+        model.beta = mse.coef_
+
+        print("model", model.beta.shape)
+        print("Beta initialization done")
+        t_1 = timeit.default_timer()
+
+        dist_corr = DistanceCorrelation(x,y)
+        distance_corr = dist_corr.compute_dist_corr()
+        print("distance_corr", distance_corr.shape)
+
+        print("measure computed", timeit.default_timer() - t_1)
+        active_set = set()
+        feat_select = dist_corr_Criterion(active_set)
+        j_max = feat_select.apply_wrapper_rule(distance_corr,model.beta)
+
+        active_set.add(j_max)
+        t_3 = timeit.default_timer()
+
+
+        # active_set.add(j_max)
+        t_2 = timeit.default_timer()
+        print("tempo HSIC criterion", t_2 - t_3)
+
+        XY = np.dot(x.transpose(), y)
+        X2 = np.dot(x.transpose(), x)
+        X2B = np.dot(X2, model.beta)
 
 
         history = None
@@ -323,44 +426,22 @@ class modifiedShooting(Algorithm):
                         beta_j = 0
                     model.beta[j] = beta_j
                     X2B += X2[:, j] * (model.beta[j] - beta_old[j])
-            #if it % 1 == 0 and verbose:
+            # if it % 1 == 0 and verbose:
             if verbose:
                 history[it] = model.evaluate_loss(x, y)
                 print(' %3d  | %.8f ' % (it + 1, history[it]))
-            #if sum(abs(model.beta)) == 0 or sum(abs(beta_old - model.beta)) / sum(abs(model.beta)) < self.tol:
-                #break
-            if len(active_set)==x.shape[1]:
+                # if sum(abs(model.beta)) == 0 or sum(abs(beta_old - model.beta)) / sum(abs(model.beta)) < self.tol:
+                # break
+            if len(active_set) == x.shape[1]:
                 active_set.clear()
                 print("clear fatto")
 
-            j_max = feat_select.apply_wrapper_rule(HSIC_KK, HSIC_KL, model.beta)
+            j_max = feat_select.apply_wrapper_rule(distance_corr, model.beta)
             active_set.add(j_max)
-            if len(active_set)==100:
-                n_informative_zero = [a for a in active_set if a<=100]
+            if len(active_set) == 1000:
+                n_informative_zero = [a for a in active_set if a <= 1000]
                 print("numero_informative", len(n_informative_zero))
 
         t_2 = timeit.default_timer() - t_1
         self.t = t_2
         self.num_iter = it
-
-    def dpp_rule(self, x, y, model, X2B, X2, beta_old):
-        p = x.shape[1]
-        lambda_lasso_max = np.empty([p])
-        XBeta = np.dot(x, model.beta)
-        for j in range(p):
-            lambda_lasso_max[j] = abs(np.dot(x[:, j].transpose(), y - XBeta))
-            print("lambda_lasso_max",lambda_lasso_max[j])
-            if lambda_lasso_max[j] < self.lambda_max - li.norm(x[:,j]) * li.norm(y) * (
-                self.lambda_max - model.lambda_lasso) / model.lambda_lasso:
-                model.beta[j] = 0
-                print("",self.lambda_max - li.norm(x[:,j]) * li.norm(y) * (
-                self.lambda_max - model.lambda_lasso) / model.lambda_lasso)
-                X2B += X2[:, j] * (model.beta[j] - beta_old[j])
-
-    # def estimate_lambda_max(self,x,y,XBeta):
-    #      p = x.shape[1]
-    #      for j in range(p):
-    #          """"""
-            #lambda_lasso_max[j] = abs(np.dot(x[:, j].transpose(), y - XBeta))
-
-

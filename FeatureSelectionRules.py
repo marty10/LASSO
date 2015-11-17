@@ -59,35 +59,36 @@ class null_rule(FeatureSelectionRule):
         """apply wrapper rule"""
 
 
-class dist_corr(FeatureSelectionRule):
-    def __init__(self):
-        pass
+class dist_corr_Criterion(FeatureSelectionRule):
+    def __init__(self,active_set):
+        self.active_set = active_set
 
-    def apply_rule(X, Y):
-        X = np.atleast_1d(X)
-        Y = np.atleast_1d(Y)
-        if np.prod(X.shape) == len(X):
-            X = X[:, None]
-        if np.prod(Y.shape) == len(Y):
-            Y = Y[:, None]
-        X = np.atleast_2d(X)
-        Y = np.atleast_2d(Y)
-        n = X.shape[0]
-        if Y.shape[0] != X.shape[0]:
-            raise ValueError('Number of samples must match')
-        a = squareform(pdist(X))
-        b = squareform(pdist(Y))
-        A = a - a.mean(axis=0)[None, :] - a.mean(axis=1)[:, None] + a.mean()
-        B = b - b.mean(axis=0)[None, :] - b.mean(axis=1)[:, None] + b.mean()
+    def apply_rule(self, corr):
+        j_max = np.argmax(np.max(corr,axis=1))
+        if len(self.active_set)!=0:
+            i=1
+            indexes = np.argsort(corr, axis = 0)
+            #print(indexes)
+            while self.active_set.__contains__(j_max) and i<=len(indexes):
+                j_max = indexes[len(indexes)-i, 0]
+                i+=1
 
-        dcov2_xy = (A * B).sum() / float(n * n)
-        dcov2_xx = (A * A).sum() / float(n * n)
-        dcov2_yy = (B * B).sum() / float(n * n)
-        dcor = np.sqrt(dcov2_xy) / np.sqrt(np.sqrt(dcov2_xx) * np.sqrt(dcov2_yy))
-        return dcor
+        return j_max
 
-    def apply_wrapper_rule(self, x, y, beta):
-        """apply wrapper rule"""
+
+
+    def apply_wrapper_rule(self, corr, beta):
+        corr_beta = corr*beta
+        j_max = np.argmax(np.max(corr_beta,axis=1))
+        if len(self.active_set)!=0:
+            i=1
+            indexes = np.argsort(corr_beta, axis = 0)
+            #print(indexes)
+            while self.active_set.__contains__(j_max) and i<=len(indexes):
+                j_max = indexes[len(indexes)-i, 0]
+                i+=1
+
+        return j_max
 
 
 class HSIC_Criterion(FeatureSelectionRule):
