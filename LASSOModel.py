@@ -279,6 +279,7 @@ class modifiedShooting(Algorithm):
         mse.fit(x, y)
         model.beta = mse.coef_
 
+        print("Beta initialization done")
         t_1 = timeit.default_timer()
         hsic = HSIC()
         HSIC_KK, HSIC_KL = hsic.HSIC_Measures(x,y)

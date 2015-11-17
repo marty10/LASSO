@@ -21,6 +21,8 @@ class HSIC():
         KL_HSIC = np.empty([p, 1])
         KK_HSIC = np.empty([p, p])
         for j in range(0, p):
+            if j%100==0:
+                print("Computing HSIC measure for feature ",j )
             KL_HSIC[j] = np.trace(np.dot(self.computeKernels(X,j), self.L))
             for l in range(0, p):
                 KK_HSIC[j, l] = np.trace(np.dot(self.computeKernels(X,j), self.computeKernels(X,l)))
