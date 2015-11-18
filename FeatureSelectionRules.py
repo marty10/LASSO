@@ -14,8 +14,19 @@ class FeatureSelectionRule:
         """apply rule"""
 
     @abc.abstractmethod
-    def apply_wrapper_rule(self, x, y, beta):
-        """apply wrapper rule"""
+    def apply_wrapper_rule(self, corr, beta):
+        beta = np.reshape(beta, (beta.shape[0], 1))
+        corr_beta = corr*beta
+        j_max = np.argmax(np.max(corr_beta,axis=1))
+        if len(self.active_set)!=0:
+            i=1
+            indexes = np.argsort(corr_beta, axis = 0)
+            #print(indexes)
+            while self.active_set.__contains__(j_max) and i<=len(indexes):
+                j_max = indexes[len(indexes)-i, 0]
+                i+=1
+
+        return j_max
 
 
 class DPP_rule(FeatureSelectionRule):
@@ -76,19 +87,8 @@ class dist_corr_Criterion(FeatureSelectionRule):
         return j_max
 
 
-
     def apply_wrapper_rule(self, corr, beta):
-        corr_beta = corr*beta
-        j_max = np.argmax(np.max(corr_beta,axis=1))
-        if len(self.active_set)!=0:
-            i=1
-            indexes = np.argsort(corr_beta, axis = 0)
-            #print(indexes)
-            while self.active_set.__contains__(j_max) and i<=len(indexes):
-                j_max = indexes[len(indexes)-i, 0]
-                i+=1
-
-        return j_max
+       """apply rule"""
 
 
 class HSIC_Criterion(FeatureSelectionRule):
@@ -98,16 +98,7 @@ class HSIC_Criterion(FeatureSelectionRule):
     def apply_rule(self, x, y):
         """apply rule"""
 
-    def apply_wrapper_rule(self, KK_HSIC, KL_HSIC, beta):
-        beta = np.reshape(beta, (beta.shape[0], 1))
-        corr = KL_HSIC - np.dot(KK_HSIC, beta)
-        j_max = np.argmax(np.max(corr,axis=1))
-        if len(self.active_set)!=0:
-            i=1
-            indexes = np.argsort(corr, axis = 0)
-            while self.active_set.__contains__(j_max) and i<=len(indexes):
-                j_max = indexes[len(indexes)-i, 0]
-                i+=1
-        return j_max
+    def apply_wrapper_rule(self, KL_HSIC, beta):
+        """apply rule"""
 
 

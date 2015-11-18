@@ -16,10 +16,9 @@ class Dataset:
         self.n_features = n_features
         X, Y = datasets.make_regression(n_samples=self.n_samples, n_features=self.n_features,
                                                   n_informative=n_informative, shuffle=False, random_state=11)
-        self.X, self.Y, _, _, _ = center_data(X, Y, fit_intercept=fit_intercept, normalize = False)
+        self.X, self.Y, _, _, _ = center_data(X, Y, fit_intercept=fit_intercept, normalize = True)
 
         self.Y = self.Y.transpose()
-        print(self.Y.shape)
         self.transformation = transformation
         self.feat_select_rule = feat_select_rule
         self.X = self.feat_select_rule.apply_rule(self.X, self.Y)

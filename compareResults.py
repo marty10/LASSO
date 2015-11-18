@@ -1,17 +1,17 @@
 from sklearn.externals import joblib
 from ExtractDataset import Dataset
-from LASSOModel import LASSOEstimator, ISTA, FISTA, ADMM, Shooting, modifiedShooting, modifiedShooting2
-from Transformation import PolinomialTransformation
+from FeatureMeasures import DistanceCorrelation, HSIC
+from LASSOModel import LASSOEstimator, ISTA, FISTA, ADMM, Shooting, modifiedShooting
 from sklearn.metrics import mean_squared_error
 import numpy as np
-
+from Transformation import PolinomialTransformation
 
 n_samples = 2000
-n_features = 6000
+n_features = 3000
 n_informative = 1000
 
-#transformation = PolinomialTransformation(degree = 2)
-dataset = Dataset(n_samples,n_features,n_informative = n_informative)#transformation = transformation)
+transformation = PolinomialTransformation(degree = 2)
+dataset = Dataset(n_samples,n_features,n_informative = n_informative,transformation = transformation)
 
 XTrain = dataset.XTrain
 YTrain = dataset.YTrain
@@ -25,7 +25,7 @@ XTestTransf = dataset.XTestTransf
 lambda_opt = {"alpha": 67.1590893061}
 
 #model_list = {ISTA(), FISTA(), Shooting(), ADMM()}
-model_list = {modifiedShooting2()}
+model_list = {modifiedShooting(DistanceCorrelation())}
 ext_data = ".npz"
 ext_model = ".pkl"
 folder = "AlgorithmResults/"
