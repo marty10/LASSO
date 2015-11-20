@@ -10,7 +10,7 @@ from sklearn.linear_model.base import center_data
 import scipy
 from FeatureMeasures import DistanceCorrelation
 from FeatureSelectionRules import FeatureSelectionRule, HSIC_Criterion, dist_corr_Criterion
-
+from OrderedSet import OrderedSet
 
 
 class LASSOEstimator(BaseEstimator):
@@ -69,6 +69,7 @@ class Shooting(Algorithm):
         t_1 = timeit.default_timer()
         mse = linear_model.LinearRegression(fit_intercept=False)
         mse.fit(x, y)
+
         model.beta = mse.coef_
         XY = np.dot(x.transpose(), y)
         X2 = np.dot(x.transpose(), x)
@@ -273,7 +274,7 @@ class modifiedShooting(Algorithm):
         self.feature_measure = feature_measure
         # self.lambda_max = lambda_max
 
-    def fit(self, x, y, model, verbose, **params):
+    def fit(self, x, y, model, verbose=False, **params):
         print("START")
         lasso_lambda = model.lambda_lasso
 
@@ -287,20 +288,22 @@ class modifiedShooting(Algorithm):
 
         print("measure computed", timeit.default_timer() - t_1)
 
-        active_set = set()
+        active_set = OrderedSet()
         t_3 = timeit.default_timer()
-        j_max = self.feature_measure.apply_wrapper_rule(feat_meas, model.beta, active_set)
 
-        active_set.add(j_max)
-        t_2 = timeit.default_timer()
-        print("tempo criterion", t_2 - t_3)
 
         XY = np.dot(x.transpose(), y)
         X2 = np.dot(x.transpose(), x)
         active_beta = np.zeros(x.shape[1])
-        active_beta[j_max] = model.beta[j_max]
+
+        active_set = self.feature_measure.apply_wrapper_rule(feat_meas, model.beta, active_set)
+
+        active_beta[list(active_set)] = model.beta[list(active_set)]
+        t_2 = timeit.default_timer()
+        print("tempo criterion", t_2 - t_3)
+
         X2B = np.dot(X2, active_beta)
-        clear_done = False
+
 
         history = None
         if verbose:
@@ -311,39 +314,43 @@ class modifiedShooting(Algorithm):
             beta_old = np.copy(active_beta)
             for j in active_set:
                 beta_j = active_beta[j]
-                if beta_j != 0:  #####126000 vs 138
 
-                    x_j2 = X2[j, j]
-                    s_j = XY[j] - X2B[j] + x_j2 * beta_j
-                    if s_j - lasso_lambda > 0:
-                        beta_j = (s_j - lasso_lambda) / x_j2
-                    elif s_j + lasso_lambda < 0:
-                        beta_j = (s_j + lasso_lambda) / x_j2
-                    else:
-                        beta_j = 0
-                    model.beta[j] = beta_j
-                    active_beta[j] = beta_j
-                    X2B += X2[:, j] * (active_beta[j] - beta_old[j])
+                x_j2 = X2[j, j]
+                s_j = XY[j] - X2B[j] + x_j2 * beta_j
+                if s_j - lasso_lambda > 0:
+                    beta_j = (s_j - lasso_lambda) / x_j2
+                elif s_j + lasso_lambda < 0:
+                    beta_j = (s_j + lasso_lambda) / x_j2
+                else:
+                    beta_j = 0
+                model.beta[j] = beta_j
+                active_beta[j] = beta_j
+                X2B += X2[:, j] * (active_beta[j] - beta_old[j])
             # if it % 1 == 0 and verbose:
-            if len(active_set) == x.shape[1]:
-                active_set.clear()
-                clear_done = True
-                if sum(abs(model.beta)) == 0 or sum(abs(beta_old - model.beta)) / sum(abs(model.beta)) < self.tol:
-                    break
-                if verbose:
-                    history[it] = model.evaluate_loss(x, y)
-                    print(' %3d  | %.8f ' % (it + 1, history[it]))
-                print("clear fatto")
-
-            j_max = self.feature_measure.apply_wrapper_rule(feat_meas, model.beta, active_set)
-            active_set.add(j_max)
-            if not clear_done:
-                active_beta[j_max] = model.beta[j_max]
-                X2B += X2[:, j_max] * (active_beta[j_max])
-
-            if len(active_set) == 4000:
+            if sum(abs(model.beta)) == 0 or sum(abs(beta_old - model.beta)) / sum(abs(model.beta)) < self.tol:
+                print("features usate: ", active_set)
                 n_informative_zero = [a for a in active_set if a <= 1000 or 3000<=a<=4000]
-                print("numero_informative", len(n_informative_zero))
+                print(len(n_informative_zero))
+                break
+            if verbose:
+                history[it] = model.evaluate_loss(x, y)
+                if it%100==0:
+                    print(' %3d  | %.8f ' % (it + 1, history[it]))
+                diff = 1
+                if it>=1:
+                    diff = abs(history[it]-history[it-1])
+            j_maxes, active_set = self.feature_measure.apply_wrapper_rule1(feat_meas, model.beta, active_set, diff)
+            new_indexes = j_maxes-active_set
+            if len(new_indexes)!=0:
+                for s in new_indexes:
+                    active_set.add(s)
+                active_beta[list(new_indexes)] = model.beta[list(new_indexes)]
+                product_col = np.sum(X2[:, list(new_indexes)]*active_beta[list(new_indexes)].transpose(),axis = 1)
+                X2B += product_col#X2[:, list(new_indexes)] * (active_beta[list(new_indexes)])
+                print("set:", len(active_set))
+            #if len(active_set) == 200:
+                #n_informative_zero = [a for a in active_set if a <= 100 or 500<=a<=600]
+                #print("numero_informative", len(n_informative_zero))
 
         t_2 = timeit.default_timer() - t_1
         self.t = t_2
