@@ -32,7 +32,7 @@ def get_current_data(XTrain, XTest, blocks_generated_i):
     return x_train_i, x_test_i
 
 def compute_mse(x_train_current_tmp, YTrain,x_test_current_tmp, YTest):
-    mse = linear_model.LinearRegression(fit_intercept=False)
+    mse = linear_model.LinearRegression(fit_intercept=False, n_jobs = -1)
     mse.fit(x_train_current_tmp, YTrain)
     y_pred_test = mse.predict(x_test_current_tmp)
     new_loss = mean_squared_error(YTest,y_pred_test)
