@@ -12,7 +12,7 @@ class Dataset:
     def __init__(self, n_samples, n_features, n_informative, feat_select_rule = null_rule(), transformation=NullTransformation(), fit_intercept = True):
         self.n_samples = n_samples
         self.n_features = n_features
-        X, Y, beta = datasets.make_regression(n_samples=self.n_samples, n_features=self.n_features,
+        X, Y= datasets.make_regression(n_samples=self.n_samples, n_features=self.n_features,
                                                   n_informative=n_informative, shuffle=False, random_state=11)
         Y = Y.transpose()
         #self.XTrain, self.YTrain,_,_,_ = center_data(X, Y, fit_intercept=fit_intercept, normalize = True)
@@ -28,7 +28,7 @@ class Dataset:
         self.XTrainTransf = self.transformation.transform(self.XTrain)
         self.XTestTransf = self.transformation.transform(self.XTest)
         # ## onesVec = np.ones([len(self.X), 1]) self.X = np.append(onesVec, self.X, axis=1)
-        self.beta = beta
+       
 
     def center_test(self, X, y, X_mean, y_mean, X_std, normalize = True):
         X -= X_mean
