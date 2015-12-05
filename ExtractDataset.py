@@ -28,7 +28,7 @@ class Dataset:
         self.XTrainTransf = self.transformation.transform(self.XTrain)
         self.XTestTransf = self.transformation.transform(self.XTest)
         # ## onesVec = np.ones([len(self.X), 1]) self.X = np.append(onesVec, self.X, axis=1)
-       
+
 
     def center_test(self, X, y, X_mean, y_mean, X_std, normalize = True):
         X -= X_mean
