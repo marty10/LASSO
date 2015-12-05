@@ -18,7 +18,7 @@ YTest = dataset.YTest
 
 
 ####generation blocks
-num_blocks = 10000
+num_blocks = 1000
 r = np.random.RandomState(11)
 active_set = 100
 
@@ -28,14 +28,15 @@ num_informative = np.array([])
 
 r1 = np.random.RandomState(0)
 rand_vect = generate_samples(1, n_features, active_set, r1, saved_indexes)[0]
-print(rand_vect)
+# print(rand_vect)
 x_train_i, x_test_i = get_current_data(XTrain, XTest, rand_vect)
 lasso_cv = linear_model.LassoCV(fit_intercept=False,  max_iter=10000, n_jobs = -1)
 lasso_cv.fit(x_train_i,YTrain)
 best_alpha = lasso_cv.alpha_
-print("best_alpha", best_alpha)
+# print("best_alpha", best_alpha)
 
 lasso = linear_model.Lasso(alpha = best_alpha, fit_intercept=False)
+model = linear_model.LinearRegression(fit_intercept=False, n_jobs = -1)
 
 while len(num_informative)<n_informative and len(saved_indexes)<active_set:
     losses = np.array([])
@@ -61,12 +62,13 @@ while len(num_informative)<n_informative and len(saved_indexes)<active_set:
     ordered_weights_indexes = np.argsort(weights_indexes)[::-1]
 
     saved_indexes = extracte_chosen_indexes(saved_indexes, ordered_weights_indexes, chosen_indexes)
-
-    rand_vect = generate_samples(1, n_features, active_set, r1, saved_indexes)[0]
-    x_train_i, x_test_i = get_current_data(XTrain, XTest, rand_vect)
-    lasso_cv = linear_model.LassoCV(fit_intercept=False,  max_iter=10000, n_jobs = -1)
-    lasso_cv.fit(x_train_i,YTrain)
-    best_alpha = lasso_cv.alpha_
+    if len(saved_indexes)>=0:#active_set/2:
+        rand_vect = generate_samples(1, n_features, active_set, r1, saved_indexes)[0]
+        x_train_i, x_test_i = get_current_data(XTrain, XTest, rand_vect)
+        lasso_cv.fit(x_train_i,YTrain)
+        best_alpha = lasso_cv.alpha_
+        lasso = linear_model.Lasso(alpha = best_alpha, fit_intercept=False)
+        #model = lasso
 
     num_informative = [f for f in saved_indexes if f<=99]
     print("num_inf", len(num_informative), "su", len(saved_indexes))
