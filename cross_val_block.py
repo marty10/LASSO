@@ -20,9 +20,9 @@ YTest = dataset.YTest
 
 
 ####generation blocks
-num_blocks = 1000
+num_blocks = 10000
 r = np.random.RandomState(11)
-active_set = 100
+active_set = 250
 
 saved_indexes = np.array([])
 chosen_indexes = 3
