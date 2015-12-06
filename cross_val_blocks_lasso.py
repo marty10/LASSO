@@ -20,7 +20,7 @@ YTest = dataset.YTest
 ####generation blocks
 num_blocks = 10000
 r = np.random.RandomState(11)
-active_set = 100
+active_set = 250
 
 saved_indexes = np.array([])
 chosen_indexes = 3
@@ -58,7 +58,7 @@ while len(num_informative)<n_informative and len(saved_indexes)<active_set:
     orderd_losses_ = np.sort(losses)
     ordered_loss_ten = extract_losses(ordered_losses)
 
-    weights_indexes = get_common_indexes(ordered_loss_ten,blocks_generated,n_features,betas)
+    weights_indexes = get_common_indexes(orderd_losses_,ordered_loss_ten,blocks_generated,n_features,betas)
     ordered_weights_indexes = np.argsort(weights_indexes)[::-1]
 
     saved_indexes = extracte_chosen_indexes(saved_indexes, ordered_weights_indexes, chosen_indexes)

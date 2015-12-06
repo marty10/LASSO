@@ -1,5 +1,3 @@
-__author__ = 'Martina'
-from sklearn import linear_model
 from sklearn.metrics import mean_squared_error
 import numpy as np
 
@@ -25,11 +23,11 @@ def compute_mse(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest):
     beta = model.coef_
     return new_loss, beta
 
-def get_common_indexes(ordered_loss_ten,blocks_generated, n_features, ordered_beta):
+def get_common_indexes(orderd_losses_, ordered_loss_ten,blocks_generated, n_features, betas):
     weights_indexes = np.zeros(n_features)
     count=0
     for i in ordered_loss_ten:
-        weights_indexes[blocks_generated[i]] += np.abs(ordered_beta[:,i])
+        weights_indexes[blocks_generated[i]] += np.abs(betas[:,i])#1./orderd_losses_[count]*np.abs(betas[:,i])
         count+=1
     return weights_indexes
 
