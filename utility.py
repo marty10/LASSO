@@ -31,6 +31,14 @@ def get_common_indexes(orderd_losses_, ordered_loss_ten,blocks_generated, n_feat
         count+=1
     return weights_indexes
 
+def get_common_indexes1(orderd_losses_, ordered_loss_ten,blocks_generated, n_features, betas):
+    weights_indexes = np.zeros(n_features)
+    count=0
+    for i in ordered_loss_ten:
+        weights_indexes[blocks_generated[i]] += np.abs(betas[:,i])*1./orderd_losses_[count]
+        count+=1
+    return weights_indexes
+
 def extract_losses(indexes_losses):
     i=0
     ordered_losses_extract = np.array([],dtype = 'int64')
