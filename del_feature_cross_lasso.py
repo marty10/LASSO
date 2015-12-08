@@ -59,8 +59,9 @@ while len(num_informative)<n_informative and len(saved_indexes)<active_set:
 
     weights_indexes = get_low_common_indexes(ordered_loss_ten,blocks_generated,n_features,betas)
     ordered_weights_indexes = np.argsort(weights_indexes)[::-1]
+    ordered_weights_indexes_values = np.sort(weights_indexes)[::-1]
 
-    saved_indexes = extracte_chosen_indexes(saved_indexes, ordered_weights_indexes, chosen_indexes)
+    saved_indexes = extracte_chosen_indexes(saved_indexes, ordered_weights_indexes,ordered_weights_indexes_values, chosen_indexes)
     if len(saved_indexes)>=0:#active_set/2:
         rand_vect = generate_samples_del(1, n_features, active_set, r1, saved_indexes)[0]
         x_train_i, x_test_i = get_current_data(XTrain, XTest, rand_vect)
