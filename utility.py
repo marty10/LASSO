@@ -70,7 +70,11 @@ def get_low_common_indexes(ordered_loss_ten,blocks_generated, n_features, betas)
     weights_indexes = np.zeros(n_features)
     count=0
     for i in ordered_loss_ten:
-        weights_indexes[blocks_generated[i]] += -1-np.abs(betas[:,i])
+        index_first_inserted = np.where(weights_indexes[blocks_generated[i]]==0)[0]
+        a1 = weights_indexes[blocks_generated[i]]
+        a1[index_first_inserted] = -1
+        weights_indexes[blocks_generated[i]] = a1
+        weights_indexes[blocks_generated[i]] += -np.abs(betas[:,i])
         count+=1
     return weights_indexes
 
