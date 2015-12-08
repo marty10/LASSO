@@ -70,7 +70,7 @@ def get_low_common_indexes(ordered_loss_ten,blocks_generated, n_features, betas)
     weights_indexes = np.zeros(n_features)
     count=0
     for i in ordered_loss_ten:
-        weights_indexes[blocks_generated[i]] += -np.abs(betas[:,i])
+        weights_indexes[blocks_generated[i]] += -1-np.abs(betas[:,i])
         count+=1
     return weights_indexes
 
@@ -112,12 +112,13 @@ def extract_losses(indexes_losses):
         i+=1
     return ordered_losses_extract
 
-def extracte_chosen_indexes(saved_indexes, ordered_weights_indexes, chosen_indexes):
+def extracte_chosen_indexes(saved_indexes, ordered_weights_indexes, values, chosen_indexes):
     i=0
     inserted_indexes = 0
     while inserted_indexes<chosen_indexes:
         current_value = ordered_weights_indexes[i]
-        if current_value not in saved_indexes:
+        current = values[i]
+        if current_value not in saved_indexes and current!=0:
             saved_indexes = np.append(saved_indexes, current_value)
             inserted_indexes+=1
         i+=1

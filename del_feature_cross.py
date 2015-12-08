@@ -17,7 +17,7 @@ XTest = dataset.XTest
 YTest = dataset.YTest
 
 ####generation blocks
-num_blocks = 10000
+num_blocks = 1000
 r = np.random.RandomState(11)
 active_set = 100
 
@@ -53,8 +53,9 @@ while len(num_informative)<n_informative and len(saved_indexes)<active_set:
 
     weights_indexes = get_low_common_indexes(ordered_loss_ten,blocks_generated,n_features,betas)
     ordered_weights_indexes = np.argsort(weights_indexes)[::-1]
+    ordered_weights_indexes_values = np.sort(weights_indexes)[::-1]
 
-    saved_indexes = extracte_chosen_indexes(saved_indexes, ordered_weights_indexes, chosen_indexes)
+    saved_indexes = extracte_chosen_indexes(saved_indexes, ordered_weights_indexes, ordered_weights_indexes_values, chosen_indexes)
     num_informative = [f for f in saved_indexes if f<=99]
     print("num_inf", len(num_informative), "su", len(saved_indexes))
 
