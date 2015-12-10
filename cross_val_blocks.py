@@ -29,7 +29,9 @@ saved_indexes = np.array([],dtype = "int64")
 chosen_indexes = 3
 num_informative = np.array([])
 coeffs = np.array([])
-
+saved_indexes_list = []
+mses = []
+num_informative_list = []
 ###filter
 # file = np.load("DistanceCorrelation500.npz")
 # d_cor_xy = file["d_cor_xy"]
@@ -70,13 +72,20 @@ while len(num_informative)<n_informative and len(saved_indexes)<active_set:
     mse_saved,_,_ = compute_mse(linearRegression, x_train_saved, YTrain,x_test_saved, YTest)
     if count==0:
         mse_last = mse_saved
+        len_last = len(saved_indexes)
     while mse_saved>mse_last:
         saved_indexes = np.delete(saved_indexes, len(saved_indexes)-1)
         x_train_saved, x_test_saved = get_current_data(XTrain, XTest, saved_indexes)
         mse_saved,_,_ = compute_mse(linearRegression, x_train_saved, YTrain,x_test_saved, YTest)
     mse_last = mse_saved
+    mses.append(mse_last)
+    len_last = len(saved_indexes)
     count+=1
+
     num_informative = [f for f in saved_indexes if f<=99]
     print("num_inf", len(num_informative), "su", len(saved_indexes), "mse", mse_saved)
 
-np.savez("cross_val_blocks_"+str(num_blocks)+"active_set"+ str(active_set)+"mse_saved.npz", saved_indexes = saved_indexes)
+    saved_indexes_list.append(saved_indexes)
+    num_informative_list.append(num_informative)
+
+    np.savez("cross_val_blocks_"+str(num_blocks)+"active_set"+ str(active_set)+"removed_indexes.npz", saved_indexes_list = saved_indexes_list, mses = mses, num_informative_list = num_informative_list)
