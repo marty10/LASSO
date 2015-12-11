@@ -76,4 +76,4 @@ while len(num_informative)<n_informative and len(saved_indexes)<active_set:
     saved_indexes_list.append(saved_indexes)
     num_informative_list.append(num_informative)
 
-    np.savez("cross_val_blocks_"+str(num_blocks)+"active_set"+ str(active_set)+"removed_indexes.npz", saved_indexes_list = saved_indexes_list, mses = mses, num_informative_list = num_informative_list)
+    np.savez("cross_val_blocks_"+str(num_blocks)+"active_set"+ str(active_set)+".npz", saved_indexes_list = saved_indexes_list, mses = mses, num_informative_list = num_informative_list)
