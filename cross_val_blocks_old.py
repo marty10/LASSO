@@ -18,6 +18,8 @@ YTest = dataset.YTest
 
 
 ####generation blocks
+print(sys.argv[0])
+print(sys.argv[1])
 sys.argv[0:] = [int(x) for x in sys.argv[0:]]
 num_blocks = sys.argv[0]
 print("num_blockd", num_blocks)
