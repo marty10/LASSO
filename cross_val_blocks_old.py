@@ -19,7 +19,8 @@ YTest = dataset.YTest
 
 ####generation blocks
 sys.argv[1:] = [int(x) for x in sys.argv[1:]]
-num_blocks, active_set = sys.argv
+num_blocks = sys.argv[0]
+active_set = sys.argv[1]
 r = np.random.RandomState(11)
 
 
