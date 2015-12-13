@@ -18,9 +18,9 @@ YTest = dataset.YTest
 
 
 ####generation blocks
-num_blocks = sys.argv[0]
+num_blocks = int(sys.argv[0])
 r = np.random.RandomState(11)
-active_set = sys.argv[1]
+active_set = int(sys.argv[1])
 
 saved_indexes = np.array([],dtype = "int64")
 chosen_indexes = 3
