@@ -1,4 +1,4 @@
-
+import sys
 from sklearn import linear_model
 from ExtractDataset import Dataset
 import numpy as np
@@ -18,9 +18,9 @@ YTest = dataset.YTest
 
 
 ####generation blocks
-num_blocks = 10000
+num_blocks = sys.argv[0]
 r = np.random.RandomState(11)
-active_set = 300
+active_set = sys.argv[1]
 
 saved_indexes = np.array([],dtype = "int64")
 chosen_indexes = 3
