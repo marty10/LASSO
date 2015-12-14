@@ -34,6 +34,7 @@ coeffs = np.array([])
 saved_indexes_list = []
 mses = []
 num_informative_list = []
+r = np.random.RandomState(11)
 ###filter
 # file = np.load("DistanceCorrelation500.npz")
 # d_cor_xy = file["d_cor_xy"]
