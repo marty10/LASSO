@@ -61,11 +61,10 @@ def compute_corr(x,y, y_pred):
 
     return cor_xy
 
-def get_common_indexes(ordered_loss_ten,blocks_generated, n_features, betas):
-    weights_indexes = np.zeros(n_features)
+def get_common_indexes(weights_indexes,ordered_loss_ten,blocks_generated, betas):
     count=0
     for i in ordered_loss_ten:
-        weights_indexes[blocks_generated[i]] += betas[:,i]#1./orderd_losses_[count]*np.abs(betas[:,i])
+        weights_indexes[blocks_generated[i]] += betas[:,i]
         count+=1
     return np.abs(weights_indexes), np.sign(weights_indexes)
 
@@ -110,15 +109,27 @@ def get_common_indexes1(orderd_losses_, ordered_loss_ten,blocks_generated, n_fea
         count+=1
     return weights_indexes
 
-def extract_losses(indexes_losses):
+def extract_losses(indexes_losses, number_loss):
     i=0
     ordered_losses_extract = np.array([],dtype = 'int64')
-    while i<100:
+    while i<number_loss:
         ordered_losses_extract = np.append(ordered_losses_extract, indexes_losses[i])
         i+=1
     return ordered_losses_extract
 
-def extracte_chosen_indexes(saved_indexes, ordered_weights_indexes, values, chosen_indexes):
+def extract_chosen_indexes(saved_indexes, ordered_weights_indexes, values, chosen_indexes):
+    i = 0
+    inserted_indexes = 0
+    while inserted_indexes < chosen_indexes:
+        current_value = ordered_weights_indexes[i]
+        current = values[i]
+        if current_value not in saved_indexes and np.abs(current) > 0.1:
+            saved_indexes = np.append(saved_indexes, current_value)
+            inserted_indexes += 1
+        i += 1
+    return saved_indexes
+
+def extract_chosen_indexes_from_start(saved_indexes, ordered_weights_indexes, values, chosen_indexes):
     i = 0
     inserted_indexes = 0
     length = len(saved_indexes)
@@ -126,7 +137,7 @@ def extracte_chosen_indexes(saved_indexes, ordered_weights_indexes, values, chos
     while inserted_indexes < chosen_indexes+length:
         current_value = ordered_weights_indexes[i]
         current = values[i]
-        if current_value not in saved_indexes and current != 0:
+        if current_value not in saved_indexes and np.abs(current) > 0.1:
             saved_indexes = np.append(saved_indexes, current_value)
             inserted_indexes += 1
         i += 1
@@ -265,6 +276,10 @@ def get_common_indexes_binning(ordered_loss_ten,blocks_generated, betas,dictlist
             current_dict = dictlist[j]
             if np.abs(beta)>=1:
                 key = int(beta/step)
+                if key>=0:
+                    key+=1
+                if key<0:
+                    key-=1
                 if key in current_dict:
                     current_dict[key] += 1
                 else:
@@ -276,7 +291,7 @@ def extract_max_from_beta(dictlist):
     for j,dict in enumerate(dictlist):
         if len(dict)!=0:
             dict_values = np.array(list(dict.values()))
-            dict_keys = 1+np.array(list(dict.keys()))
+            dict_keys = np.array(list(dict.keys()))
             key_values = dict_values*dict_keys
             max_value = np.max(np.abs(key_values))
             weights_indexes[j] = max_value

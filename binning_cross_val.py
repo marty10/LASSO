@@ -43,8 +43,6 @@ r = np.random.RandomState(11)
 # d_cor_xy_ordered = np.argsort(d_cor_xy)
 # XTrain = np.delete(XTrain, d_cor_xy_ordered[:24],axis = 1)
 # XTest = np.delete(XTest, d_cor_xy_ordered[:24],axis = 1)
-linearRegression = linear_model.LinearRegression(fit_intercept=False, n_jobs = -1)
-dictlist = [dict() for x in range(n_features)]
 
 while len(num_informative)<n_informative and len(saved_indexes)<active_set:
 
@@ -55,6 +53,7 @@ while len(num_informative)<n_informative and len(saved_indexes)<active_set:
     blocks_generated = generate_samples(num_blocks, XTrain.shape[1], active_set, r, saved_indexes, np.array([]))
     for i in range(0, num_blocks):
         x_train_i, x_test_i = get_current_data(XTrain, XTest, blocks_generated[i,:])
+        linearRegression = linear_model.LinearRegression(fit_intercept=False, n_jobs = -1)
         new_loss,beta,corr = compute_mse(linearRegression, x_train_i, YTrain,x_test_i, YTest)
         losses = np.append(losses, new_loss)
 
@@ -66,15 +65,16 @@ while len(num_informative)<n_informative and len(saved_indexes)<active_set:
             corrs = np.append(corrs, corr,axis = 1)
     ordered_losses = np.argsort(losses)
     orderd_losses_ = np.sort(losses)
-    ordered_loss_ten = extract_losses(ordered_losses)
+    ordered_loss_ten = extract_losses(ordered_losses,100)
 
     dictlist = get_common_indexes_binning(ordered_loss_ten,blocks_generated,betas,dictlist)
     weights_indexes = extract_max_from_beta(dictlist)
     ordered_weights_indexes = np.argsort(weights_indexes)[::-1]
     ordered_weights_indexes_values = np.sort(weights_indexes)[::-1]
 
-    saved_indexes = extracte_chosen_indexes(saved_indexes, ordered_weights_indexes, ordered_weights_indexes_values, chosen_indexes)
+    saved_indexes = extract_chosen_indexes_from_start(saved_indexes, ordered_weights_indexes, ordered_weights_indexes_values, chosen_indexes)
     x_train_saved, x_test_saved = get_current_data(XTrain, XTest, saved_indexes)
+    linearRegression = linear_model.LinearRegression(fit_intercept=False, n_jobs = -1)
     mse_saved,_,_ = compute_mse(linearRegression, x_train_saved, YTrain,x_test_saved, YTest)
     mse_last = mse_saved
     mses.append(mse_last)
