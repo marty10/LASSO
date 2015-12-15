@@ -1,9 +1,10 @@
 import sys
+
 from sklearn import linear_model
 from ExtractDataset import Dataset
 import numpy as np
 from utility import generate_samples, get_current_data, compute_mse, extract_losses, get_common_indexes, \
-    extracte_chosen_indexes, get_common_indexes1
+    extract_chosen_indexes, get_common_indexes1, extract_chosen_indexes_from_start
 
 n_samples = 200
 n_features = 500
