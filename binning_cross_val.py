@@ -42,7 +42,7 @@ r = np.random.RandomState(11)
 # d_cor_xy_ordered = np.argsort(d_cor_xy)
 # XTrain = np.delete(XTrain, d_cor_xy_ordered[:24],axis = 1)
 # XTest = np.delete(XTest, d_cor_xy_ordered[:24],axis = 1)
-
+dictlist = [dict() for x in range(n_features)]
 while len(num_informative)<n_informative and len(saved_indexes)<active_set:
 
     losses = np.array([])
