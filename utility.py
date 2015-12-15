@@ -276,7 +276,7 @@ def extract_max_from_beta(dictlist):
     for j,dict in enumerate(dictlist):
         if len(dict)!=0:
             dict_values = np.array(dict.values())
-            dict_keys = (1+np.array(dict.keys()))
+            dict_keys = 1+np.array(list(dict.keys()))
             key_values = dict_values*dict_keys
             max_value = np.max(np.abs(key_values))
             weights_indexes[j] = max_value
