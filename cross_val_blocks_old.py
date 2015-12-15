@@ -44,13 +44,13 @@ num_informative_list = []
 # XTrain = np.delete(XTrain, d_cor_xy_ordered[:24],axis = 1)
 # XTest = np.delete(XTest, d_cor_xy_ordered[:24],axis = 1)
 linearRegression = linear_model.LinearRegression(fit_intercept=False, n_jobs = -1)
-
+weights_indexes = np.zeros(n_features)
 while len(num_informative)<n_informative and len(saved_indexes)<active_set:
     losses = np.array([])
     betas = np.array([])
     coeffs = np.array([])
     corrs = np.array([])
-    blocks_generated = generate_samples(num_blocks, XTrain.shape[1], active_set, r, saved_indexes)
+    blocks_generated = generate_samples(num_blocks, XTrain.shape[1], active_set, r, saved_indexes, np.array([]))
     for i in range(0, num_blocks):
         x_train_i, x_test_i = get_current_data(XTrain, XTest, blocks_generated[i,:])
         new_loss,beta,corr = compute_mse(linearRegression, x_train_i, YTrain,x_test_i, YTest)
@@ -64,17 +64,16 @@ while len(num_informative)<n_informative and len(saved_indexes)<active_set:
             corrs = np.append(corrs, corr,axis = 1)
     ordered_losses = np.argsort(losses)
     orderd_losses_ = np.sort(losses)
-    ordered_loss_ten = extract_losses(ordered_losses)
+    ordered_loss_ten = ordered_losses[:10]
 
-    weights_indexes = get_common_indexes(ordered_loss_ten,blocks_generated,n_features,betas)
+    weights_indexes,beta_sign = get_common_indexes(weights_indexes, ordered_loss_ten,blocks_generated,betas)
     ordered_weights_indexes = np.argsort(weights_indexes)[::-1]
     ordered_weights_indexes_values = np.sort(weights_indexes)[::-1]
 
-    saved_indexes = extracte_chosen_indexes(saved_indexes, ordered_weights_indexes, ordered_weights_indexes_values, chosen_indexes)
+    saved_indexes = extract_chosen_indexes_from_start(saved_indexes, ordered_weights_indexes, ordered_weights_indexes_values, chosen_indexes)
     x_train_saved, x_test_saved = get_current_data(XTrain, XTest, saved_indexes)
     mse_saved,_,_ = compute_mse(linearRegression, x_train_saved, YTrain,x_test_saved, YTest)
-    mse_last = mse_saved
-    mses.append(mse_last)
+    mses.append(mse_saved)
 
     num_informative = [f for f in saved_indexes if f<=99]
     print("num_inf", len(num_informative), "su", len(saved_indexes), "mse", mse_saved)

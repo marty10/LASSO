@@ -137,7 +137,7 @@ def extract_chosen_indexes_from_start(saved_indexes, ordered_weights_indexes, va
     while inserted_indexes < chosen_indexes+length:
         current_value = ordered_weights_indexes[i]
         current = values[i]
-        if current_value not in saved_indexes and np.abs(current) > 0.1:
+        if current_value not in saved_indexes and np.abs(current)>0.1:
             saved_indexes = np.append(saved_indexes, current_value)
             inserted_indexes += 1
         i += 1
