@@ -28,7 +28,7 @@ file = np.load("cancer_dataset.npz")
 x = file["x"]
 y = file["y"]
 n_samples = len(x)
-n_features = len([val for (key,val) in x[0].iteritems()])
+n_features = len([val for (key,val) in x[0].items()])
 X = np.zeros([n_samples,n_features])
 
 
