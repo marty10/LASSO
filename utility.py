@@ -68,6 +68,34 @@ def get_common_indexes(weights_indexes,ordered_loss_ten,blocks_generated, betas)
         count+=1
     return np.abs(weights_indexes), np.sign(weights_indexes)
 
+def get_common_indexes(weights_indexes,ordered_loss_ten,blocks_generated, betas, n_features):
+    count=0
+    current_weight = np.zeros(n_features)
+    for i in ordered_loss_ten:
+        weights_indexes[blocks_generated[i]] += betas[:,i]
+        current_weight[blocks_generated[i]]+= betas[:,i]
+        count+=1
+    return np.abs(weights_indexes), np.sign(current_weight)
+
+def get_common_indexes_threshold(weights_indexes,ordered_loss_ten,blocks_generated, betas,threshold):
+    count=0
+    for i in ordered_loss_ten:
+        current_beta = betas[:,i]
+        weights_indexes[blocks_generated[i]] += compute_threshold(current_beta,threshold)
+        count+=1
+    return np.abs(weights_indexes), np.sign(weights_indexes)
+
+def compute_threshold(current_beta,threshold):
+    new_beta = np.zeros(len(current_beta))
+    for i,beta_j in enumerate(current_beta):
+        if beta_j>threshold and beta_j>0:
+            new_beta[i] = 1
+        elif beta_j<-threshold and beta_j<0:
+            new_beta[i] = -1
+        else:
+            new_beta[i] = 0
+    return new_beta
+
 
 def get_low_common_indexes(ordered_loss_ten,blocks_generated, n_features, betas):
     weights_indexes = np.zeros(n_features)
@@ -162,8 +190,10 @@ def extracte_chosen_indexes_beta_check(old_values, saved_indexes, ordered_weight
 def extract_indexes_beta_sign_check(old_values, saved_indexes, ordered_weights_indexes, values, chosen_indexes,removed_indexes):
     i = 0
     inserted_indexes = 0
-
-    while inserted_indexes < chosen_indexes:
+    lenght = len(saved_indexes)
+    saved_indexes = np.array([], dtype = "int64")
+    old_values = np.array([], dtype = "int64")
+    while inserted_indexes < chosen_indexes+lenght:
         current_value = ordered_weights_indexes[i]
         current = values[i]
         if current_value not in saved_indexes and current != 0 and current_value not in removed_indexes:
@@ -171,11 +201,10 @@ def extract_indexes_beta_sign_check(old_values, saved_indexes, ordered_weights_i
             old_values = np.append(old_values, current)
             inserted_indexes += 1
         i += 1
-        assert(len(old_values)==len(saved_indexes))
+    assert(len(old_values)==len(saved_indexes))
     return saved_indexes, old_values
 
-def value_beta_sign(beta_sign_old, beta_sign, old_values, saved_indexes,ordered_weights_indexes):
-    removed_indexes = np.array([], dtype = "int64")
+def value_beta_sign(beta_sign_old, beta_sign, old_values, saved_indexes, removed_indexes):
     index_to_delete = np.array([], dtype = "int64")
     for i,current_value in enumerate(saved_indexes):
         if beta_sign_old[current_value]!=beta_sign[current_value]:
@@ -183,10 +212,10 @@ def value_beta_sign(beta_sign_old, beta_sign, old_values, saved_indexes,ordered_
             removed_indexes = np.append(removed_indexes, current_value)
     saved_indexes = np.delete(saved_indexes, index_to_delete)
     old_values = np.delete(old_values, index_to_delete)
-    return saved_indexes, old_values, removed_indexes
+    return saved_indexes, old_values, np.unique(removed_indexes)
 
-def value_beta(old_values, saved_indexes,ordered_weights_indexes,values):
-    removed_values = np.array([], dtype= "int64")
+def value_beta(old_values, saved_indexes,ordered_weights_indexes,values,removed_values):
+
     for current_value in saved_indexes:
         i = np.where(ordered_weights_indexes == current_value)[0]
         old_v = np.where(saved_indexes == current_value)[0]
@@ -286,11 +315,38 @@ def get_common_indexes_binning(ordered_loss_ten,blocks_generated, betas,dictlist
                     current_dict[key] = 1
     return dictlist
 
+def get_common_indexes_binning_threshold(ordered_loss_ten,blocks_generated, betas,dictlist):
+    step = 1000
+    for i in ordered_loss_ten:
+        beta_indexes = blocks_generated[i]
+        current_beta = betas[:,i]
+        assert(len(current_beta)==len(beta_indexes))
+        for k,j in enumerate(beta_indexes):
+            beta = current_beta[k]
+            current_dict = dictlist[j]
+            key = int(beta/step)
+            if key>=0:
+                key+=1
+            if key<0:
+                key-=1
+            if np.abs(beta)<=1:
+                if key in current_dict:
+                    current_dict[key] -= 1
+                else:
+                    current_dict[key] = -1
+            elif key in current_dict:
+                current_dict[key] += 1
+            else:
+                current_dict[key] = 1
+
+    return dictlist
+
 def extract_max_from_beta(dictlist):
     weights_indexes = np.zeros(len(dictlist))
     for j,dict in enumerate(dictlist):
         if len(dict)!=0:
             dict_values = np.array(list(dict.values()))
+            dict_values[dict_values<0] = 0
             dict_keys = np.array(list(dict.keys()))
             key_values = dict_values*dict_keys
             max_value = np.max(np.abs(key_values))
