@@ -33,7 +33,7 @@ X = np.zeros([n_samples,n_features])
 
 
 for i in range(0,n_samples):
-    X[i,:] = [val for (key,val) in x[i].iteritems()]
+    X[i,:] = [val for (key,val) in x[i].items()]
 
 XTrain = X[:33,:]
 XTest =  X[33:,:]
