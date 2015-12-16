@@ -4,12 +4,12 @@ import sys
 from ExtractDataset import Dataset
 import numpy as np
 from utility import generate_samples, get_current_data, compute_mse, extract_losses, get_common_indexes, \
-    extract_chosen_indexes, get_common_indexes1, extract_chosen_indexes_from_start
+    extract_chosen_indexes, extract_chosen_indexes_from_start
 
 
 
 #####dataset
-from libsvm.python.svmutil import svm_read_problem
+
 def center_test(X, y, X_mean, y_mean, X_std, normalize = True):
     X -= X_mean
     if normalize:
@@ -24,7 +24,9 @@ print("num_blockd", num_blocks)
 active_set = sys.argv[2]
 print("active_set", active_set)
 
-y, x = svm_read_problem('Datasets/duke')
+file = np.load("cancer_dataset.npz")
+x = file["x"]
+y = file["y"]
 n_samples = len(x)
 n_features = len([val for (key,val) in x[0].iteritems()])
 X = np.zeros([n_samples,n_features])
