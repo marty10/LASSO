@@ -3,8 +3,8 @@ import sys
 from sklearn import linear_model
 from ExtractDataset import Dataset
 import numpy as np
-from utility import generate_samples, get_current_data, compute_mse, extract_losses, get_common_indexes, \
-    extract_chosen_indexes, get_common_indexes1, extract_chosen_indexes_from_start
+from utility import get_current_data, compute_mse, get_common_indexes,extract_chosen_indexes_from_start, \
+    generate_samples_dynamic_set
 
 n_samples = 200
 n_features = 500
