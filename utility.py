@@ -241,7 +241,6 @@ def extract_chosen_indexes_from_start(saved_indexes, ordered_weights_indexes,cho
         if current_value not in saved_indexes:
             saved_indexes = np.append(saved_indexes, current_value)
             inserted_indexes += 1
-            assert(del_indexes[current_value]<1)
         i += 1
     inters = np.intersect1d(old_saved_indexes, saved_indexes)
     if len(inters)!=len(old_saved_indexes):
