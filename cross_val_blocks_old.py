@@ -16,7 +16,7 @@ XTrain = dataset.XTrain
 YTrain = dataset.YTrain
 XTest = dataset.XTest
 YTest = dataset.YTest
-
+n_samples_test = XTest.shape[0]
 
 ####generation blocks
 print(sys.argv[1])
