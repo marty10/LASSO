@@ -1,9 +1,37 @@
 from scipy.stats import pearsonr
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, r2_score
 import numpy as np
+from libsvm.python.svmutil import svm_read_problem
+
+def generate_samples_dynamic_set(num_blocks, n_features, r,saved_indexes,r1, index_to_delete):
+    current_lenght = len(saved_indexes)
+    if current_lenght+40<=n_features-len(index_to_delete):
+        start = current_lenght+30
+        end = current_lenght+40
+    else:
+        end = n_features-len(index_to_delete)+1
+        start = end-1
+    gen_vect_1 = np.arange(start,end)
+    active_set = r1.choice(gen_vect_1, 1)[0]
+    print("active_set", active_set)
+    blocks_generated = np.empty([num_blocks, active_set], dtype = 'int64')
+    gen_vect = np.arange(0,n_features)
+    gen_vect = np.delete(gen_vect, saved_indexes)
+
+    for i in index_to_delete:
+        gen_vect = np.delete(gen_vect, np.where(gen_vect==i)[0])
+    if len(index_to_delete)!=0:
+        print("indici cancellati",index_to_delete, "di lunghezza", len(index_to_delete))
+    for i in range(0,num_blocks):
+        rand_vect = r.choice(gen_vect,active_set-len(saved_indexes), replace = False)
+        rand_vect = np.append(rand_vect,saved_indexes)
+        blocks_generated[i,:] = rand_vect
+    return blocks_generated
+
 
 def generate_samples(num_blocks, n_features, active_set,r,saved_indexes,deleted_indexes):
     blocks_generated = np.empty([num_blocks, active_set], dtype = 'int64')
+
     for i in range (0,num_blocks):
         gen_vect = np.arange(0,n_features)
         gen_vect = np.delete(gen_vect, saved_indexes)
@@ -37,13 +65,14 @@ def get_current_data(XTrain, XTest, blocks_generated_i):
     x_test_i = XTest[:,blocks_generated_i]
     return x_train_i, x_test_i
 
-def get_current_train(XTrain, blocks_generated_i):
+def get_current_samples(XTrain, blocks_generated_i):
     x_train_i =  XTrain[blocks_generated_i,:]
     return x_train_i
 
 def compute_mse(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest):
     model.fit(x_train_current_tmp, YTrain)
     y_pred_test = model.predict(x_test_current_tmp)
+    new_loss = r2_score(YTest, y_pred_test)
     new_loss = mean_squared_error(YTest,y_pred_test)
     beta = model.coef_
     beta = beta.reshape([len(beta),1])
@@ -51,6 +80,46 @@ def compute_mse(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest):
     corr = compute_corr(x_test_current_tmp, YTest, y_pred_test)
     corr = corr.reshape([len(corr),1])
     return new_loss, beta,np.abs(corr)
+
+
+def compute_mse_binary(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest):
+    model.fit(x_train_current_tmp, YTrain)
+    y_pred_test = model.predict(x_test_current_tmp)
+    n = len(YTest)
+    signs = np.sign(YTest) == np.sign(y_pred_test)
+    new_loss = 1./n*sum(signs==True)
+    beta = model.coef_
+    beta = beta.reshape([len(beta),1])
+    return new_loss, beta
+
+def compute_ber_binary(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest):
+    model.fit(x_train_current_tmp, YTrain)
+    y_pred_test = model.predict(x_test_current_tmp)
+
+    positive_ones = np.where(np.sign(y_pred_test)==1)[0]
+    negative_ones = np.where(np.sign(y_pred_test)==-1)[0]
+
+    positive_ones_real = np.where(np.sign(YTest)==1)[0]
+    negative_ones_real = np.where(np.sign(YTest)==-1)[0]
+
+    fp = float(len(np.intersect1d(positive_ones,negative_ones_real)))
+    tn = (float)(len(np.intersect1d(negative_ones,negative_ones_real)))
+    tp = (float)(len(np.intersect1d(positive_ones,positive_ones_real)))
+    fn = (float)(len(np.intersect1d(negative_ones,positive_ones_real)))
+
+    if fp!=0:
+        first_term = fp/(tn+fp)
+    else:
+        first_term = 0
+    if fn!=0:
+        second_term = fn/(fn+tp)
+    else:
+        second_term = 0
+    new_loss = 0.5*(first_term+second_term)
+    beta = model.coef_
+    beta = beta.reshape([len(beta),1])
+    return new_loss, beta
+
 
 def compute_corr(x,y, y_pred):
     n,p = x.shape
@@ -68,14 +137,18 @@ def get_common_indexes(weights_indexes,ordered_loss_ten,blocks_generated, betas)
         count+=1
     return np.abs(weights_indexes), np.sign(weights_indexes)
 
-def get_common_indexes(weights_indexes,ordered_loss_ten,blocks_generated, betas, n_features):
+def get_common_indexes(weights_indexes,ordered_loss_ten,blocks_generated, betas, n_features, index_to_delete):
     count=0
     current_weight = np.zeros(n_features)
+
     for i in ordered_loss_ten:
         weights_indexes[blocks_generated[i]] += betas[:,i]
         current_weight[blocks_generated[i]]+= betas[:,i]
         count+=1
-    return np.abs(weights_indexes), np.sign(current_weight)
+    weights_indexes = np.abs(weights_indexes)
+    weights_indexes[index_to_delete]=0
+    current_weight[index_to_delete]=0
+    return weights_indexes, np.sign(current_weight)
 
 def get_common_indexes_threshold(weights_indexes,ordered_loss_ten,blocks_generated, betas,threshold):
     count=0
@@ -157,19 +230,25 @@ def extract_chosen_indexes(saved_indexes, ordered_weights_indexes, values, chose
         i += 1
     return saved_indexes
 
-def extract_chosen_indexes_from_start(saved_indexes, ordered_weights_indexes, values, chosen_indexes):
+def extract_chosen_indexes_from_start(saved_indexes, ordered_weights_indexes,chosen_indexes,del_indexes):
     i = 0
     inserted_indexes = 0
     length = len(saved_indexes)
+    old_saved_indexes = saved_indexes.copy()
     saved_indexes = np.array([],dtype = "int64")
     while inserted_indexes < chosen_indexes+length:
         current_value = ordered_weights_indexes[i]
-        current = values[i]
-        if current_value not in saved_indexes and np.abs(current)>0.1:
+        if current_value not in saved_indexes:
             saved_indexes = np.append(saved_indexes, current_value)
             inserted_indexes += 1
+            assert(del_indexes[current_value]<1)
         i += 1
-    return saved_indexes
+    inters = np.intersect1d(old_saved_indexes, saved_indexes)
+    if len(inters)!=len(old_saved_indexes):
+        del_ind = np.array(list(set(old_saved_indexes)-set(inters)), dtype = "int64")
+        del_indexes[del_ind]+=1
+
+    return saved_indexes,del_indexes
 
 def extracte_chosen_indexes_beta_check(old_values, saved_indexes, ordered_weights_indexes, values, chosen_indexes):
     i = 0
@@ -316,7 +395,7 @@ def get_common_indexes_binning(ordered_loss_ten,blocks_generated, betas,dictlist
     return dictlist
 
 def get_common_indexes_binning_threshold(ordered_loss_ten,blocks_generated, betas,dictlist):
-    step = 1000
+    step = 100
     for i in ordered_loss_ten:
         beta_indexes = blocks_generated[i]
         current_beta = betas[:,i]
@@ -357,7 +436,7 @@ def extract_max_from_beta(dictlist):
 def extract_results(filename):
     active_set = np.load(filename)
     active_indexes = active_set["saved_indexes_list"]
-    last_active_indexes = active_indexes[len(active_indexes)-1][:100]
+    last_active_indexes = active_indexes[len(active_indexes)-1]
     return last_active_indexes
 
 
@@ -365,3 +444,47 @@ def extract_informative(active_set,p):
     beta_index = np.where(active_set<=p)[0]
     beta_index_chosen = active_set[beta_index]
     return beta_index, beta_index_chosen
+
+
+def read_libsvm_dataset(filename):
+    y, x = svm_read_problem(filename)
+    #np.savez("cancer_dataset.npz", y = y, x = x)
+    keys = get_common_key(x)
+    return x,y,keys
+
+def get_common_key(x):
+    i=0
+    keys = np.array([], "int64")
+    for dict in x:
+        keys_dict = np.array(dict.keys())
+        if i==0:
+            keys = keys_dict
+        else:
+            keys = np.intersect1d(keys_dict, keys)
+        i+=1
+    return keys
+
+def compute_data(y,x,keys):
+    n_samples = len(x)
+    X = np.zeros([n_samples,len(keys)])
+    for i in range(0,n_samples):
+        current_feat = [val for (key,val) in x[i].iteritems() if key in keys]
+        X[i,:] = current_feat
+    return X,y
+
+
+def center_test(X, y, X_mean, y_mean, X_std, normalize = True):
+    X = X.astype(X_mean.dtype)
+    X -= X_mean
+    if normalize:
+        X /= X_std
+    y = y - y_mean
+    return X,y
+
+
+def assign_weights(weights_ordered_indexes):
+    mean_weigths = np.mean(weights_ordered_indexes)
+    weights_ordered_indexes[weights_ordered_indexes<mean_weigths]=1
+    weights_ordered_indexes[weights_ordered_indexes>mean_weigths] = float(mean_weigths)/weights_ordered_indexes[weights_ordered_indexes>mean_weigths]
+
+    return weights_ordered_indexes
