@@ -35,7 +35,6 @@ final_active_set = 500
 active_set_samples = (int)(8./9.*n_samples_test)
 
 saved_indexes = np.array([],dtype = "int64")
-chosen_indexes = 3
 num_informative = np.array([])
 coeffs = np.array([])
 saved_indexes_list = []
@@ -47,11 +46,12 @@ linearRegression = linear_model.LinearRegression(fit_intercept=False, n_jobs = -
 mse,_,_ = compute_mse(linearRegression, XTrain, YTrain,XTest,YTest)
 print("start_mse", mse)
 weights_indexes = np.zeros(n_features)
-index = 0
+index = 1000
 deleted_indexes = np.where(del_indexes>index)[0]
 iter = 0
+r3 = np.random.RandomState(14)
 
-while len(saved_indexes)+chosen_indexes<=final_active_set-len(deleted_indexes):
+while len(saved_indexes)<=final_active_set-len(deleted_indexes):
     losses = np.array([])
     betas = np.array([])
     coeffs = np.array([])
@@ -72,12 +72,23 @@ while len(saved_indexes)+chosen_indexes<=final_active_set-len(deleted_indexes):
             betas = np.append(betas, beta, axis =1)
     ordered_losses = np.argsort(losses)
     orderd_losses_ = np.sort(losses)
-    ordered_loss_ten = ordered_losses[:10]
+    #losses_to_select = r3.choice(np.arange(100,200), 1, replace=False)[0]
+    #print("loss scelte", losses_to_select)
+    first_loss = orderd_losses_[0]
+    chosen_losses = len(orderd_losses_[orderd_losses_<=first_loss*4./3])
+    if chosen_losses<5:
+        chosen_losses=5
+    print("losses scelte", chosen_losses)
+    index_chosen_losses = ordered_losses[:chosen_losses]
 
-    weights_indexes,beta_sign = get_common_indexes(weights_indexes, ordered_loss_ten,blocks_generated,betas,n_features,deleted_indexes)
+    weights_indexes,beta_sign = get_common_indexes(weights_indexes, index_chosen_losses,blocks_generated,betas,n_features,deleted_indexes,saved_indexes)
     ordered_weights_indexes = np.argsort(weights_indexes)[::-1]
     ordered_weights_indexes_values = np.sort(weights_indexes)[::-1]
 
+    chosen_indexes = r3.choice(np.arange(1,6), 1, replace=False)[0]
+    if chosen_indexes+len(saved_indexes)>final_active_set:
+        chosen_indexes = final_active_set-len(saved_indexes)
+    print("chosen indexes", chosen_indexes)
     saved_indexes,del_indexes = extract_chosen_indexes_from_start(saved_indexes, ordered_weights_indexes, chosen_indexes,del_indexes)
     deleted_indexes = np.where(del_indexes>index)[0]
     assert(len(deleted_indexes)+len(saved_indexes)<=n_features)
@@ -95,4 +106,4 @@ while len(saved_indexes)+chosen_indexes<=final_active_set-len(deleted_indexes):
     num_informative_list.append(num_informative)
 
     iter+=1
-    np.savez("cross_val_blocks_"+str(num_blocks)+"active_set"+ str(final_active_set)+"dynamic_set_absBeta_1.npz", saved_indexes_list = saved_indexes_list, mses = mses, num_informative_list = num_informative_list, weights_list = weights_list)
+    np.savez("cross_val_blocks_"+str(num_blocks)+"active_set"+ str(final_active_set)+"dynamic_set_all.npz", saved_indexes_list = saved_indexes_list, mses = mses, num_informative_list = num_informative_list, weights_list = weights_list)
