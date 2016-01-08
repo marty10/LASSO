@@ -1,7 +1,7 @@
 from scipy.stats import pearsonr
 from sklearn.metrics import mean_squared_error, r2_score
 import numpy as np
-from libsvm.python.svmutil import svm_read_problem
+
 
 def generate_samples_dynamic_set(num_blocks, n_features, r,saved_indexes,r1, index_to_delete):
     current_lenght = len(saved_indexes)
