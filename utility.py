@@ -1,7 +1,7 @@
 from scipy.stats import pearsonr
 from sklearn.metrics import mean_squared_error, r2_score
 import numpy as np
-#from libsvm.python.svmutil import svm_read_problem
+from libsvm.python.svmutil import svm_read_problem
 
 def generate_samples_dynamic_set(num_blocks, n_features, r,saved_indexes,r1, index_to_delete):
     current_lenght = len(saved_indexes)
@@ -137,14 +137,14 @@ def get_common_indexes(weights_indexes,ordered_loss_ten,blocks_generated, betas)
         count+=1
     return np.abs(weights_indexes), np.sign(weights_indexes)
 
-def get_common_indexes(weights_indexes,ordered_loss_ten,blocks_generated, betas, n_features, index_to_delete):
+def get_common_indexes(weights_indexes,ordered_loss_ten,blocks_generated, betas, n_features, index_to_delete,saved_indexes):
     count=0
     current_weight = np.zeros(n_features)
-
     for i in ordered_loss_ten:
         weights_indexes[blocks_generated[i]] += betas[:,i]
         current_weight[blocks_generated[i]]+= betas[:,i]
         count+=1
+
     weights_indexes = np.abs(weights_indexes)
     weights_indexes[index_to_delete]=0
     current_weight[index_to_delete]=0
@@ -394,7 +394,7 @@ def get_common_indexes_binning(ordered_loss_ten,blocks_generated, betas,dictlist
     return dictlist
 
 def get_common_indexes_binning_threshold(ordered_loss_ten,blocks_generated, betas,dictlist):
-    step = 100
+    step = 500
     for i in ordered_loss_ten:
         beta_indexes = blocks_generated[i]
         current_beta = betas[:,i]
@@ -403,10 +403,8 @@ def get_common_indexes_binning_threshold(ordered_loss_ten,blocks_generated, beta
             beta = current_beta[k]
             current_dict = dictlist[j]
             key = int(beta/step)
-            if key>=0:
-                key+=1
-            if key<0:
-                key-=1
+            if key==0:
+                key=0.5
             if np.abs(beta)<=1:
                 if key in current_dict:
                     current_dict[key] -= 1
@@ -484,6 +482,5 @@ def center_test(X, y, X_mean, y_mean, X_std, normalize = True):
 def assign_weights(weights_ordered_indexes):
     mean_weigths = np.mean(weights_ordered_indexes)
     weights_ordered_indexes[weights_ordered_indexes<mean_weigths]=1
-    weights_ordered_indexes[weights_ordered_indexes>mean_weigths] = float(mean_weigths)/weights_ordered_indexes[weights_ordered_indexes>mean_weigths]
-
+    weights_ordered_indexes[weights_ordered_indexes>=mean_weigths]=float(mean_weigths)/(weights_ordered_indexes[weights_ordered_indexes>=mean_weigths])
     return weights_ordered_indexes
