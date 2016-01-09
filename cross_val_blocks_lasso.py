@@ -27,7 +27,12 @@ active_set = sys.argv[2]
 print("active_set", active_set)
 #active_set = sys.argv[1]
 r = np.random.RandomState(11)
+r1 = np.random.RandomState(12)
+r2 = np.random.RandomState(13)
+r4 = np.random.RandomState(15)
+final_active_set = 500
 active_set_samples = (int)(8./9.*n_samples_test)
+
 
 final_active_set = 500
 saved_indexes = np.array([],dtype = "int64")
