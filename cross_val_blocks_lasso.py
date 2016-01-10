@@ -23,8 +23,8 @@ print(sys.argv[1])
 sys.argv[1:] = [int(x) for x in sys.argv[1:]]
 num_blocks = sys.argv[1]
 print("num_blockd", num_blocks)
-active_set = sys.argv[2]
-print("active_set", active_set)
+max_set = sys.argv[2]
+print("active_set", max_set)
 #active_set = sys.argv[1]
 r = np.random.RandomState(11)
 r1 = np.random.RandomState(12)
@@ -62,7 +62,7 @@ while len(saved_indexes)<=final_active_set-len(deleted_indexes):
     coeffs = np.array([])
     corrs = np.array([])
 
-    if len(saved_indexes)+40>=150:
+    if len(saved_indexes)>=max_set:
             saved_indexes = np.array([],dtype = "int64")
     if len(saved_indexes)>0:
         if iter==1:
