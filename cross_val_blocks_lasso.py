@@ -130,4 +130,4 @@ while len(saved_indexes)<=final_active_set-len(deleted_indexes):
     num_informative_list.append(num_informative)
 
     iter+=1
-    np.savez("cross_val_blocks_"+str(num_blocks)+"active_set"+ str(final_active_set)+"dynamic_set_lasso_reduced.npz", saved_indexes_list = saved_indexes_list, mses = mses, num_informative_list = num_informative_list, weights_list = weights_list)
+    np.savez("cross_val_blocks_"+str(num_blocks)+"active_set"+ str(final_active_set)+"dynamic_set_lasso_reduced"+ str(max_set)+".npz", saved_indexes_list = saved_indexes_list, mses = mses, num_informative_list = num_informative_list, weights_list = weights_list)
