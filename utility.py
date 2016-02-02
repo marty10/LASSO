@@ -1,18 +1,31 @@
+import math
+from scipy.sparse import coo_matrix, csr_matrix
 from scipy.stats import pearsonr
 from sklearn.metrics import mean_squared_error, r2_score
 import numpy as np
 
 
-def generate_samples_dynamic_set(num_blocks, n_features, r,saved_indexes,r1, index_to_delete):
+def generate_samples_dynamic_set(num_blocks, n_features, r,saved_indexes,r1, index_to_delete, min, max,active_set,max_active_set):
     current_lenght = len(saved_indexes)
-    if current_lenght+40<=n_features-len(index_to_delete):
-        start = current_lenght+30
-        end = current_lenght+40
+    diff = max-min
+    if active_set!=0:
+        min= np.abs(active_set-current_lenght)+1
+        max = min+diff
+    if current_lenght+max<=n_features-len(index_to_delete):
+        start = current_lenght+min
+        end = current_lenght+max
     else:
         end = n_features-len(index_to_delete)+1
         start = end-1
-    gen_vect_1 = np.arange(start,end)
-    active_set = r1.choice(gen_vect_1, 1)[0]
+    if current_lenght>=active_set:
+        active_set = r1.choice(np.arange(start,end), 1, replace=False)[0]
+    #active_set = 100
+    if active_set>max_active_set:
+        active_set = max_active_set
+    binom_coeff = binomialCoefficient(n_features,active_set)
+    if binom_coeff<num_blocks:
+        print("###########################################coef binomiale", binom_coeff)
+        num_blocks=binom_coeff
     print("active_set", active_set)
     blocks_generated = np.empty([num_blocks, active_set], dtype = 'int64')
     gen_vect = np.arange(0,n_features)
@@ -26,7 +39,7 @@ def generate_samples_dynamic_set(num_blocks, n_features, r,saved_indexes,r1, ind
         rand_vect = r.choice(gen_vect,active_set-len(saved_indexes), replace = False)
         rand_vect = np.append(rand_vect,saved_indexes)
         blocks_generated[i,:] = rand_vect
-    return blocks_generated
+    return blocks_generated,active_set,num_blocks
 
 
 def generate_samples(num_blocks, n_features, active_set,r,saved_indexes,deleted_indexes):
@@ -72,7 +85,7 @@ def get_current_samples(XTrain, blocks_generated_i):
 def compute_mse(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest):
     model.fit(x_train_current_tmp, YTrain)
     y_pred_test = model.predict(x_test_current_tmp)
-    new_loss = r2_score(YTest, y_pred_test)
+
     new_loss = mean_squared_error(YTest,y_pred_test)
     beta = model.coef_
     beta = beta.reshape([len(beta),1])
@@ -144,7 +157,6 @@ def get_common_indexes(weights_indexes,ordered_loss_ten,blocks_generated, betas,
         weights_indexes[blocks_generated[i]] += betas[:,i]
         current_weight[blocks_generated[i]]+= betas[:,i]
         count+=1
-
     weights_indexes = np.abs(weights_indexes)
     weights_indexes[index_to_delete]=0
     current_weight[index_to_delete]=0
@@ -461,6 +473,7 @@ def get_common_key(x):
         i+=1
     return keys
 
+
 def compute_data(y,x,keys):
     n_samples = len(x)
     X = np.zeros([n_samples,len(keys)])
@@ -470,17 +483,30 @@ def compute_data(y,x,keys):
     return X,y
 
 
-def center_test(X, y, X_mean, y_mean, X_std, normalize = True):
-    X = X.astype(X_mean.dtype)
-    X -= X_mean
-    if normalize:
-        X /= X_std
-    y = y - y_mean
-    return X,y
-
-
 def assign_weights(weights_ordered_indexes):
     mean_weigths = np.mean(weights_ordered_indexes)
     weights_ordered_indexes[weights_ordered_indexes<mean_weigths]=1
-    weights_ordered_indexes[weights_ordered_indexes>=mean_weigths]=float(mean_weigths)/(weights_ordered_indexes[weights_ordered_indexes>=mean_weigths])
+    weights_ordered_indexes[weights_ordered_indexes>=mean_weigths] = float(mean_weigths)/(weights_ordered_indexes[weights_ordered_indexes>=mean_weigths])
     return weights_ordered_indexes
+
+def assign_weights_ordered(weights_ordered_indexes,active_set):
+     weights_ordered_indexes[:active_set] = 0
+     weights_ordered_indexes[active_set:] = 1
+     return weights_ordered_indexes
+
+def center_test(X, y, X_mean, y_mean, X_std, normalize = True):
+    X -= X_mean
+    if normalize:
+        X /= X_std
+        y = y - y_mean
+    return X,y
+
+
+def binomialCoefficient(p,s):
+    a = math.factorial(p)
+    b = math.factorial(s)
+    c = math.factorial(p-s)  # that appears to be useful to get the correct result
+    div = a // (b * c)
+
+    return div
+

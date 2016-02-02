@@ -6,20 +6,18 @@ from sklearn.base import BaseEstimator
 import numpy as np
 import timeit
 import numpy.linalg as li
-from sklearn.linear_model.base import center_data
 import scipy
-from FeatureMeasures import DistanceCorrelation
-from FeatureSelectionRules import FeatureSelectionRule, HSIC_Criterion, dist_corr_Criterion
-from OrderedSet import OrderedSet
+from utility import assign_weights
 
 
 class LASSOEstimator(BaseEstimator):
-    def __init__(self, algorithm, fit_intercept=True):
+    def __init__(self, algorithm, fit_intercept=False):
         self._estimator_type = "regressor"
         self.beta = 0
         self.lambda_lasso = 0
         self.algorithm = algorithm
         self.fit_intercept = fit_intercept
+
 
     def get_params(self, deep):  # solo quelli del costruttore
         return {"algorithm": self.algorithm}
@@ -28,7 +26,7 @@ class LASSOEstimator(BaseEstimator):
         self.lambda_lasso = params["alpha"]
         return self
 
-    def fit(self, x, y, verbose=True, **params):
+    def fit(self, x, y, verbose=False,**params):
         return self.algorithm.fit(x, y, self, verbose, **params)
 
     def predict(self, x):
@@ -46,7 +44,7 @@ class LASSOEstimator(BaseEstimator):
         else:
             raise TypeError('The matrix A must be numpy.ndarray or scipy.sparse.csr_matrix')
 
-        return 0.5 * np.sum((dot(x, self.beta) - y) ** 2.0) + self.lambda_lasso * np.sum(abs(self.beta))
+        return 0.5 * np.sum((dot(x, self.beta) - y) ** 2.0) #+ self.lambda_lasso * np.sum(abs(self.beta))
 
 
 class Algorithm:
@@ -58,38 +56,46 @@ class Algorithm:
 
 
 class Shooting(Algorithm):
-    def __init__(self, tol=1e-4, max_iter=100000000):
+    def __init__(self,  weights = None, warm_start = None,  tol=1e-4, max_iter=100000000):
         self.num_iter = 0
         self.t = 0
         self.tol = tol
         self.max_iter = max_iter
+        self.weights = weights
+        self.warm_start = warm_start
 
-    def fit(self, x, y, model, verbose, **params):
-        lasso_lambda = model.lambda_lasso
+    def fit(self, x, y, model, verbose ,**params):
+        if self.weights == None:
+            self.weights = np.ones(x.shape[1])
+        n_samples = x.shape[0]
+        lasso_lambda = model.lambda_lasso*self.weights*n_samples
+        assert(len(lasso_lambda) == x.shape[1])
+        #print("current lambda", model.lambda_lasso)
+
+
         t_1 = timeit.default_timer()
         mse = linear_model.LinearRegression(fit_intercept=False)
         mse.fit(x, y)
 
         model.beta = mse.coef_
+        #model.beta = self.warm_start
         XY = np.dot(x.transpose(), y)
         X2 = np.dot(x.transpose(), x)
         X2B = np.dot(X2, model.beta)
-
         history = None
         if verbose:
             print(' iter | loss ')
             history = [0.0] * self.max_iter
-        for it in xrange(self.max_iter):
+        for it in range(self.max_iter):
             beta_old = np.copy(model.beta)
             for j in range(len(model.beta)):
                 beta_j = model.beta[j]
-                # if beta_j != 0:  #####126000 vs 138
                 x_j2 = X2[j, j]
-                s_j = XY[j] - X2B[j] + x_j2 * beta_j
-                if s_j - lasso_lambda > 0:
-                    beta_j = (s_j - lasso_lambda) / x_j2
-                elif s_j + lasso_lambda < 0:
-                    beta_j = (s_j + lasso_lambda) / x_j2
+                s_j = 2*(XY[j] - X2B[j] + x_j2 * beta_j)
+                if s_j - lasso_lambda[j] > 0:
+                    beta_j = (s_j - lasso_lambda[j]) / 2*x_j2
+                elif s_j + lasso_lambda[j] < 0:
+                    beta_j = (s_j + lasso_lambda[j]) / 2*x_j2
                 else:
                     beta_j = 0
                 model.beta[j] = beta_j
@@ -106,7 +112,7 @@ class Shooting(Algorithm):
 
 
 class ADMM(Algorithm):
-    def __init__(self, rho=2.0, alpha=1.0,
+    def __init__(self, rho=0.1, alpha=1.0,
                  max_iter=100000000, abs_tol=1e-6, rel_tol=1e-4):
         self.rho = rho  # step size
         self.alpha = alpha  # over relaxation parameter
@@ -118,11 +124,9 @@ class ADMM(Algorithm):
     def fit(self, X, y, model, verbose, **params):
         global dot_prod, lin_solve, vec_norm
         if isinstance(X, np.ndarray):
-            mat_prod = np.dot
             dot_prod = np.dot
             lin_solve = np.linalg.solve
         elif isinstance(X, scipy.sparse.csr_matrix):
-            mat_prod = lambda X, x: scipy.sparse.csr_matrix.dot(X, x)
             dot_prod = lambda x, y: scipy.sparse.csr_matrix.dot(x, y).ravel()
             lin_solve = lambda X, x: scipy.sparse.linalg.gmres(X, x)[0]
         else:
@@ -130,7 +134,6 @@ class ADMM(Algorithm):
         n, p = X.shape
 
         xTy = dot_prod(X.T, y)
-        x = np.zeros(p)
         z = np.zeros(p)
         u = np.zeros(p)
 
@@ -139,9 +142,9 @@ class ADMM(Algorithm):
         if verbose:
             print(' iter | loss ')
             history = [0.0] * self.max_iter
-        for it in xrange(self.max_iter):
+        for it in range(self.max_iter):
             # x-update
-            q = xTy + self.rho * z - u  # temporary value
+            q = xTy + self.rho * (z - u)  # temporary value
 
             if n >= p:  # if skinny
                 x = lin_solve(U, lin_solve(L, q))
@@ -167,13 +170,14 @@ class ADMM(Algorithm):
             # eps_dual = np.sqrt(d) * self.abs_tol + self.rel_tol * li.norm(self.rho * u)
 
             # if (r_norm < eps_pri) and (s_norm < eps_dual):
-            if sum(abs(z)) == 0 or sum(abs(z_old - z)) / sum(abs(z)) < self.rel_tol:
-                break
+
             model.beta = z
             if verbose:
                 history[it] = model.evaluate_loss(X, y)
                 print(' %3d  | %.8f ' % (it + 1, history[it]))
                 # anyway
+            if sum(abs(z)) == 0 or sum(abs(z_old - z)) / sum(abs(z)) < self.rel_tol:
+                break
         model.beta = z
 
     def factor(self, X, rho):
@@ -264,114 +268,269 @@ class FISTA(Algorithm):
         '''
         return np.maximum(0.0, x - thr) - np.maximum(0.0, -x - thr)
 
-
-class modifiedShooting(Algorithm):
-    def __init__(self, feature_measure, tol=1e-4, max_iter=10000000):
+class ShootingModified(Algorithm):
+    def __init__(self,  weights = None, warm_start = None,  tol=1e-6, max_iter=100000000):
         self.num_iter = 0
         self.t = 0
         self.tol = tol
         self.max_iter = max_iter
-        self.feature_measure = feature_measure
-        # self.lambda_max = lambda_max
+        self.weights = weights
+        self.warm_start = warm_start
 
-    def fit(self, x, y, model, verbose=False, **params):
-        print("START")
-        lasso_lambda = model.lambda_lasso
+    def fit(self, x, y, model, verbose ,**params):
+        if self.weights == None:
+            self.weights = np.ones(x.shape[1])
+        n_samples = x.shape[0]
+        lasso_lambda = model.lambda_lasso*self.weights*n_samples
+        assert(len(lasso_lambda) == x.shape[1])
+        print("current lambda", model.lambda_lasso)
 
+
+        t_1 = timeit.default_timer()
         mse = linear_model.LinearRegression(fit_intercept=False)
         mse.fit(x, y)
+
         model.beta = mse.coef_
-
-        print("Beta initialization done")
-        t_1 = timeit.default_timer()
-        feat_meas = self.feature_measure.compute_measures(x,y)
-
-        print("measure computed", timeit.default_timer() - t_1)
-
-        active_set = OrderedSet()
-        t_3 = timeit.default_timer()
-
-
+        #model.beta = self.warm_start
         XY = np.dot(x.transpose(), y)
         X2 = np.dot(x.transpose(), x)
-        active_beta = np.zeros(x.shape[1])
-
-        active_set = self.feature_measure.apply_wrapper_rule(feat_meas, model.beta, active_set)
-
-        active_beta[list(active_set)] = model.beta[list(active_set)]
-        t_2 = timeit.default_timer()
-        print("tempo criterion", t_2 - t_3)
-
-        X2B = np.dot(X2, active_beta)
-
+        X2B = np.dot(X2, model.beta)
 
         history = None
         if verbose:
             print(' iter | loss ')
             history = [0.0] * self.max_iter
-
         for it in range(self.max_iter):
-            beta_old = np.copy(active_beta)
-            for j in active_set:
-                beta_j = active_beta[j]
-
+            beta_old = np.copy(model.beta)
+            for j in range(len(model.beta)):
+                beta_j = model.beta[j]
                 x_j2 = X2[j, j]
-                s_j = XY[j] - X2B[j] + x_j2 * beta_j
-                if s_j - lasso_lambda > 0:
-                    beta_j = (s_j - lasso_lambda) / x_j2
-                elif s_j + lasso_lambda < 0:
-                    beta_j = (s_j + lasso_lambda) / x_j2
+                s_j = 2*(XY[j] - X2B[j] + x_j2 * beta_j)
+                if s_j - lasso_lambda[j] > 0:
+                    beta_j = (s_j - lasso_lambda[j]) / 2*x_j2
+                elif s_j + lasso_lambda[j] < 0:
+                    beta_j = (s_j + lasso_lambda[j]) / 2*x_j2
                 else:
                     beta_j = 0
                 model.beta[j] = beta_j
-                active_beta[j] = beta_j
-                X2B += X2[:, j] * (active_beta[j] - beta_old[j])
-            # if it % 1 == 0 and verbose:
-            if sum(abs(model.beta)) == 0 or sum(abs(beta_old - model.beta)) / sum(abs(model.beta)) < self.tol:
-                print("features usate: ", active_set)
-                n_informative_zero = [a for a in active_set if a <= 1000 or 3000<=a<=4000]
-                print(len(n_informative_zero))
-                break
-            if verbose:
+                X2B += X2[:, j] * (model.beta[j] - beta_old[j])
+            if it % 100 == 0 and verbose:
                 history[it] = model.evaluate_loss(x, y)
-                if it%100==0:
-                    print(' %3d  | %.8f ' % (it + 1, history[it]))
-                diff = 1
-                if it>=1:
-                    diff = abs(history[it]-history[it-1])
-            j_maxes, active_set = self.feature_measure.apply_wrapper_rule1(feat_meas, model.beta, active_set, diff)
-            new_indexes = j_maxes-active_set
-            if len(new_indexes)!=0:
-                for s in new_indexes:
-                    active_set.add(s)
-                active_beta[list(new_indexes)] = model.beta[list(new_indexes)]
-                product_col = np.sum(X2[:, list(new_indexes)]*active_beta[list(new_indexes)].transpose(),axis = 1)
-                X2B += product_col#X2[:, list(new_indexes)] * (active_beta[list(new_indexes)])
-                print("set:", len(active_set))
-            #if len(active_set) == 200:
-                #n_informative_zero = [a for a in active_set if a <= 100 or 500<=a<=600]
-                #print("numero_informative", len(n_informative_zero))
+                print(' %3d  | %.8f ' % (it + 1, history[it]))
+            if sum(abs(model.beta)) == 0 or sum(abs(beta_old - model.beta)) / sum(abs(model.beta)) < self.tol:
+                break
 
         t_2 = timeit.default_timer() - t_1
         self.t = t_2
         self.num_iter = it
 
-    def dpp_rule(self, x, y, model, X2B, X2, beta_old):
-        p = x.shape[1]
-        lambda_lasso_max = np.empty([p])
-        XBeta = np.dot(x, model.beta)
-        for j in range(p):
-            lambda_lasso_max[j] = abs(np.dot(x[:, j].transpose(), y - XBeta))
-            print("lambda_lasso_max", lambda_lasso_max[j])
-            if lambda_lasso_max[j] < self.lambda_max - li.norm(x[:, j]) * li.norm(y) * (
-                        self.lambda_max - model.lambda_lasso) / model.lambda_lasso:
-                model.beta[j] = 0
-                print("", self.lambda_max - li.norm(x[:, j]) * li.norm(y) * (
-                    self.lambda_max - model.lambda_lasso) / model.lambda_lasso)
-                X2B += X2[:, j] * (model.beta[j] - beta_old[j])
+class ShootingEnet(Algorithm):
+    def __init__(self,  weights = None, warm_start = None,  alpha = 0.5, tol=1e-4, max_iter=10000):
+        self.num_iter = 0
+        self.t = 0
+        self.tol = tol
+        self.max_iter = max_iter
+        self.weights = weights
+        self.warm_start = warm_start
+        self.alpha = alpha
 
-                # def estimate_lambda_max(self,x,y,XBeta):
-                #      p = x.shape[1]
-                #      for j in range(p):
-                #          """"""
-                # lambda_lasso_max[j] = abs(np.dot(x[:, j].transpose(), y - XBeta))
+    def fit(self, x, y, model, verbose ,**params):
+        if self.weights == None:
+            self.weights = np.ones(x.shape[1])
+        n_samples = x.shape[0]
+        lasso_lambda = model.lambda_lasso*self.weights*n_samples
+        assert(len(lasso_lambda) == x.shape[1])
+        print("current lambda", model.lambda_lasso)
+
+
+        t_1 = timeit.default_timer()
+        mse = linear_model.LinearRegression(fit_intercept=False)
+        mse.fit(x, y)
+
+        model.beta = mse.coef_
+        #model.beta = self.warm_start
+        XY = np.dot(x.transpose(), y)
+        X2 = np.dot(x.transpose(), x)
+        X2B = np.dot(X2, model.beta)
+
+        history = None
+
+        if verbose:
+            print(' iter | loss ')
+            history = [0.0] * self.max_iter
+        for it in range(self.max_iter):
+            beta_old = np.copy(model.beta)
+            for j in range(len(model.beta)):
+                beta_j = model.beta[j]
+                x_j2 = X2[j, j]
+                s_j = 2*(XY[j] - X2B[j] + x_j2 * beta_j)
+                if s_j - lasso_lambda[j]*self.alpha > 0:
+                    beta_j = (s_j - lasso_lambda[j]) / 2*x_j2+lasso_lambda[j]*(1-self.alpha)
+                elif s_j + lasso_lambda[j]*self.alpha < 0:
+                    beta_j = (s_j + lasso_lambda[j]) / 2*x_j2+lasso_lambda[j]*(1-self.alpha)
+                else:
+                    beta_j = 0
+                model.beta[j] = beta_j
+                X2B += X2[:, j] * (model.beta[j] - beta_old[j])
+            if it % 10 == 0 and verbose:
+                history[it] = model.evaluate_loss(x, y)
+                print(' %3d  | %.8f ' % (it + 1, history[it]))
+            if sum(abs(model.beta)) == 0 or sum(abs(beta_old - model.beta)) / sum(abs(model.beta)) < self.tol:
+                break
+
+        t_2 = timeit.default_timer() - t_1
+        self.t = t_2
+        self.num_iter = it
+
+
+# class LARS(Algorithm):
+#     def __init__(self,  weights = None, warm_start = None,  alpha = 0.5, tol=1e-4, max_iter=10000):
+#         self.num_iter = 0
+#         self.t = 0
+#         self.tol = tol
+#         self.max_iter = max_iter
+#         self.weights = weights
+#         self.warm_start = warm_start
+#         self.alpha = alpha
+#
+#     def fit(self, X, y, **params):
+#         # n is the number of variables, p is the number of "predictors" or
+#         # basis vectors
+#
+#         # the predictors are assumed to be standardized and y is centered.
+#
+#         # in the example of the prostate data n would be the number
+#         # n = number of data points, p = number of predictors
+#         n,p = X.shape
+#
+#         # mu = regressed version of y sice there are no predictors it is initially the
+#         # zero vector
+#         mu = np.zeros(n)
+#
+#         # active set and inactive set - they should invariably be complements
+#         act_set = []
+#         inact_set = range(p)
+#
+#         k = 0
+#         vs = 0
+#         nvs = min(n-1,p)
+#
+#         beta = np.zeros((2*nvs,p))
+#
+#         maxiter = nvs * 8
+#
+#         # current regression coefficients and correlation with residual
+#         beta = np.zeros((p+1,p))
+#         corr = np.zeros((p+1,p))
+#
+#          # initial cholesky decomposition of the gram matrix
+#         # since the active set is empty this is the empty matrix
+#          R = zeros((0,0))
+#
+#         while vs < nvs and k < maxiter:
+#             print "new iteration: vs = ", vs, " nvs = ", nvs, " k = ", k
+#             print "mu.shape = ", mu.shape
+#             #print "mu = ", mu
+#
+#             # compute correlation with inactive set
+#             # and element that has the maximum correlation
+#         # add the variables one at a time
+#         for k in xrange(p):
+#             print "NEW ITERATION k = ", k, " active_set = ", act_set
+#
+#             # compute the current correlation
+#              c = dot(X.T, y - mu)
+#     -        #c = c.reshape(1,len(c))
+#     -        jia = argmax(abs(c[inact_set]))
+#     -        j = inact_set[jia]
+#     -        C = c[j]
+#
+#     -        print "predictor ", j, " max corr with w/ current residual: ", C
+#     -        print "adding ", j, " to active set"
+#     -
+#     -        print "R shape before insert: ", R.shape
+#     -
+#     +        print "current correlation = ", c
+#     +
+#     +        # store the result
+#     +        corr[k,:] = c
+#     +
+#     +        # choose the predictor with the maximum correlation and add it to the active
+#     +        # set
+#     +        jmax = inact_set[argmax(abs(c[inact_set]))]
+#     +        C = c[jmax]
+#     +
+#     +        print "iteration = ", k, " jmax = ", jmax, " C = ", C
+#     +
+#              # add the most correlated predictor to the active set
+#     -        R = cholinsert(R,X[:,j],X[:,act_set])
+#     -        act_set.append(j)
+#     -        inact_set.remove(j)
+#     -        vs += 1
+#     -
+#     -        print "R shape after insert ", R.shape
+#     +        R = cholinsert(R,X[:,jmax],X[:,act_set])
+#     +        act_set.append(jmax)
+#     +        inact_set.remove(jmax)
+#
+#     -        print "active set = ", act_set
+#     -        print "inactive set = ", inact_set
+#     -
+#              # get the signs of the correlations
+#              s = sign(c[act_set])
+#              s = s.reshape(len(s),1)
+#     -        #print "R.shape = ", R.shape
+#     -        #print "s.shape = ", s.shape
+#     -
+#     -        # move in the direction of the least squares solution
+#     +        print "sign = ", s
+#
+#     +        # move in the direction of the least squares solution restricted to the active
+#     +        # set
+#     +
+#              GA1 = solve(R,solve(R.T, s))
+#              AA = 1/sqrt(sum(GA1 * s))
+#              w = AA * GA1
+#     -
+#     -        # equiangular direction - this should be a unit vector
+#     -        print "X[:,act_set].shape = ",X[:,act_set].shape
+#     -        #print "w.shape = ",w.shape
+#     -
+#     +
+#     +        print "AA = ", AA
+#     +        print "w = ", w
+#     +
+#              u = dot(X[:,act_set], w).reshape(-1)
+#
+#     -        #print "norm of u = ", norm(u)
+#     -        #print "u.shape = ", u.shape
+#     +        print "norm of u = ", norm(u)
+#     +        print "u.shape = ", u.shape
+#
+#              # if this is the last iteration i.e. all variables are in the
+#              # active set, then set the step toward the full least squares
+#              # solution
+#     -        if vs == nvs:
+#     +        if k == p:
+#                  print "last variable going all the way to least squares solution"
+#                  gamma = C / AA
+#              else:
+#                  a = dot(X.T,u)
+#                  a = a.reshape((len(a),))
+#     +
+#                  tmp = r_[(C - c[inact_set])/(AA - a[inact_set]),
+#                           (C + c[inact_set])/(AA + a[inact_set])]
+#     +
+#                  gamma = min(r_[tmp[tmp > 0], array([C/AA]).reshape(-1)])
+#     +
+#     +        print "ITER k = ", k, ", gamma = ", gamma
+#
+#              mu = mu + gamma * u
+#
+#              if beta.shape[0] < k:
+#                  beta = c_[beta, zeros((beta.shape[0],))]
+#              beta[k+1,act_set] = beta[k,act_set] + gamma*w.T.reshape(-1)
+#     -
+#     -        k += 1
+#     +
+#     +    return beta, corr
