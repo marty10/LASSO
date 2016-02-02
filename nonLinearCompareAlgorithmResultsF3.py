@@ -22,8 +22,7 @@ transformation = F3()
 print("function", transformation)
 step = sys.argv[3]
 print("step", step)
-start = sys.argv[4]
-print("lambda start", start)
+
 
 verbose = True
 file = "nonLinearDataset/"+transformation.__class__.__name__+"/test"+transformation.__class__.__name__+"num_blocks_modified1000num_samples"+str(n_samples)+"n_features"+str(original_features)+"dynamic_set.npz"
@@ -105,7 +104,7 @@ indexes_to_extract = []
 ordered_indexes_div_zeros = []
 current_informatives = []
 
-alphas = np.linspace(start, 1, 100)
+alphas = np.linspace(0.001, 1, 100)
 parameters = {"alpha": alphas}
 
 for active_set in active_sets:
