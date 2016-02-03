@@ -103,7 +103,7 @@ indexes_to_extract = []
 ordered_indexes_div_zeros = []
 current_informatives = []
 
-alphas = np.linspace(0.001, end, 100)
+alphas = np.linspace(0.0000001, end, 100)
 parameters = {"alpha": alphas}
 
 for active_set in active_sets:
