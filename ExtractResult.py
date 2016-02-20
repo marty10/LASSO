@@ -10,6 +10,15 @@ class Result:
         self.data_file_name = data_file_name
         self.model_file_name = model_file_name
 
+    def extract_train_val(self):
+        file = np.load(self.data_file_name)
+        XTrain = file["XTrain_Val"]
+        YTrain = file["YTrain_Val"]
+        XVal = file["XVal"]
+        YVal = file["YVal_"]
+
+        return XTrain, YTrain, XVal, YVal
+
     def extract_data(self):
         file = np.load(self.data_file_name)
         XTrain = file["XTrain"]
@@ -19,14 +28,31 @@ class Result:
         mses = file["mses"]
         return XTrain, YTrain, XTest, YTest,mses
 
+    def extract_mse(self):
+        file = np.load(self.data_file_name)
+        mses = file["mses"]
+        return mses
+
+    def extract_train_test(self):
+        file = np.load(self.data_file_name)
+        XTrain = file["XTrain"]
+        YTrain = file["YTrain"]
+        XTest = file["XTest"]
+        YTest = file["YTest"]
+        return XTrain, YTrain, XTest, YTest
 
     def extract_active_sets_indexes_beta(self):
         file = np.load(self.data_file_name)
         active_sets = file["active_sets"]
+        ord_beta_div_zeros = file["ordered_indexes_div_zeros"]
         beta_div_zeros = file["beta_div_zeros"]
         indexes_to_extract = file["indexes_to_extract"]
-        real_beta_div_zeros = file["real_beta_div_zeros"]
-        return active_sets, beta_div_zeros, real_beta_div_zeros, indexes_to_extract
+        return active_sets, beta_div_zeros, ord_beta_div_zeros, indexes_to_extract
+
+    def extract_count_div_beta_zeros(self):
+        file = np.load(self.data_file_name)
+        count_div_beta_zeros = file["count_div_beta_zeros"]
+        return count_div_beta_zeros
 
     def extract_informative(self):
         file = np.load(self.data_file_name)
@@ -39,7 +65,7 @@ class Result:
         return weights
 
     def extract_dict(self):
-        file = np.load(self.data_file_name, encoding = "bytes")
+        file = np.load(self.data_file_name)
         dict_ = file["dict_"][()]
         return dict_
 

@@ -1,21 +1,38 @@
 import math
-from scipy.sparse import coo_matrix, csr_matrix
 from scipy.stats import pearsonr
-from sklearn.metrics import mean_squared_error, r2_score
+from sklearn import linear_model
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import numpy as np
 
+def compute_lasso(XTrain, YTrain, XTest, YTest, score):
+    lasso_cv = linear_model.LassoCV(fit_intercept=False,  max_iter=10000, n_jobs = -1)
+    lasso_cv.fit(XTrain,YTrain)
+    best_alpha = lasso_cv.alpha_
 
-def generate_samples_dynamic_set(num_blocks, n_features, r,saved_indexes,r1, index_to_delete, min, max,active_set,max_active_set):
+    model = linear_model.Lasso(fit_intercept=False,alpha=best_alpha)
+    new_loss,_,_ = compute_mse(model, XTrain, YTrain,XTest, YTest, score)
+
+    # beta_ordered = np.argsort(np.abs(beta[:,0]))[::-1]
+    # print("beta ordinati",beta_ordered)
+    #
+    # beta_ordered_values = beta[beta_ordered]
+    #
+    # print("beta",beta_ordered_values )
+    # print("loss corrente", new_loss)
+
+    return new_loss,_#, beta_ordered_values
+
+def generate_samples_dynamic_set(num_blocks, n_features, r,saved_indexes,r1, min, max,active_set,max_active_set):
     current_lenght = len(saved_indexes)
     diff = max-min
     if active_set!=0:
         min= np.abs(active_set-current_lenght)+1
         max = min+diff
-    if current_lenght+max<=n_features-len(index_to_delete):
+    if current_lenght+max<=n_features:
         start = current_lenght+min
         end = current_lenght+max
     else:
-        end = n_features-len(index_to_delete)+1
+        end = n_features+1
         start = end-1
     if current_lenght>=active_set:
         active_set = r1.choice(np.arange(start,end), 1, replace=False)[0]
@@ -26,15 +43,13 @@ def generate_samples_dynamic_set(num_blocks, n_features, r,saved_indexes,r1, ind
     if binom_coeff<num_blocks:
         print("###########################################coef binomiale", binom_coeff)
         num_blocks=binom_coeff
+    else:
+        num_blocks=1000
     print("active_set", active_set)
     blocks_generated = np.empty([num_blocks, active_set], dtype = 'int64')
     gen_vect = np.arange(0,n_features)
     gen_vect = np.delete(gen_vect, saved_indexes)
 
-    for i in index_to_delete:
-        gen_vect = np.delete(gen_vect, np.where(gen_vect==i)[0])
-    if len(index_to_delete)!=0:
-        print("indici cancellati",index_to_delete, "di lunghezza", len(index_to_delete))
     for i in range(0,num_blocks):
         rand_vect = r.choice(gen_vect,active_set-len(saved_indexes), replace = False)
         rand_vect = np.append(rand_vect,saved_indexes)
@@ -82,16 +97,21 @@ def get_current_samples(XTrain, blocks_generated_i):
     x_train_i =  XTrain[blocks_generated_i,:]
     return x_train_i
 
-def compute_mse(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest):
+def compute_mse(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest, score):
     model.fit(x_train_current_tmp, YTrain)
     y_pred_test = model.predict(x_test_current_tmp)
-
-    new_loss = mean_squared_error(YTest,y_pred_test)
+    if score=="mean_squared_error":
+        new_loss = mean_squared_error(YTest,y_pred_test)
+    else:
+        new_loss = r2_score(YTest,y_pred_test)#/np.abs(np.mean(y_pred_test))*np.abs(np.mean(YTest))
     beta = model.coef_
+    if x_train_current_tmp.shape[1]==1:
+        beta = np.array([beta])
     beta = beta.reshape([len(beta),1])
     #coeff = compute_mse_coefficient(y_pred_test, YTest)
-    corr = compute_corr(x_test_current_tmp, YTest, y_pred_test)
-    corr = corr.reshape([len(corr),1])
+    #corr = compute_corr(x_test_current_tmp, YTest, y_pred_test)
+    #corr = corr.reshape([len(corr),1])
+    corr = 1
     return new_loss, beta,np.abs(corr)
 
 
@@ -150,7 +170,7 @@ def get_common_indexes(weights_indexes,ordered_loss_ten,blocks_generated, betas)
         count+=1
     return np.abs(weights_indexes), np.sign(weights_indexes)
 
-def get_common_indexes(weights_indexes,ordered_loss_ten,blocks_generated, betas, n_features, index_to_delete,saved_indexes):
+def get_common_indexes(weights_indexes,ordered_loss_ten,blocks_generated, betas, n_features):
     count=0
     current_weight = np.zeros(n_features)
     for i in ordered_loss_ten:
@@ -158,8 +178,6 @@ def get_common_indexes(weights_indexes,ordered_loss_ten,blocks_generated, betas,
         current_weight[blocks_generated[i]]+= betas[:,i]
         count+=1
     weights_indexes = np.abs(weights_indexes)
-    weights_indexes[index_to_delete]=0
-    current_weight[index_to_delete]=0
     return weights_indexes, np.sign(current_weight)
 
 def get_common_indexes_threshold(weights_indexes,ordered_loss_ten,blocks_generated, betas,threshold):
@@ -242,7 +260,7 @@ def extract_chosen_indexes(saved_indexes, ordered_weights_indexes, values, chose
         i += 1
     return saved_indexes
 
-def extract_chosen_indexes_from_start(saved_indexes, ordered_weights_indexes,chosen_indexes,del_indexes):
+def extract_chosen_indexes_from_start(saved_indexes, ordered_weights_indexes,chosen_indexes):
     i = 0
     inserted_indexes = 0
     length = len(saved_indexes)
@@ -255,11 +273,8 @@ def extract_chosen_indexes_from_start(saved_indexes, ordered_weights_indexes,cho
             inserted_indexes += 1
         i += 1
     inters = np.intersect1d(old_saved_indexes, saved_indexes)
-    if len(inters)!=len(old_saved_indexes):
-        del_ind = np.array(list(set(old_saved_indexes)-set(inters)), dtype = "int64")
-        del_indexes[del_ind]+=1
 
-    return saved_indexes,del_indexes
+    return saved_indexes
 
 def extracte_chosen_indexes_beta_check(old_values, saved_indexes, ordered_weights_indexes, values, chosen_indexes):
     i = 0
@@ -490,16 +505,17 @@ def assign_weights(weights_ordered_indexes):
     return weights_ordered_indexes
 
 def assign_weights_ordered(weights_ordered_indexes,active_set):
-     weights_ordered_indexes[:active_set] = 0
-     weights_ordered_indexes[active_set:] = 1
+     weights_ordered_indexes[:active_set-1] = 0
+     weights_ordered_indexes[active_set-1:] = 1
      return weights_ordered_indexes
 
 def center_test(X, y, X_mean, y_mean, X_std, normalize = True):
-    X -= X_mean
+    X_copy = X.copy()
+    X_copy -= X_mean
     if normalize:
-        X /= X_std
-        y = y - y_mean
-    return X,y
+        X_copy /= X_std
+        y_copy = y - y_mean
+    return X_copy,y_copy
 
 
 def binomialCoefficient(p,s):
