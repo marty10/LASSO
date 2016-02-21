@@ -94,7 +94,7 @@ for i in range(n_features):
         for key in keys_sel:
             for j in indexes[beta_indexes]:
                 if j in dict_.get(key):
-                    print key
+                    print (key)
                     break
 
 
@@ -133,7 +133,7 @@ for i in range(n_features):
         for key in keys_sel:
             for j in indexes[beta_indexes]:
                 if j in dict_.get(key):
-                    print key
+                    print (key)
                     break
 
 
