@@ -34,7 +34,7 @@ index_mse = len(weights_data) - 1
 weights_data = weights_data[index_mse]
 weights = assign_weights(weights_data.copy())
 
-keys_ = np.array(dict_.keys()).astype("int64")
+keys_ = np.array(list(dict_.keys())).astype("int64")
 original_features = len(keys_)
 final_weights = np.zeros(original_features)
 
