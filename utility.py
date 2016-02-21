@@ -10,17 +10,9 @@ def compute_lasso(XTrain, YTrain, XTest, YTest, score):
     best_alpha = lasso_cv.alpha_
 
     model = linear_model.Lasso(fit_intercept=False,alpha=best_alpha)
-    new_loss,_,_ = compute_mse(model, XTrain, YTrain,XTest, YTest, score)
+    new_loss,beta,_ = compute_mse(model, XTrain, YTrain,XTest, YTest, score)
 
-    # beta_ordered = np.argsort(np.abs(beta[:,0]))[::-1]
-    # print("beta ordinati",beta_ordered)
-    #
-    # beta_ordered_values = beta[beta_ordered]
-    #
-    # print("beta",beta_ordered_values )
-    # print("loss corrente", new_loss)
-
-    return new_loss,_#, beta_ordered_values
+    return new_loss,beta
 
 def generate_samples_dynamic_set(num_blocks, n_features, r,saved_indexes,r1, min, max,active_set,max_active_set):
     current_lenght = len(saved_indexes)

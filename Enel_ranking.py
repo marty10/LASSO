@@ -80,7 +80,7 @@ for i in range(n_features):
         print("----------------------------")
         print("iteration ", i)
 
-        new_loss, _ = compute_lasso(XTrain_current, YTrain, XTest_current, YVal, score)
+        new_loss, beta = compute_lasso(XTrain_current, YTrain, XTest_current, YVal, score)
 
         losses.append(new_loss)
         beta = np.abs(beta[:, 0])
