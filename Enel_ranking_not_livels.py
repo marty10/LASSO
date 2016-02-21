@@ -56,7 +56,6 @@ ordered_indexes = np.argsort(weights_data)[::-1]
 losses = []
 
 new_loss, _ = compute_lasso(XTrain, YTrain, XVal, YVal, score)
-
 print("new_loss", new_loss)
 
 losses = []
