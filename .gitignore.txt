@@ -1,4 +1,0 @@
-*.npz
-*.pkl
-*.pdf
-nonLinearDataset/*

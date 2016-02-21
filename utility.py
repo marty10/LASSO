@@ -1,8 +1,43 @@
 import math
 from scipy.stats import pearsonr
 from sklearn import linear_model
+from sklearn.grid_search import GridSearchCV
+from sklearn.linear_model.coordinate_descent import _alpha_grid
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import numpy as np
+
+
+def compute_weightedLASSO(lasso,XTrain_current,YTrain, XTest_current, YTest,scoring, score_f, verbose ):
+
+    alphas = _alpha_grid(XTrain_current, YTrain, fit_intercept=False)
+    parameters = {"alpha": alphas}
+
+    clf = GridSearchCV(lasso, parameters, fit_params = {"verbose" : False}, cv=3, scoring=scoring)
+    clf.fit(XTrain_current, YTrain)
+    lambda_opt = clf.best_params_
+
+    print("best lambda", lambda_opt)
+
+    lasso.set_params(**lambda_opt)
+    lasso.fit(XTrain_current,YTrain)
+
+    y_pred_train = lasso.predict(XTrain_current)
+    mse_train = score_f(YTrain, y_pred_train)
+    if verbose:
+        print("mse_train "+lasso.__class__.__name__,mse_train)
+
+    y_pred_test = lasso.predict(XTest_current)
+    mse_test = score_f(YTest, y_pred_test)
+    if verbose:
+        print ("mse_test weights "+lasso.__class__.__name__,mse_test)
+    return mse_test, lasso.beta
+
+def get_beta_div_zeros(beta):
+    beta_ord = np.sort(beta)[::-1]
+    beta_ordered = beta_ord[beta_ord >= 0.1]
+    len_div_zero = len(beta_ordered)
+    beta_indexes = np.argsort(np.abs(beta))[::-1][:len_div_zero]
+    return beta_indexes, beta_ordered
 
 def compute_lasso(XTrain, YTrain, XTest, YTest, score):
     lasso_cv = linear_model.LassoCV(fit_intercept=False,  max_iter=10000, n_jobs = -1)
@@ -10,8 +45,7 @@ def compute_lasso(XTrain, YTrain, XTest, YTest, score):
     best_alpha = lasso_cv.alpha_
 
     model = linear_model.Lasso(fit_intercept=False,alpha=best_alpha)
-    new_loss,beta,_ = compute_mse(model, XTrain, YTrain,XTest, YTest, score)
-
+    new_loss,beta = compute_mse(model, XTrain, YTrain,XTest, YTest, score)
     return new_loss,beta
 
 def generate_samples_dynamic_set(num_blocks, n_features, r,saved_indexes,r1, min, max,active_set,max_active_set):
@@ -92,20 +126,26 @@ def get_current_samples(XTrain, blocks_generated_i):
 def compute_mse(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest, score):
     model.fit(x_train_current_tmp, YTrain)
     y_pred_test = model.predict(x_test_current_tmp)
+
     if score=="mean_squared_error":
         new_loss = mean_squared_error(YTest,y_pred_test)
+    elif score== "mean_absolute_error":
+        new_loss = mean_absolute_error(YTest,y_pred_test)
     else:
-        new_loss = r2_score(YTest,y_pred_test)#/np.abs(np.mean(y_pred_test))*np.abs(np.mean(YTest))
+        new_loss = r2_score(YTest,y_pred_test)
     beta = model.coef_
     if x_train_current_tmp.shape[1]==1:
         beta = np.array([beta])
     beta = beta.reshape([len(beta),1])
-    #coeff = compute_mse_coefficient(y_pred_test, YTest)
-    #corr = compute_corr(x_test_current_tmp, YTest, y_pred_test)
-    #corr = corr.reshape([len(corr),1])
-    corr = 1
-    return new_loss, beta,np.abs(corr)
 
+    return new_loss, beta
+
+def print_features_active(keys_sel, indexes, dict_):
+    for key in keys_sel:
+        for i in indexes:
+            if i in dict_.get(key):
+                print key
+                break
 
 def compute_mse_binary(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest):
     model.fit(x_train_current_tmp, YTrain)
