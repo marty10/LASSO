@@ -144,7 +144,7 @@ def print_features_active(keys_sel, indexes, dict_):
     for key in keys_sel:
         for i in indexes:
             if i in dict_.get(key):
-                print key
+                print (key)
                 break
 
 def compute_mse_binary(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest):
