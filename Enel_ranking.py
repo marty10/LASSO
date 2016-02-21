@@ -8,7 +8,7 @@ from LASSOModel import Shooting, LASSOEstimator
 from utility import get_current_data, assign_weights, compute_mse, assign_weights_ordered, compute_lasso
 import matplotlib.pyplot as plt
 
-file = "Enel_2014/Enel_cross_val_blocks.npz"
+file = "ENEL_2014/Enel_cross_val_blocks.npz"
 results = Result(file, "lasso")
 
 dict_ = results.extract_dict()
