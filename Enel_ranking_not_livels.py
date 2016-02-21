@@ -61,17 +61,13 @@ print("new_loss", new_loss)
 
 losses = []
 n_features = XTrain.shape[1]
-lasso_cv = linear_model.LassoCV(fit_intercept=False, max_iter=100000, n_jobs=-1)
 
+weights_livel = np.array(weights_livel)
 for i in range(n_features):
 
         ###compute LASSO
-        indexes = np.array([], dtype="int64")
-        for k in ordered_final_weights[:i+1]:
-            indexes = np.union1d(indexes,dict_.get(k))
+        indexes = ordered_final_weights[:i+1].astype("int64")
 
-
-        indexes = indexes.astype("int64")
         XTrain_current, XTest_current = get_current_data(XTrain, XVal, indexes)
 
         print("----------------------------")
@@ -84,7 +80,7 @@ for i in range(n_features):
         beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
         keys_sel = ordered_final_weights[:i+1]
-        print_features_active(keys_sel, indexes[beta_indexes], dict_)
+        print(weights_livel[beta_indexes])
 
         weights_ = weights[indexes]
 
@@ -97,5 +93,5 @@ for i in range(n_features):
         beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
         print(indexes[beta_indexes])
-        print_features_active(keys_sel, indexes[beta_indexes], dict_)
+        print(weights_livel[beta_indexes])
 
