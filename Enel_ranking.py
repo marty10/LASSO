@@ -64,7 +64,7 @@ for i in range(n_features):
         ###compute LASSO
         indexes = []
         for k in ordered_final_weights[:i + 1]:
-            indexes = np.union1d(indexes, dict_.get(k))
+            indexes = np.union1d(indexes, (list)(dict_.get(k)))
 
         XTrain_current, XTest_current = get_current_data(XTrain, XVal, indexes)
 
