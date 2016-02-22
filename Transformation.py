@@ -29,9 +29,9 @@ class EnelTransformation(Transformation):
             start_dim = x_transf.shape[1]
             for j in range(i,i+12):
                 if x_transf.shape[1]==0:
-                    x_transf = np.power(np.sqrt(np.power(x[:,j],2)+np.power(x[:,j+12],2)),3).reshape([n,1])
+                    x_transf = np.power(np.sqrt(np.power(x[:,j],2)+np.power(x[:,j+12],2)).reshape([n,1]),3)
                 else:
-                    x_transf = np.concatenate((x_transf,np.power(np.sqrt(np.power(x[:,j],2)+np.power(x[:,j+12],2)),3).reshape([n,1])), axis = 1)
+                    x_transf = np.concatenate((x_transf,np.power(np.sqrt(np.power(x[:,j],2)+np.power(x[:,j+12],2)).reshape([n,1]))), axis = 1)
             current_dim = x_transf.shape[1]
             dict_[key] = np.append(dict_[key], np.arange(start_dim,current_dim))
             key+=1
@@ -166,17 +166,6 @@ class AllTransformation(Transformation):
             count+=1
         x_transf[:, m*(self.degree)*2+m: m*(self.degree)*2+2*m] = np.sin(x)
         x_transf[:, m*(self.degree)*2+2*m: m*(self.degree)*2+3*m] = np.exp2(x)
-        return x_transf
-
-class PolinomialKernel(Transformation):
-    def __init__(self, degree):
-        self.degree = degree
-
-    def transform(self,x):
-        n,m = x.shape
-        K = np.zeros([m,m])
-        for d in range(self.degree):
-            x_transf[:,m*(d):m*(d)+m] = np.power(x,d+1)
         return x_transf
 
 
@@ -425,29 +414,4 @@ class F5(Transformation):
                     dict_[key] = np.append(dict_[key], key+current_dim).astype("int64")
 
         return x_transf,new_informatives,dict_#[0,1]
-
-
-class Gaussian(Transformation):
-    def __init__(self, sigma):
-        self.sigma = sigma
-
-    def transform(self,x):
-        n,m = x.shape
-        dict_ = dict.fromkeys(np.arange(0,m),np.array([]).astype("int64"))
-        x_transf = np.array([[]])
-
-        for l in range(0,m):
-            x_l = x[:,l]
-            start_dim = x_transf.shape[1]
-            for k in range(l+1,m):
-                x_k = x[:,k]
-                if x_transf.shape[1]==0:
-                    x_transf = np.exp(-self.sigma*(x_l-x_k)/ 2).reshape([n,1])
-                else:
-                    x_transf = np.concatenate((x_transf,np.exp(-self.sigma*(x_l-x_k)/ 2).reshape([n,1])), axis = 1)
-                current_dim = x_transf.shape[1]
-                dict_[k] = np.append(dict_[k],current_dim-1)
-            final_dim = x_transf.shape[1]
-            dict_[l] = np.append(dict_[l],np.arange(start_dim,final_dim))
-        return x_transf
 
