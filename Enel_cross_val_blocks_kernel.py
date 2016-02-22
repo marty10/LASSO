@@ -10,7 +10,7 @@ from utility import generate_samples_dynamic_set, get_current_data, compute_mse,
 
 
 ####load data
-file = "Enel_2014/Enel_dataset.npz"
+file = "ENEL_2014/Enel_dataset.npz"
 results = Result(file, "lasso")
 
 XTrain, YTrain, XTest, YTest = results.extract_train_test()
