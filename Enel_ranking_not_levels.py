@@ -4,9 +4,8 @@ import numpy as np
 from LASSOModel import Shooting, LASSOEstimator
 from utility import get_current_data, assign_weights, compute_mse, assign_weights_ordered, compute_lasso, \
     get_beta_div_zeros, print_features_active, compute_weightedLASSO
-import matplotlib.pyplot as plt
 
-file_name = "Enel_cross_val_blocks_kernel"
+file_name = "Enel_cross_val_blocks"
 ext = ".npz"
 file = "ENEL_2014/"+file_name+ext
 results = Result(file, "lasso")
@@ -35,44 +34,44 @@ weights_data = weights_data[index_mse]
 weights = assign_weights(weights_data.copy())
 
 keys_ = np.array(list(dict_.keys())).astype("int64")
-original_features = len(keys_)
-final_weights = np.zeros(original_features)
 
-for key in keys_:
-    final_weights[key] += np.sum(weights_data[dict_.get(key).astype("int64")])
 
-ordered_final_weights = np.argsort(final_weights)[::-1]
+ordered_final_weights = np.argsort(weights_data)[::-1]
+values = list(dict_.values())
+
+weights_livel = []
+for w in ordered_final_weights:
+    key = np.where(values==w)[0][0]
+    a = values[key]
+    level = np.where(values[key]==w)[0][0]
+    weights_livel.append([key, level])
+
 if verbose:
     print("-------------")
-    print("ranking of the featues:", ordered_final_weights)
+    print("ranking of the featues:", weights_livel)
     print("-------------")
 ordered_indexes = np.argsort(weights_data)[::-1]
 losses = []
 
-
 new_loss, _ = compute_lasso(XTrain, YTrain, XVal, YVal, score)
-
 print("new_loss", new_loss)
 
 losses = []
 indexes_tot = []
-n_features = len(ordered_final_weights)
+n_features = XTrain.shape[1]
 
-
+weights_livel = np.array(weights_livel)
 for i in range(n_features):
 
         ###compute LASSO
-        indexes = []
-
-        for k in ordered_final_weights[:i + 1]:
-            indexes = np.union1d(indexes, dict_.get(k))
-
-        indexes = np.array(indexes).astype("int64")
+        indexes = ordered_final_weights[:i+1].astype("int64")
         indexes_tot.append(indexes)
+
         XTrain_current, XTest_current = get_current_data(XTrain, XVal, indexes)
 
         print("----------------------------")
         print("iteration ", i)
+
 
         keys_sel = ordered_final_weights[:i+1]
 
@@ -88,8 +87,9 @@ for i in range(n_features):
         beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
         print(indexes[beta_indexes])
-        print_features_active(keys_sel, indexes[beta_indexes], dict_)
+        print(weights_livel[beta_indexes])
 
-        np.savez(file_name+"ranking"+ext, mses = losses, indexes = indexes_tot)
+        np.savez(file_name+"_ranking_not_levels"+ext, mses = losses, indexes = indexes_tot)
 
 print("min mse", np.min(losses), "with:", indexes_tot[np.argmin(losses)])
+

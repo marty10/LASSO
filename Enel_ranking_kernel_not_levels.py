@@ -1,6 +1,3 @@
-from sklearn import linear_model
-from sklearn.grid_search import GridSearchCV
-from sklearn.linear_model.coordinate_descent import _alpha_grid
 from sklearn.metrics import r2_score, mean_squared_error
 from ExtractResult import Result
 import numpy as np
@@ -9,7 +6,9 @@ from utility import get_current_data, assign_weights, compute_mse, assign_weight
     get_beta_div_zeros, print_features_active, compute_weightedLASSO
 import matplotlib.pyplot as plt
 
-file = "ENEL_2014/Enel_cross_val_blocks.npz"
+file_name = "Enel_cross_val_blocks_kernel"
+ext = ".npz"
+file = "ENEL_2014/"+file_name+ext
 results = Result(file, "lasso")
 
 dict_ = results.extract_dict()
@@ -59,27 +58,22 @@ new_loss, _ = compute_lasso(XTrain, YTrain, XVal, YVal, score)
 print("new_loss", new_loss)
 
 losses = []
+indexes_tot = []
 n_features = XTrain.shape[1]
 
-weights_livel = np.array(weights_livel)
 for i in range(n_features):
 
         ###compute LASSO
         indexes = ordered_final_weights[:i+1].astype("int64")
+        indexes_tot.append(indexes)
 
         XTrain_current, XTest_current = get_current_data(XTrain, XVal, indexes)
 
         print("----------------------------")
         print("iteration ", i)
 
-        new_loss, beta = compute_lasso(XTrain_current, YTrain, XTest_current, YVal, score)
-
-        losses.append(new_loss)
-        beta = np.abs(beta[:, 0])
-        beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
         keys_sel = ordered_final_weights[:i+1]
-        print(weights_livel[beta_indexes])
 
         weights_ = weights[indexes]
 
@@ -87,10 +81,15 @@ for i in range(n_features):
         lasso = LASSOEstimator(model)
 
         loss, beta = compute_weightedLASSO(lasso,XTrain_current,YTrain, XTest_current, YVal,scoring, score_f, verbose)
+        losses.append(loss)
 
         beta = np.abs(beta)
         beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
         print(indexes[beta_indexes])
         print(weights_livel[beta_indexes])
+
+        np.savez(file_name+"_ranking_not_levels"+ext, mses = losses, indexes = indexes_tot)
+
+print("min mse", np.min(losses), "with:", indexes_tot[np.argmin(losses)])
 
