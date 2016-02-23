@@ -1,11 +1,9 @@
 from sklearn.linear_model.base import center_data
 from sklearn.metrics import mean_squared_error, r2_score
-from ExtractDataset import ArtificialNonLinearDataset
 from ExtractResult import Result
 from LASSOModel import Shooting, LASSOEstimator
-from Transformation import F2, F3, F5, F4, F1
 import numpy as np
-from utility import compute_mse, center_test, assign_weights, get_current_data, compute_lasso, get_beta_div_zeros, \
+from utility import center_test, assign_weights, get_current_data, compute_lasso, get_beta_div_zeros, \
     print_features_active, compute_weightedLASSO
 
 iter = 29
