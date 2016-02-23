@@ -61,13 +61,16 @@ losses = []
 indexes_tot = []
 n_features = len(ordered_final_weights)
 
+
 for i in range(n_features):
 
         ###compute LASSO
         indexes = []
+
         for k in ordered_final_weights[:i + 1]:
             indexes = np.union1d(indexes, dict_.get(k))
 
+        indexes = np.array(indexes).astype("int64")
         indexes_tot.append(indexes)
         XTrain_current, XTest_current = get_current_data(XTrain, XVal, indexes)
 
