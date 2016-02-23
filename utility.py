@@ -5,8 +5,6 @@ from sklearn.grid_search import GridSearchCV
 from sklearn.linear_model.coordinate_descent import _alpha_grid
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import numpy as np
-from libsvm.python.svmutil import svm_read_problem
-
 
 
 def extract_level(ordered_final_weights, values):
