@@ -14,7 +14,7 @@ def extract_level(ordered_final_weights, values):
         a = values[key]
         level = np.where(values[key]==w)[0][0]
         weights_level.append([key, level])
-    return weights_level
+    return np.array(weights_level, dtype="int64")
 
 def compute_weightedLASSO(lasso,XTrain_current,YTrain, XTest_current, YTest,scoring, score_f, verbose ):
 

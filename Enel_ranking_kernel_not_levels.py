@@ -3,7 +3,7 @@ from ExtractResult import Result
 import numpy as np
 from LASSOModel import Shooting, LASSOEstimator
 from utility import get_current_data, assign_weights, compute_mse, assign_weights_ordered, compute_lasso, \
-    get_beta_div_zeros, print_features_active, compute_weightedLASSO
+    get_beta_div_zeros, print_features_active, compute_weightedLASSO, extract_level
 import matplotlib.pyplot as plt
 
 file_name = "Enel_cross_val_blocks_kernel"
@@ -40,16 +40,11 @@ keys_ = np.array(list(dict_.keys())).astype("int64")
 ordered_final_weights = np.argsort(weights_data)[::-1]
 values = list(dict_.values())
 
-weights_livel = []
-for w in ordered_final_weights:
-    key = np.where(values==w)[0][0]
-    a = values[key]
-    level = np.where(values[key]==w)[0][0]
-    weights_livel.append([key, level])
+weights_level = extract_level(ordered_final_weights, values)
 
 if verbose:
     print("-------------")
-    print("ranking of the featues:", weights_livel)
+    print("ranking of the featues:", weights_level)
     print("-------------")
 ordered_indexes = np.argsort(weights_data)[::-1]
 losses = []
@@ -87,7 +82,7 @@ for i in range(n_features):
         beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
         print(indexes[beta_indexes])
-        print(weights_livel[beta_indexes])
+        print(weights_level[beta_indexes])
 
         np.savez(file_name+"_ranking_not_levels"+ext, mses = losses, indexes = indexes_tot)
 
