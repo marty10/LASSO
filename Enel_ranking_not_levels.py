@@ -3,7 +3,7 @@ from ExtractResult import Result
 import numpy as np
 from LASSOModel import Shooting, LASSOEstimator
 from utility import get_current_data, assign_weights, compute_mse, assign_weights_ordered, compute_lasso, \
-    get_beta_div_zeros, print_features_active, compute_weightedLASSO
+    get_beta_div_zeros, print_features_active, compute_weightedLASSO, extract_level
 
 file_name = "Enel_cross_val_blocks"
 ext = ".npz"
@@ -33,22 +33,16 @@ index_mse = len(weights_data) - 1
 weights_data = weights_data[index_mse]
 weights = assign_weights(weights_data.copy())
 
-keys_ = np.array(list(dict_.keys())).astype("int64")
-
 
 ordered_final_weights = np.argsort(weights_data)[::-1]
 values = list(dict_.values())
 
-weights_livel = []
-for w in ordered_final_weights:
-    key = np.where(values==w)[0][0]
-    a = values[key]
-    level = np.where(values[key]==w)[0][0]
-    weights_livel.append([key, level])
+weights_level = extract_level(ordered_final_weights, values)
+
 
 if verbose:
     print("-------------")
-    print("ranking of the featues:", weights_livel)
+    print("ranking of the featues:", weights_level)
     print("-------------")
 ordered_indexes = np.argsort(weights_data)[::-1]
 losses = []
@@ -60,7 +54,7 @@ losses = []
 indexes_tot = []
 n_features = XTrain.shape[1]
 
-weights_livel = np.array(weights_livel)
+weights_level = np.array(weights_level)
 for i in range(n_features):
 
         ###compute LASSO
@@ -87,7 +81,7 @@ for i in range(n_features):
         beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
         print(indexes[beta_indexes])
-        print(weights_livel[beta_indexes])
+        print(weights_level[beta_indexes])
 
         np.savez(file_name+"_ranking_not_levels"+ext, mses = losses, indexes = indexes_tot)
 

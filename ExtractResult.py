@@ -19,6 +19,20 @@ class Result:
 
         return XTrain, YTrain, XVal, YVal
 
+    def extract_data_transf(self):
+        file = np.load(self.data_file_name)
+        XTrainTransf = file["XTrainTransf_"]
+        XTestTransf = file["XTestTransf_"]
+        return XTrainTransf, XTestTransf
+
+    def extract_train_test(self):
+        file = np.load(self.data_file_name)
+        XTrain = file["XTrain"]
+        YTrain = file["YTrain"]
+        XTest = file["XTest"]
+        YTest = file["YTest"]
+        return XTrain, YTrain, XTest, YTest
+
     def extract_data(self):
         file = np.load(self.data_file_name)
         XTrain = file["XTrain"]
@@ -32,14 +46,6 @@ class Result:
         file = np.load(self.data_file_name)
         mses = file["mses"]
         return mses
-
-    def extract_train_test(self):
-        file = np.load(self.data_file_name)
-        XTrain = file["XTrain"]
-        YTrain = file["YTrain"]
-        XTest = file["XTest"]
-        YTest = file["YTest"]
-        return XTrain, YTrain, XTest, YTest
 
     def extract_active_sets_indexes_beta(self):
         file = np.load(self.data_file_name)
@@ -69,11 +75,7 @@ class Result:
         dict_ = file["dict_"][()]
         return dict_
 
-    def extract_data_transf(self):
-        file = np.load(self.data_file_name)
-        XTrainTransf = file["XTrainTransf"]
-        XTestTransf = file["XTestTransf"]
-        return XTrainTransf, XTestTransf
+
 
     def extract_mse_test(self):
         file = np.load(self.data_file_name)
