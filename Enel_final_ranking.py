@@ -41,7 +41,7 @@ weights_data = weights_data[index_mse]
 
 final_weights = np.zeros(len(dict_.keys()))
 
-keys_ = np.array(dict_.keys()).astype("int64")
+keys_ = np.array((list)(dict_.keys())).astype("int64")
 for key in keys_:
     final_weights[key] += np.sum(weights_data[dict_.get(key).astype("int64")])
 

@@ -40,7 +40,7 @@ index_mse = len(weights_data)-1
 weights_data = weights_data[index_mse]
 values = list(dict_.values())
 
-keys_ = np.array(dict_.keys()).astype("int64")
+keys_ = np.array((list)(dict_.keys())).astype("int64")
 ordered_final_weights = np.argsort(weights_data)[::-1]
 
 weights_level = extract_level(ordered_final_weights, values)
