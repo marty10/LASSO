@@ -11,7 +11,7 @@ class Kernel:
         """kernel transformation"""
 
 
-class Gaussia_kernel(Kernel):
+class Gaussian_kernel(Kernel):
     def __init__(self, sigma):
         self.sigma = sigma
 
@@ -33,8 +33,8 @@ class Gaussia_kernel(Kernel):
         y_transf = np.zeros([m,1])
         for l in range(0,m):
             x_l = x[:,l]
-            a = li.norm(x_l-y)**2/ 2
-            y_transf[l]
+            y_transf[l] = np.exp(-self.sigma*li.norm(x_l-y)**2/ 2)
+        return y_transf
 
 
 class Scalar_kernel(Kernel):
@@ -54,15 +54,15 @@ class Scalar_kernel(Kernel):
                 if k!=l:
                     x_transf[k,l] = x_transf[l,k]
         for key in (list)(dict_.keys()):
-            dict_[key] = np.append(dict_[key],np.arange(key*24,key*24+24))
+            dict_[key] = np.append(dict_[key],np.arange(key*12,key*12+12))
         return x_transf, dict_
 
     def transform_y(self,x,y):
         n,m = x.shape
-        y_transf = []
+        y_transf = np.array([])
         for l in range(0,m):
             x_l = x[:,l]
-            y_transf.append(np.dot(x_l,y))
+            y_transf = np.append(y_transf,np.dot(x_l,y))
         return y_transf
 
 

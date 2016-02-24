@@ -4,7 +4,7 @@ from sklearn.linear_model.base import center_data
 import numpy as np
 from ExtractResult import Result
 from Kernel import Scalar_kernel
-from Transformation import EnelTransformation
+from Transformation import EnelTransformation, EnelWindSpeedTransformation
 from utility import generate_samples_dynamic_set, get_current_data, compute_mse, get_common_indexes, \
     extract_chosen_indexes_from_start, center_test
 
@@ -20,8 +20,9 @@ transf = EnelTransformation()
 #_, dict_ = transf.transform(XTrain)
 #XTest_transf, dict_ = transf.transform(XTest)
 
-XTest_transf = XTest
-XTrain_transf = XTrain
+XTest_transf,_ = EnelWindSpeedTransformation().transform(XTest)
+XTrain_transf,_ = EnelWindSpeedTransformation().transform(XTrain)
+
 YTest = Scalar_kernel().transform_y(XTest_transf,YTest)
 YTrain = Scalar_kernel().transform_y(XTrain_transf,YTrain)
 
@@ -151,6 +152,6 @@ while num_cycle<cycles:
     saved_indexes_list.append(saved_indexes)
     num_informative_list.append(num_informative)
 
-    np.savez("Enel_cross_val_blocks_scalar_kernel.npz", dict_ = dict_,saved_indexes_list = saved_indexes_list, mses = mses, num_informative_list = num_informative_list,
+    np.savez("Enel_cross_val_blocks_scalar_kernel_speed.npz", dict_ = dict_,saved_indexes_list = saved_indexes_list, mses = mses, num_informative_list = num_informative_list,
            weights_list = weights_list, XTrain = XTrain, XTest = XTest, YTest = YTest, YTrain = YTrain, XTrainTransf_ = XTrain_transf, XTestTransf_ = XTest_transf, XTrain_ValNoCenter = XTrain_noCenter,
            XValTransf_noCenter = XVal_noCenter, YTrainVal_noCenter = YTrain_noCenter, YVal_noCenter = YVal_noCenter, XTrain_Val = XTrain_, XVal = XVal_ , YVal_ = YVal_, YTrain_Val = YTrain_ )
