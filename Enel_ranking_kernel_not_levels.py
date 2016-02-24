@@ -6,7 +6,11 @@ from utility import get_current_data, assign_weights, compute_mse, assign_weight
     get_beta_div_zeros, print_features_active, compute_weightedLASSO, extract_level
 import matplotlib.pyplot as plt
 
-file_name = "Enel_cross_val_blocks_kernel"
+import sys
+
+sys.argv[1:] = [str(x) for x in sys.argv[1:]]
+file_name = sys.argv[1]
+
 ext = ".npz"
 file = "ENEL_2014/"+file_name+ext
 results = Result(file, "lasso")
