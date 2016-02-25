@@ -9,7 +9,8 @@ from sklearn.cross_validation import train_test_split
 from sklearn.linear_model.base import center_data
 
 from Transformation import NullTransformation
-from FeatureSelectionRules import null_rule
+from libsvm.python.svmutil import svm_read_problem
+from old.FeatureSelectionRules import null_rule
 
 
 class Dataset:
@@ -160,7 +161,7 @@ class Enel_dataset(Dataset):
         wb = openpyxl.load_workbook(current_coord_file)
         sheet = wb.get_sheet_by_name('PSC')
 
-        X = np.zeros([sheet._current_row-1,2])
+        X = np.zeros([49,2])
         i=0
         for cellObj in sheet.columns[1][1:]:
             X[i,0] = cellObj.value
