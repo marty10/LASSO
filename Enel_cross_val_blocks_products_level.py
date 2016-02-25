@@ -22,15 +22,14 @@ transf = EnelWindSpeedTransformation()
 XTrain_transf, dict_ = transf.transform(XTrain)
 XTest_transf, dict_ = transf.transform(XTest)
 
-Coord = np.load("Coord.npz")["Coord"]
+Coord = np.load("ENEL_2014/Coord.npz")["Coord"]
 
 neight_= find_nearest(Coord,k)
-print("k")
+
 
 XTrain_transf = transf.nearest_products_levels(neight_,dict_,XTrain)
 XTest_transf = transf.nearest_products_levels(neight_,dict_,XTest)
 
-print("transf")
 ##center data
 XTrain_noCenter, XVal_noCenter, YTrain_noCenter, YVal_noCenter = train_test_split(XTrain_transf, YTrain, test_size=0.33,random_state=0)
 XTrain_, YTrain_, X_mean, y_mean, X_std = center_data(XTrain_noCenter, YTrain_noCenter, fit_intercept=True, normalize = True)
