@@ -38,7 +38,7 @@ class EnelWindSpeedTransformation(Transformation):
 
         return x_transf, dict_
 
-   def nearest_products(self, neigh_, dict_, x):
+    def nearest_products(self, neigh_, dict_, x):
         x_transf = np.array([[]])
         #output_dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
         n = x.shape[0]
