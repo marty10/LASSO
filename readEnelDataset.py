@@ -1,7 +1,6 @@
 from ExtractDataset import Enel_dataset
 from ExtractResult import Result
-from Fit import Enel_power3, Enel_scalarKernel, Log_x_fit, Log_xy_fit, Sqrt_fit, Inverse_x_fit, Inverse_y_fit, Log_y_fit, \
-    Polynomial_fit, Power_fit, Enel_gaussianKernel, Linear_fit
+from Fit import  Linear_fit
 from Transformation import EnelWindSpeedTransformation
 import sys
 from utility import find_nearest
@@ -51,7 +50,7 @@ Linear_fit().fitting(XTrain, YTrain, XTest,YTest )
 #Inverse_y_fit().fitting(XTrain, YTrain, XTest, YTest)
 
 
-Enel_power3().fitting(XTrain, YTrain, XTest,YTest)
+#Enel_power3().fitting(XTrain, YTrain, XTest,YTest)
 #Enel_gaussianKernel().fitting(XTrain, YTrain, XTest,YTest)
 
 
