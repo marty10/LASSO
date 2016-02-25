@@ -20,7 +20,7 @@ print(neight_)
 #XTrain, YTrain, XTest, YTest = enel_dataset.get_data()
 #np.savez("Enel_dataset.npz", XTrain = XTrain, XTest = XTest, YTrain = YTrain, YTest = YTest)
 
-file = "Enel_2014/Enel_dataset.npz"
+file = "ENEL_2014/Enel_dataset.npz"
 results = Result(file, "lasso")
 
 XTrain, YTrain, XTest, YTest = results.extract_train_test()
