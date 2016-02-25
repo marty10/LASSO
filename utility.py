@@ -1,4 +1,6 @@
 import math
+
+from scipy import spatial
 from scipy.stats import pearsonr
 from sklearn import linear_model
 from sklearn.grid_search import GridSearchCV
@@ -32,13 +34,17 @@ def compute_weightedLASSO(lasso,XTrain_current,YTrain, XTest_current, YTest,scor
 
     y_pred_train = lasso.predict(XTrain_current)
     mse_train = score_f(YTrain, y_pred_train)
+    abs_error_train = 100*mean_absolute_error(YTrain,y_pred_train)#*len(YTrain)#/(89.7*9*331)
     if verbose:
         print("mse_train "+lasso.__class__.__name__,mse_train)
-
+        print("abs train", abs_error_train)
     y_pred_test = lasso.predict(XTest_current)
     mse_test = score_f(YTest, y_pred_test)
+    abs_error_test = 100*mean_absolute_error(YTest,y_pred_test)#*len(YTest)/(89.7*16*165)
     if verbose:
         print ("mse_test weights "+lasso.__class__.__name__,mse_test)
+        print("abs test", abs_error_test)
+
     return mse_test, lasso.beta
 
 def get_beta_div_zeros(beta):
@@ -553,9 +559,10 @@ def assign_weights_ordered(weights_ordered_indexes,active_set):
 def center_test(X, y, X_mean, y_mean, X_std, normalize = True):
     X_copy = X.copy()
     X_copy -= X_mean
+    y_copy = y.copy()
     if normalize:
         X_copy /= X_std
-        y_copy = y - y_mean
+        y_copy = y_copy - y_mean
     return X_copy,y_copy
 
 
@@ -567,3 +574,15 @@ def binomialCoefficient(p,s):
 
     return div
 
+
+def find_nearest(Coord,k):
+    dim = Coord.shape[0]
+    dict_ = dict.fromkeys(np.arange(0,dim),np.array([]))
+    x = Coord[:,0]
+    y = Coord[:,1]
+    tree = spatial.KDTree(zip(x.ravel(), y.ravel()))
+    for i in range(0,dim):
+        d,j = tree.query(Coord[i,:],k = k)
+        j = j[j>=i]
+        dict_[i] = j
+    return dict_
