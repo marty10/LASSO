@@ -4,6 +4,7 @@ from Fit import  Linear_fit
 from Transformation import EnelWindSpeedTransformation
 import sys
 from utility import find_nearest
+import numpy as np
 
 folder_train = "ENEL_2014/PSC/0-23_0001-0049/"
 folder_test = "ENEL_2014/PSC/24-47_0001-0049/"
