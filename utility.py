@@ -579,7 +579,7 @@ def find_nearest(Coord,k):
     dict_ = dict.fromkeys(np.arange(0,dim),np.array([]))
     x = Coord[:,0]
     y = Coord[:,1]
-    tree = spatial.KDTree(zip(x.ravel(), y.ravel()))
+    tree = spatial.KDTree(np.column_stack(x.ravel(), y.ravel()))
     for i in range(0,dim):
         d,j = tree.query(Coord[i,:],k = k)
         j = j[j>=i]
