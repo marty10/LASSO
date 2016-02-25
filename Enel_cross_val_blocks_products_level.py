@@ -8,7 +8,6 @@ from utility import generate_samples_dynamic_set, get_current_data, compute_mse,
     extract_chosen_indexes_from_start, center_test, find_nearest
 import sys
 
-
 file = "ENEL_2014/Enel_dataset.npz"
 results = Result(file, "lasso")
 
@@ -26,10 +25,12 @@ XTest_transf, dict_ = transf.transform(XTest)
 Coord = np.load("Coord.npz")["Coord"]
 
 neight_= find_nearest(Coord,k)
+print("k")
 
 XTrain_transf = transf.nearest_products_levels(neight_,dict_,XTrain)
 XTest_transf = transf.nearest_products_levels(neight_,dict_,XTest)
 
+print("transf")
 ##center data
 XTrain_noCenter, XVal_noCenter, YTrain_noCenter, YVal_noCenter = train_test_split(XTrain_transf, YTrain, test_size=0.33,random_state=0)
 XTrain_, YTrain_, X_mean, y_mean, X_std = center_data(XTrain_noCenter, YTrain_noCenter, fit_intercept=True, normalize = True)
@@ -74,7 +75,7 @@ active_set = 0
 lasso_cv = linear_model.LassoCV(fit_intercept=False, n_jobs = -1)
 flag_linear = 0
 score = "mean_squared_error"
-
+print("start")
 while num_cycle<cycles:
     losses = np.array([])
     betas = np.array([])
