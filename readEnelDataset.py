@@ -12,8 +12,7 @@ label_file = "ENEL_2014/PSC/Metering_2011-2014_UTC.txt"
 sys.argv[1:] = [int(x) for x in sys.argv[1:]]
 k = sys.argv[1]
 
-enel_dataset = Enel_dataset(folder_train, folder_test, label_file, centerdata=False)
-Coord = enel_dataset.extract_coordinates(folder="ENEL_2014/PSC/")
+Coord = np.load("ENEL_2014/Coord.npz")["Coord"]
 
 neight_= find_nearest(Coord,k)
 print(neight_)
