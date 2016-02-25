@@ -9,7 +9,6 @@ from sklearn.cross_validation import train_test_split
 from sklearn.linear_model.base import center_data
 
 from Transformation import NullTransformation
-from libsvm.python.svmutil import svm_read_problem
 from old.FeatureSelectionRules import null_rule
 
 
