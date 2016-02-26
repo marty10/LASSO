@@ -75,7 +75,7 @@ lasso_cv = linear_model.LassoCV(fit_intercept=False, n_jobs = -1)
 flag_linear = 0
 score = "mean_squared_error"
 print("start")
-iter = 0
+iter = 4
 while num_cycle<cycles:
     losses = np.array([])
     betas = np.array([])
