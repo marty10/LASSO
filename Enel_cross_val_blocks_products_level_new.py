@@ -90,9 +90,10 @@ while num_cycle<cycles:
             lasso_cv.fit(x_train_saved,YTrain_)
             best_alpha = lasso_cv.alpha_
             print(best_alpha)
+            iter = 0
         model = linear_model.Lasso(fit_intercept=False,alpha=best_alpha)
         flag_linear = 0
-        iter = 0
+
     else:
         model = linear_model.LinearRegression(fit_intercept=False)
         flag_linear = 1
