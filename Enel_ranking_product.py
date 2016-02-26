@@ -2,7 +2,8 @@ from sklearn.metrics import r2_score, mean_squared_error
 import numpy as np
 from ExtractResult import Result
 from LASSOModel import Shooting, LASSOEstimator
-from utility import assign_weights, get_current_data, compute_weightedLASSO, get_beta_div_zeros, print_features_active
+from utility import assign_weights, get_current_data, compute_weightedLASSO, get_beta_div_zeros, print_features_active, \
+    compute_lasso
 
 file_name = "Enel_cross_val_blocks_level_products2"
 ext = ".npz"
@@ -17,6 +18,9 @@ results = Result(file, "lasso")
 dict_ = results_dict.extract_dict()
 
 XTrain, YTrain, XVal, YVal = results.extract_train_val()
+
+new_loss, beta = compute_lasso(XTrain, YTrain, XVal, YVal,score = "mean_squared_error")
+print("loss lineare", new_loss)
 
 score = "mean_squared_error"
 if score=="r2_score":
@@ -76,7 +80,6 @@ for i in range(n_features):
 
         a = np.in1d(indexes,del_)
         indexes = np.delete(indexes, np.where(a==True)[0])
-
 
         indexes = indexes.astype("int64")
         XTrain_current, XTest_current = get_current_data(XTrain, XVal, indexes)
