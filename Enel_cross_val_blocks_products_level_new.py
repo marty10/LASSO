@@ -69,7 +69,7 @@ max_set = min_set+5
 max_active_set = int(n_features_transf/10)
 active_set = 0
 
-compute_mse = "False"
+compute_mse_current = "False"
 lasso_cv = linear_model.LassoCV(fit_intercept=False, n_jobs = -1)
 flag_linear = 0
 score = "mean_squared_error"
@@ -140,7 +140,7 @@ while num_cycle<cycles:
     x_train_saved, x_val_saved = get_current_data(XTrain_, XVal_, saved_indexes)
     end_time = timeit.default_timer()
 
-    if compute_mse:
+    if compute_mse_current:
         x_val_saved = x_val_saved[rand_vect,:]
         YVal_saved = YVal_[rand_vect]
         mse_saved,_= compute_mse(model, x_train_saved, YTrain_,x_val_saved, YVal_saved, "mean_squared_error")

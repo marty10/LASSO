@@ -1,23 +1,26 @@
 from sklearn.metrics import r2_score, mean_squared_error
-from ExtractResult import Result
 import numpy as np
+from ExtractResult import Result
 from LASSOModel import Shooting, LASSOEstimator
-from utility import get_current_data, assign_weights, compute_mse, assign_weights_ordered, compute_lasso, \
-    get_beta_div_zeros, print_features_active, compute_weightedLASSO, extract_level
-import matplotlib.pyplot as plt
+from utility import assign_weights, get_current_data, compute_weightedLASSO, get_beta_div_zeros, print_features_active, \
+    compute_lasso
 
-import sys
-
-sys.argv[1:] = [str(x) for x in sys.argv[1:]]
-file_name = sys.argv[1]
-
+file_name = "Enel_cross_val_blocks_level_products2"
 ext = ".npz"
 file = "ENEL_2014/"+file_name+ext
+
+file_dict = "ENEL_2014/Product_level_2_dict.npz"
+
+results_dict = Result(file_dict, "lasso")
 results = Result(file, "lasso")
 
-dict_ = results.extract_dict()
+#dict_ = results.extract_dict()
+dict_ = results_dict.extract_dict()
 
 XTrain, YTrain, XVal, YVal = results.extract_train_val()
+
+new_loss, beta = compute_lasso(XTrain, YTrain, XVal, YVal,score = "mean_squared_error")
+print("loss lineare", new_loss)
 
 score = "mean_squared_error"
 if score=="r2_score":
@@ -39,30 +42,32 @@ weights_data = weights_data[index_mse]
 weights = assign_weights(weights_data.copy())
 
 keys_ = np.array(list(dict_.keys())).astype("int64")
+original_features = len(keys_)
+final_weights = np.zeros(original_features)
 
+for key in keys_:
+    final_weights[key] += np.sum(weights_data[dict_.get(key).astype("int64")])
 
-ordered_final_weights = np.argsort(weights_data)[::-1]
-values = list(dict_.values())
-
-weights_level = extract_level(ordered_final_weights, values)
-
+ordered_final_weights = np.argsort(final_weights)[::-1]
 if verbose:
     print("-------------")
-    print("ranking of the featues:", weights_level)
+    print("ranking of the featues:", ordered_final_weights)
     print("-------------")
 ordered_indexes = np.argsort(weights_data)[::-1]
 losses = []
 
-new_loss, _ = compute_lasso(XTrain, YTrain, XVal, YVal, score)
-print("new_loss", new_loss)
+
+#new_loss, _ = compute_lasso(XTrain, YTrain, XVal, YVal, score)
+
+#print("new_loss", new_loss)
 
 losses = []
 indexes_tot = []
-n_features = XTrain.shape[1]
+n_features = len(ordered_final_weights)
+
 
 for i in range(n_features):
 
-        ###compute LASSO
         indexes = ordered_final_weights[:i+1].astype("int64")
         indexes_tot.append(indexes)
 
@@ -71,7 +76,7 @@ for i in range(n_features):
         print("----------------------------")
         print("iteration ", i)
 
-        weights_ = weights[indexes]
+        weights_ = assign_weights(weights_data.copy()[indexes])
 
         model = Shooting(weights_)
         lasso = LASSOEstimator(model)
@@ -83,9 +88,9 @@ for i in range(n_features):
         beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
         print(indexes[beta_indexes])
-        print(weights_level[beta_indexes])
 
-        np.savez(file_name+"_ranking_not_levels"+ext, mses = losses, indexes = indexes_tot)
 
-print("min mse", np.min(losses), "with:", indexes_tot[np.argmin(losses)])
+        np.savez(file_name+"ranking_not_levels"+ext, mses = losses, indexes = indexes_tot)
+
+print("min mse", np.min(losses), "with:", indexes_tot(np.argmin(losses)))
 
