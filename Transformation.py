@@ -40,15 +40,16 @@ class EnelWindSpeedTransformation(Transformation):
 
     def nearest_products_levels(self, neigh_, dict_, x):
         x_transf = np.array([[]])
-        #output_dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
+        output_dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
         n = x.shape[0]
         keys_ = (list)(neigh_.keys())
         values = (list)(neigh_.values())
         for key in keys_:
             current_values = values[key]
             k_levels = dict_[key]
-
+            start_dim = x_transf.shape[1]
             for k in k_levels:
+                current_dim = x_transf.shape[1]
                 v = [dict_[j][k%12] for j in current_values]
                 v = np.hstack(v).astype("int64")
                 prod = x[:,k].reshape([n,1])*x[:,v]
@@ -56,7 +57,14 @@ class EnelWindSpeedTransformation(Transformation):
                     x_transf = prod
                 else:
                     x_transf = np.concatenate((x_transf,prod), axis = 1)
-        return x_transf
+                l=0
+                for current_v in current_values:
+                    if current_v!=key:
+                        output_dict_[current_v] = np.append(output_dict_[current_v], current_dim+l)
+                    l+=1
+            end_dim = x_transf.shape[1]
+            output_dict_[key] = np.append(output_dict_[key], np.arange(start_dim, end_dim))
+        return x_transf, output_dict_
 
     def nearest_products(self, neigh_, dict_, x):
         x_transf = np.array([[]])
