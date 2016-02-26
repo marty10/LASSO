@@ -85,10 +85,11 @@ while num_cycle<cycles:
         print ("ciclo", num_cycle)
         saved_indexes = np.array([],dtype = "int64")
         active_set = 0
-    if len(saved_indexes)>0 and iter==5:
-        lasso_cv.fit(x_train_saved,YTrain_)
-        best_alpha = lasso_cv.alpha_
-        print(best_alpha)
+    if len(saved_indexes)>0:
+        if iter==5:
+            lasso_cv.fit(x_train_saved,YTrain_)
+            best_alpha = lasso_cv.alpha_
+            print(best_alpha)
         model = linear_model.Lasso(fit_intercept=False,alpha=best_alpha)
         flag_linear = 0
         iter = 0
