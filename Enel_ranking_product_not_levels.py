@@ -39,23 +39,15 @@ weights_data = results.extract_weights()
 
 index_mse = len(weights_data) - 1
 weights_data = weights_data[index_mse]
-weights = assign_weights(weights_data.copy())
 
-keys_ = np.array(list(dict_.keys())).astype("int64")
-original_features = len(keys_)
-final_weights = np.zeros(original_features)
-
-for key in keys_:
-    final_weights[key] += np.sum(weights_data[dict_.get(key).astype("int64")])
-
-ordered_final_weights = np.argsort(final_weights)[::-1]
+ordered_final_weights = np.argsort(weights_data)[::-1]
+ordered_indexes = ordered_final_weights
 if verbose:
     print("-------------")
     print("ranking of the featues:", ordered_final_weights)
     print("-------------")
-ordered_indexes = np.argsort(weights_data)[::-1]
-losses = []
 
+losses = []
 
 #new_loss, _ = compute_lasso(XTrain, YTrain, XVal, YVal, score)
 
@@ -88,7 +80,6 @@ for i in range(n_features):
         beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
         print(indexes[beta_indexes])
-
 
         np.savez(file_name+"ranking_not_levels"+ext, mses = losses, indexes = indexes_tot)
 
