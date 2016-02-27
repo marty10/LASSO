@@ -38,6 +38,11 @@ class EnelWindSpeedTransformation(Transformation):
 
         return x_transf, dict_
 
+    def power_curve_conversion(self,x):
+        x_new = x.copy()
+
+        x_new[x_new>14] = 600
+
     def nearest_products_levels(self, neigh_, dict_, x):
         x_transf = np.array([[]])
         output_dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
@@ -64,6 +69,7 @@ class EnelWindSpeedTransformation(Transformation):
                     l+=1
             end_dim = x_transf.shape[1]
             output_dict_[key] = np.append(output_dict_[key], np.arange(start_dim, end_dim))
+        #x_transf = np.concatenate((x_transf,x), axis = 1)
         return x_transf, output_dict_
 
     def nearest_products(self, neigh_, dict_, x):
