@@ -2,12 +2,11 @@ from sklearn import linear_model
 from sklearn.cross_validation import train_test_split
 from sklearn.linear_model.base import center_data
 import numpy as np
-
 from ExtractResult import Result
 from Transformation import EnelTransformation
 from utility import generate_samples_dynamic_set, get_current_data, compute_mse, get_common_indexes, \
     extract_chosen_indexes_from_start, center_test
-
+import sys
 
 ####load data
 file = "ENEL_2014/Enel_dataset.npz"
@@ -15,8 +14,20 @@ results = Result(file, "lasso")
 
 XTrain, YTrain, XTest, YTest = results.extract_train_test()
 
+sys.argv[1:] = [str(x) for x in sys.argv[1:]]
+kind_transformation = sys.argv[1]
+
 ##transformation of data
-transf = EnelTransformation()
+
+if kind_transformation=="windSpeed":
+    transf = EnelWindSpeedTransformation()
+    YTrain = YTrain**(1./3)
+    YTest = YTest**(1./3)
+    output_file_name = "Enel_cross_val_blocks_wind_speed.npz"
+elif kind_transformation=="windSpeedPower3":
+    transf = EnelTransformation()
+    output_file_name = "Enel_cross_val_blocks.npz"
+
 XTrain_transf, dict_ = transf.transform(XTrain)
 XTest_transf, dict_ = transf.transform(XTest)
 
@@ -143,6 +154,6 @@ while num_cycle<cycles:
     saved_indexes_list.append(saved_indexes)
     num_informative_list.append(num_informative)
 
-    np.savez("Enel_cross_val_blocks.npz", dict_ = dict_,saved_indexes_list = saved_indexes_list, mses = mses, num_informative_list = num_informative_list,
+    np.savez(output_file_name, dict_ = dict_,saved_indexes_list = saved_indexes_list, mses = mses, num_informative_list = num_informative_list,
            weights_list = weights_list, XTrain = XTrain, XTest = XTest, YTest = YTest, YTrain = YTrain, XTrainTransf_ = XTrain_transf, XTestTransf_ = XTest_transf, XTrain_ValNoCenter = XTrain_noCenter,
            XValTransf_noCenter = XVal_noCenter, YTrainVal_noCenter = YTrain_noCenter, YVal_noCenter = YVal_noCenter, XTrain_Val = XTrain_, XVal = XVal_ , YVal_ = YVal_, YTrain_Val = YTrain_ )
