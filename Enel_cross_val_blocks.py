@@ -146,7 +146,7 @@ while num_cycle<cycles:
     if compute_mse_current:
         x_val_saved = x_val_saved[rand_vect,:]
         YVal_saved = YVal_[rand_vect]
-        mse_saved,_= compute_mse(model, x_train_saved, YTrain_,x_val_saved, YVal_saved, "mean_squared_error")
+        mse_saved,_= compute_mse(model, x_train_saved, YTrain_,x_val_saved, YVal_saved, score)
         mses.append(mse_saved)
         print("mse", mse_saved)
     weights_list.append(weights_abs)
