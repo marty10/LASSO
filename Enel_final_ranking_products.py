@@ -7,9 +7,10 @@ from utility import center_test, assign_weights, get_current_data, compute_lasso
     print_features_active, compute_weightedLASSO
 import sys
 
-sys.argv[1:] = [int(x) for x in sys.argv[1:]]
-iter = sys.argv[1]
-file_name = (str)(sys.argv[1])
+sys.argv[1:3] = [int(x) for x in sys.argv[1:3]]
+k = sys.argv[1]
+iter = sys.argv[2]
+file_name = (str)(sys.argv[3])
 
 
 compute_lasso_current = False
