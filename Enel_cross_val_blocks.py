@@ -32,10 +32,13 @@ XTrain_transf, dict_ = transf.transform(XTrain)
 XTest_transf, dict_ = transf.transform(XTest)
 
 ##center data
+##center data
 XTrain_noCenter, XVal_noCenter, YTrain_noCenter, YVal_noCenter = train_test_split(XTrain_transf, YTrain, test_size=0.33,random_state=0)
 XTrain_, YTrain_, X_mean, y_mean, X_std = center_data(XTrain_noCenter, YTrain_noCenter, fit_intercept=True, normalize = True)
 XVal_, YVal_ = center_test(XVal_noCenter,YVal_noCenter,X_mean,y_mean,X_std)
 
+#new_loss, _ = compute_lasso(XTrain_, YTrain_, XVal_, YVal_,score = "mean_squared_error")
+#print("loss", new_loss)
 
 n_features_transf = XTrain_.shape[1]
 
@@ -51,19 +54,16 @@ n_samples_val = XVal_.shape[0]
 
 active_set_samples = (int)(8./9.*n_samples_val)
 
-saved_indexes = np.array([],dtype = "int64")
-num_informative = np.array([])
+saved_indexes = []
 
 saved_indexes_list = []
 mses = []
-num_informative_list = []
 weights_list = []
 
 
 weights_indexes = np.zeros(n_features_transf)
 r3 = np.random.RandomState(14)
-cv_flag = True
-countIter = 0
+countIter = 4
 
 num_cycle = 0
 cycles = 10
@@ -72,23 +72,28 @@ max_set = min_set+5
 max_active_set = int(n_features_transf/10)
 active_set = 0
 
+compute_mse_current = "False"
 lasso_cv = linear_model.LassoCV(fit_intercept=False, n_jobs = -1)
 flag_linear = 0
 score = "mean_squared_error"
 
 while num_cycle<cycles:
-    losses = np.array([])
-    betas = np.array([])
+
+    losses = []
+    betas = []
 
     if len(saved_indexes)>=max_active_set:
         num_cycle +=1
         print ("ciclo", num_cycle)
-        saved_indexes = np.array([],dtype = "int64")
+        saved_indexes = []
         active_set = 0
+        countIter=4
     if len(saved_indexes)>0:
-        lasso_cv.fit(x_train_saved,YTrain_)
-        best_alpha = lasso_cv.alpha_
-        print(best_alpha)
+        if countIter==5:
+            lasso_cv.fit(x_train_saved,YTrain_)
+            best_alpha = lasso_cv.alpha_
+            print(best_alpha)
+            countIter = 0
         model = linear_model.Lasso(fit_intercept=False,alpha=best_alpha)
         flag_linear = 0
     else:
@@ -101,17 +106,12 @@ while num_cycle<cycles:
         rand_vect = r1.choice(n_samples_val,active_set_samples, replace = False)
         x_val_i = x_val_i[rand_vect,:]
         YVal_i = YVal_[rand_vect]
-        new_loss,beta,_ = compute_mse(model, x_train_i, YTrain_,x_val_i, YVal_i, score)
-        losses = np.append(losses, new_loss)
+        new_loss, beta= compute_mse(model, x_train_i, YTrain_,x_val_i, YVal_i, score)
+        losses.append(new_loss)
+        betas.append(beta)
 
-        if len(betas)==0:
-            betas = beta
-        else:
-            betas = np.append(betas, beta, axis =1)
     ordered_losses = np.argsort(losses)
-    orderd_losses_ = losses[ordered_losses]
-    #losses_to_select = r3.choice(np.arange(100,200), 1, replace=False)[0]
-    #print("loss scelte", losses_to_select)
+    orderd_losses_ = np.array(losses)[ordered_losses]
 
     standard_deviation = np.std(orderd_losses_)
     mean_weights = np.mean(orderd_losses_)
@@ -119,16 +119,15 @@ while num_cycle<cycles:
     chosen_losses = len(orderd_losses_[orderd_losses_+standard_deviation<=mean_weights])
     if chosen_losses>num_blocks/3:
         chosen_losses = num_blocks/3
-    #if chosen_losses<min_losses:
-    #chosen_losses=min_losses
+
     print("losses scelte", chosen_losses)
     index_chosen_losses = ordered_losses[:chosen_losses]
-
+    betas = np.hstack(betas)
     if flag_linear == 0:
-        weights_indexes,_ = get_common_indexes(weights_indexes, index_chosen_losses,blocks_generated,betas,n_features_transf)
+        weights_indexes = get_common_indexes(weights_indexes, index_chosen_losses,blocks_generated,betas,n_features_transf)
         weights_abs = np.abs(weights_indexes)
     else:
-        weights_indexes_copy,_ = get_common_indexes(weights_indexes.copy(), index_chosen_losses,blocks_generated,betas,n_features_transf)
+        weights_indexes_copy = get_common_indexes(weights_indexes.copy(), index_chosen_losses,blocks_generated,betas,n_features_transf)
         weights_abs = np.abs(weights_indexes_copy)
 
     ordered_weights_indexes = np.argsort(weights_abs)[::-1]
@@ -142,18 +141,22 @@ while num_cycle<cycles:
 
     assert(len(saved_indexes)<=max_active_set)
     x_train_saved, x_val_saved = get_current_data(XTrain_, XVal_, saved_indexes)
-    x_val_saved = x_val_saved[rand_vect,:]
-    YVal_saved = YVal_[rand_vect]
-    mse_saved,_,_ = compute_mse(model, x_train_saved, YTrain_,x_val_saved, YVal_saved, score)
-    mses.append(mse_saved)
+    end_time = timeit.default_timer()
+
+    if compute_mse_current:
+        x_val_saved = x_val_saved[rand_vect,:]
+        YVal_saved = YVal_[rand_vect]
+        mse_saved,_= compute_mse(model, x_train_saved, YTrain_,x_val_saved, YVal_saved, "mean_squared_error")
+        mses.append(mse_saved)
+        print("mse", mse_saved)
     weights_list.append(weights_abs)
 
     print("saved_indexes", saved_indexes)
-    print("mse", mse_saved)
+
     print("---------------")
     saved_indexes_list.append(saved_indexes)
-    num_informative_list.append(num_informative)
 
-    np.savez(output_file_name, dict_ = dict_,saved_indexes_list = saved_indexes_list, mses = mses, num_informative_list = num_informative_list,
-           weights_list = weights_list, XTrain = XTrain, XTest = XTest, YTest = YTest, YTrain = YTrain, XTrainTransf_ = XTrain_transf, XTestTransf_ = XTest_transf, XTrain_ValNoCenter = XTrain_noCenter,
+    countIter+=1
+
+    np.savez(output_file_name, dict_ = dict_,saved_indexes_list = saved_indexes_list, mses = mses, weights_list = weights_list, XTrain = XTrain, XTest = XTest, YTest = YTest, YTrain = YTrain, XTrainTransf_ = XTrain_transf, XTestTransf_ = XTest_transf, XTrain_ValNoCenter = XTrain_noCenter,
            XValTransf_noCenter = XVal_noCenter, YTrainVal_noCenter = YTrain_noCenter, YVal_noCenter = YVal_noCenter, XTrain_Val = XTrain_, XVal = XVal_ , YVal_ = YVal_, YTrain_Val = YTrain_ )
