@@ -33,13 +33,13 @@ def compute_weightedLASSO(lasso,XTrain_current,YTrain, XTest_current, YTest,scor
 
     y_pred_train = lasso.predict(XTrain_current)
     mse_train = score_f(YTrain, y_pred_train)
-    abs_error_train = 100*mean_absolute_error(YTrain,y_pred_train)#*len(YTrain)#/(89.7*9*331)
+    abs_error_train = mean_absolute_error(YTrain,y_pred_train)*len(YTrain)/(89.7*9*331)
     if verbose:
         print("mse_train "+lasso.__class__.__name__,mse_train)
         print("abs train", abs_error_train)
     y_pred_test = lasso.predict(XTest_current)
     mse_test = score_f(YTest, y_pred_test)
-    abs_error_test = 100*mean_absolute_error(YTest,y_pred_test)#*len(YTest)/(89.7*16*165)
+    abs_error_test = mean_absolute_error(YTest,y_pred_test)*len(YTest)/(89.7*16*165)
     if verbose:
         print ("mse_test weights "+lasso.__class__.__name__,mse_test)
         print("abs test", abs_error_test)
