@@ -73,7 +73,7 @@ max_set = min_set+5
 max_active_set = int(n_features_transf/10)
 active_set = 0
 
-compute_mse_current = "False"
+compute_mse_current = 0
 lasso_cv = linear_model.LassoCV(fit_intercept=False, n_jobs = -1)
 flag_linear = 0
 score = "mean_squared_error"
