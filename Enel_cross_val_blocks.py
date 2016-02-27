@@ -7,6 +7,7 @@ from Transformation import EnelTransformation
 from utility import generate_samples_dynamic_set, get_current_data, compute_mse, get_common_indexes, \
     extract_chosen_indexes_from_start, center_test
 import sys
+from Transformation import EnelWindSpeedTransformation
 
 ####load data
 file = "ENEL_2014/Enel_dataset.npz"
