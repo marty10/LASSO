@@ -24,4 +24,4 @@ enel_transf = EnelWindSpeedTransformation()
 XTrain, dict_ = enel_transf.transform(XTrain)
 XTrain, output_dict = enel_transf.nearest_products_levels(neight_,dict_,XTrain)
 
-np.savez("ENEL_2014/Product_level_2_dict", dict_ = output_dict)
+np.savez("ENEL_2014/Product_level_"+str(k)+"_dict", dict_ = output_dict)
