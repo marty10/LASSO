@@ -1,7 +1,7 @@
 from ExtractResult import Result
 from Transformation import EnelWindSpeedTransformation
 import numpy as np
-
+import sys
 from utility import find_nearest
 
 folder_train = "ENEL_2014/PSC/0-23_0001-0049/"
@@ -14,7 +14,10 @@ results = Result(file, "lasso")
 XTrain, YTrain, XTest, YTest = results.extract_train_test()
 
 Coord = np.load("ENEL_2014/Coord.npz")["Coord"]
-k=2
+
+sys.argv[1:] = [int(x) for x in sys.argv[1:]]
+k = sys.argv[1]
+
 neight_= find_nearest(Coord,k)
 
 enel_transf = EnelWindSpeedTransformation()

@@ -4,12 +4,16 @@ from ExtractResult import Result
 from LASSOModel import Shooting, LASSOEstimator
 from utility import assign_weights, get_current_data, compute_weightedLASSO, get_beta_div_zeros, print_features_active, \
     compute_lasso
+import sys
 
-file_name = "Enel_cross_val_blocks_level_products2"
+sys.argv[1:] = [str(x) for x in sys.argv[1:]]
+file_name = sys.argv[1]
+file_name_dict = sys.argv[2]
 ext = ".npz"
 file = "ENEL_2014/"+file_name+ext
 
-file_dict = "ENEL_2014/Product_level_2_dict.npz"
+
+file_dict = "ENEL_2014/"+file_name_dict+ext
 
 results_dict = Result(file_dict, "lasso")
 results = Result(file, "lasso")
