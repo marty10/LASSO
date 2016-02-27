@@ -6,6 +6,7 @@ import numpy as np
 from utility import center_test, assign_weights, get_current_data, compute_lasso, get_beta_div_zeros, \
     print_features_active, compute_weightedLASSO
 
+compute_lasso_current = 0
 iter = 29
 score = "mean_squared_error"
 if score=="r2_score":
@@ -83,9 +84,10 @@ XTrain_current, XTest_current = get_current_data(XTrain, XTest,indexes)
 
 
 ###compute LASSO
-new_loss, beta = compute_lasso(XTrain_current, YTrain, XTest_current, YTest, score=score)
-beta = np.abs(beta[:, 0])
-beta_indexes,beta_ordered = get_beta_div_zeros(beta)
+if compute_lasso_current:
+    new_loss, beta = compute_lasso(XTrain_current, YTrain, XTest_current, YTest, score=score)
+    beta = np.abs(beta[:, 0])
+    beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
 print("loss insieme ridotto", new_loss)
 print(indexes[beta_indexes])

@@ -47,13 +47,7 @@ weights_data = results_cross_val.extract_weights()
 index_mse = len(weights_data)-1
 weights_data = weights_data[index_mse]
 
-final_weights = np.zeros(len(dict_.keys()))
-
-keys_ = np.array((list)(dict_.keys())).astype("int64")
-for key in keys_:
-    final_weights[key] += np.sum(weights_data[dict_.get(key).astype("int64")])
-
-ordered_final_weights = np.argsort(final_weights)[::-1]
+ordered_final_weights = np.argsort(weights_data)[::-1]
 if verbose:
     print("-------------")
     print("ranking of the featues:", ordered_final_weights)
@@ -61,14 +55,9 @@ if verbose:
 
 ###compute LASSO
 #resultsData = Result(file_data,"lasso")
-ordered_indexes = np.argsort(weights_data)[::-1]
+ordered_indexes = ordered_final_weights
 
-keys_sel = ordered_final_weights[:iter]
-indexes = np.array([], dtype = "int64")
-for key in keys_sel:
-    indexes = np.union1d(indexes,dict_.get(key))
-
-indexes = np.array(indexes).astype("int64")
+indexes = ordered_final_weights[:iter].astype("int64")
 
 weights = assign_weights(weights_data.copy())
 weights = weights[indexes]
