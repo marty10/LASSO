@@ -1,4 +1,5 @@
 import math
+
 from scipy import spatial
 from scipy.stats import pearsonr
 from sklearn import linear_model
@@ -33,13 +34,13 @@ def compute_weightedLASSO(lasso,XTrain_current,YTrain, XTest_current, YTest,scor
 
     y_pred_train = lasso.predict(XTrain_current)
     mse_train = score_f(YTrain, y_pred_train)
-    abs_error_train = mean_absolute_error(YTrain,y_pred_train)*len(YTrain)/(89.7*9*331)
+    abs_error_train = 100*mean_absolute_error(YTrain,y_pred_train)#*len(YTrain)#/(89.7*9*331)
     if verbose:
         print("mse_train "+lasso.__class__.__name__,mse_train)
         print("abs train", abs_error_train)
     y_pred_test = lasso.predict(XTest_current)
     mse_test = score_f(YTest, y_pred_test)
-    abs_error_test = mean_absolute_error(YTest,y_pred_test)*len(YTest)/(89.7*16*165)
+    abs_error_test = 100*mean_absolute_error(YTest,y_pred_test)#*len(YTest)/(89.7*16*165)
     if verbose:
         print ("mse_test weights "+lasso.__class__.__name__,mse_test)
         print("abs test", abs_error_test)
@@ -148,6 +149,7 @@ def compute_mse(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest, score
     else:
         new_loss = r2_score(YTest,y_pred_test)
     beta = model.coef_
+
     if x_train_current_tmp.shape[1]==1:
         beta = np.array([beta])
     beta = beta.reshape([len(beta),1])
@@ -217,14 +219,12 @@ def get_common_indexes(weights_indexes,ordered_loss_ten,blocks_generated, betas)
     return np.abs(weights_indexes), np.sign(weights_indexes)
 
 def get_common_indexes(weights_indexes,ordered_loss_ten,blocks_generated, betas, n_features):
-    count=0
     current_weight = np.zeros(n_features)
     for i in ordered_loss_ten:
         weights_indexes[blocks_generated[i]] += betas[:,i]
         current_weight[blocks_generated[i]]+= betas[:,i]
-        count+=1
     weights_indexes = np.abs(weights_indexes)
-    return weights_indexes, np.sign(current_weight)
+    return weights_indexes
 
 def get_common_indexes_threshold(weights_indexes,ordered_loss_ten,blocks_generated, betas,threshold):
     count=0
@@ -310,16 +310,13 @@ def extract_chosen_indexes_from_start(saved_indexes, ordered_weights_indexes,cho
     i = 0
     inserted_indexes = 0
     length = len(saved_indexes)
-    old_saved_indexes = saved_indexes.copy()
-    saved_indexes = np.array([],dtype = "int64")
+    saved_indexes = []
     while inserted_indexes < chosen_indexes+length:
         current_value = ordered_weights_indexes[i]
         if current_value not in saved_indexes:
-            saved_indexes = np.append(saved_indexes, current_value)
+            saved_indexes.append(current_value)
             inserted_indexes += 1
         i += 1
-    inters = np.intersect1d(old_saved_indexes, saved_indexes)
-
     return saved_indexes
 
 def extracte_chosen_indexes_beta_check(old_values, saved_indexes, ordered_weights_indexes, values, chosen_indexes):

@@ -142,7 +142,6 @@ while num_cycle<cycles:
 
     assert(len(saved_indexes)<=max_active_set)
     x_train_saved, x_val_saved = get_current_data(XTrain_, XVal_, saved_indexes)
-    end_time = timeit.default_timer()
 
     if compute_mse_current:
         x_val_saved = x_val_saved[rand_vect,:]
