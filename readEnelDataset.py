@@ -25,8 +25,8 @@ results = Result(file, "lasso")
 
 XTrain, YTrain, XTest, YTest = results.extract_train_test()
 
-YTrain = (YTrain*1000)#**(1. / 3)
-YTest = (YTest*1000)#**(1. / 3)
+YTrain = YTrain**(1. / 3)
+YTest = YTest**(1. / 3)
 
 enel_transf = EnelWindSpeedTransformation()
 XTrain, dict_ = enel_transf.transform(XTrain)
