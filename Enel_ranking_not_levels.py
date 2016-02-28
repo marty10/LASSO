@@ -4,8 +4,11 @@ import numpy as np
 from LASSOModel import Shooting, LASSOEstimator
 from utility import get_current_data, assign_weights, compute_mse, assign_weights_ordered, compute_lasso, \
     get_beta_div_zeros, print_features_active, compute_weightedLASSO, extract_level
+import sys
 
-file_name = "Enel_cross_val_blocks"
+sys.argv[1:] = [str(x) for x in sys.argv[1:]]
+file_name = sys.argv[1]
+
 ext = ".npz"
 file = "ENEL_2014/"+file_name+ext
 results = Result(file, "lasso")
