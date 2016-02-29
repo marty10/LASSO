@@ -18,7 +18,7 @@ XTrain, dict_ = enel_transf.transform(XTrain)
 XTest, dict_ = EnelWindSpeedTransformation().transform(XTest)
 
 for k in range(5,10):
-
+    print(k, "vicini")
     turbine_dict = find_nearest_turbine(Coord,Coord_turb,k)
 
     XTrain_, output_dict = enel_transf.nearest_mean_turbine(turbine_dict,dict_,XTrain, power_curve)
