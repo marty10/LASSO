@@ -34,7 +34,7 @@ def compute_weightedLASSO(lasso,XTrain_current,YTrain, XTest_current, YTest,scor
 
     y_pred_train = lasso.predict(XTrain_current)
     mse_train = score_f(YTrain, y_pred_train)
-    abs_error_train = 100*mean_absolute_error(YTrain,y_pred_train)*len(YTrain)/(89.7*9*331)
+    abs_error_train = 100*mean_absolute_error(YTrain,y_pred_train)*len(YTrain)/(89.7*16*331)
     if verbose:
         print("mse_train "+lasso.__class__.__name__,mse_train)
         print("abs train", abs_error_train)
@@ -571,15 +571,3 @@ def binomialCoefficient(p,s):
     return div
 
 
-def find_nearest(Coord,k):
-    dim = Coord.shape[0]
-    dict_ = dict.fromkeys(np.arange(0,dim),np.array([]))
-    x = Coord[:,0]
-    y = Coord[:,1]
-
-    tree = spatial.KDTree(np.column_stack((x.ravel(), y.ravel())))
-    for i in range(0,dim):
-        d,j = tree.query(Coord[i,:],k = k)
-        j = j[j>=i]
-        dict_[i] = j
-    return dict_

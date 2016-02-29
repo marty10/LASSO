@@ -9,7 +9,8 @@ from sklearn.cross_validation import train_test_split
 from sklearn.linear_model.base import center_data
 
 from Transformation import NullTransformation
-from FeatureSelectionRules import null_rule
+from libsvm.python.svmutil import svm_read_problem
+from old.FeatureSelectionRules import null_rule
 
 
 class Dataset:
@@ -141,18 +142,18 @@ class Libsvm_Dataset(Dataset):
 class Enel_dataset(Dataset):
     def __init__(self, folder_train, folder_test, label_file, start_data_train = ["24/08/2012", "23"], end_data_train = ["20/07/2013", "7"],
                  start_data_test = ["20/07/2013", "8"], end_data_test = ["31/12/2013", "23"], centerdata = True):
-
-        files = os.listdir(folder_train)
-
-        X_indexes = [0,2]
-        Y_indexes = [0]
-        self.XTrain, self.YTrain = self.extract_data(folder_train, files, label_file, start_data_train, end_data_train, X_indexes, Y_indexes, test_flag = 0)
-        self.XTest, self.YTest = self.extract_data(folder_test, files, label_file, start_data_test, end_data_test, X_indexes, Y_indexes, test_flag=1)
-
-        if centerdata:
-            self.XTrain, self.YTrain, X_mean, y_mean, X_std = center_data(self.XTrain, self.YTrain, fit_intercept=True, normalize = True)
-            self.XTest, self.YTest = self.center_test(self.XTest,self.YTest,X_mean,y_mean,X_std)
-            self.YTest = self.YTest-y_mean
+        pass
+        # files = os.listdir(folder_train)
+        #
+        # X_indexes = [0,2]
+        # Y_indexes = [0]
+        # self.XTrain, self.YTrain = self.extract_data(folder_train, files, label_file, start_data_train, end_data_train, X_indexes, Y_indexes, test_flag = 0)
+        # self.XTest, self.YTest = self.extract_data(folder_test, files, label_file, start_data_test, end_data_test, X_indexes, Y_indexes, test_flag=1)
+        #
+        # if centerdata:
+        #     self.XTrain, self.YTrain, X_mean, y_mean, X_std = center_data(self.XTrain, self.YTrain, fit_intercept=True, normalize = True)
+        #     self.XTest, self.YTest = self.center_test(self.XTest,self.YTest,X_mean,y_mean,X_std)
+        #     self.YTest = self.YTest-y_mean
 
     def extract_coordinates(self, folder):
         file_name = "Coordinate.xlsx"
@@ -160,17 +161,35 @@ class Enel_dataset(Dataset):
         wb = openpyxl.load_workbook(current_coord_file)
         sheet = wb.get_sheet_by_name('PSC')
 
+        ###extract point coord
         X = np.zeros([49,2])
-        i=0
-        for cellObj in sheet.columns[1][1:]:
-            X[i,0] = cellObj.value
-            i+=1
-        i=0
-        for cellObj in sheet.columns[2][1:]:
-            X[i,1] = cellObj.value
-            i+=1
+        j=0
+        for col in range(1,3):
+            X = self.extract_info_columns(sheet, col, j, X)
+            j+=1
 
+        ##extract turbine coord
+        X_turb = np.zeros([39,2])
+        j=0
+        for col in range(4,6):
+            X_turb = self.extract_info_columns(sheet, col, j,X_turb)
+            j+=1
+        return X, X_turb
+
+    def extract_info_columns(self, sheet, col, j, X):
+        i=0
+        for cellObj in sheet.columns[col][1:]:
+            X[i,j] = cellObj.value
+            i+=1
+            if i==X.shape[0]:
+                break
         return X
+
+    def extract_power_curve(self,file_name):
+        X = np.genfromtxt(file_name, delimiter='\t')
+        return X
+
+
 
     def extract_data(self, dir, files, label_file, start_data, end_data, X_indexes, Y_indexes, test_flag ):
 
