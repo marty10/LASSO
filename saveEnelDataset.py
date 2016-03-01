@@ -1,16 +1,18 @@
 from ExtractDataset import Enel_dataset
 import numpy as np
 
-folder_train = "ENEL_2014/PSC/0-23_0001-0049/"
-folder_test = "ENEL_2014/PSC/24-47_0001-0049/"
-label_file = "ENEL_2014/PSC/Metering_2011-2014_UTC.txt"
-file_name_power_curve =  "ENEL_2014/PSC_Pot_curves.txt"
+from ExtractResult import Result
 
-### save the dataset
-enel_dataset = Enel_dataset(folder_train, folder_test, label_file,centerdata=False)
-dict_ = enel_dataset.dict_
-Coord, Coord_turb = enel_dataset.extract_coordinates(folder="ENEL_2014/PSC/")
-power_curve = enel_dataset.extract_power_curve(file_name_power_curve)
-XTrain, YTrain, XTest, YTest =  enel_dataset.get_data()
+file = "ENEL_2014/Enel_dataset.npz"
+results = Result(file, "lasso")
+
+XTrain, YTrain, XTest, YTest = results.extract_train_test()
+enel_dict = results.extract_dict()
+Coord, Coord_turb, power_curve = results.extract_coords()
+
+dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
+
+for key in (list)(dict_.keys()):
+    dict_[key] = np.arange(key*24,key*24+24)
 
 np.savez("ENEL_2014/Enel_dataset.npz", XTrain = XTrain, YTrain = YTrain,XTest = XTest,YTest = YTest, Coord = Coord,Coord_turb = Coord_turb, power_curve=power_curve, dict_ = dict_)
