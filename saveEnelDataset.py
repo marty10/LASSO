@@ -7,7 +7,6 @@ file = "ENEL_2014/Enel_dataset.npz"
 results = Result(file, "lasso")
 
 XTrain, YTrain, XTest, YTest = results.extract_train_test()
-enel_dict = results.extract_dict()
 Coord, Coord_turb, power_curve = results.extract_coords()
 
 dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
