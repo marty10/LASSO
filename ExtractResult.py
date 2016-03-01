@@ -57,7 +57,7 @@ class Result:
         return weights
 
     def extract_dict(self):
-        dict_ = self.open_file["dict_"][()]
+        dict_ = self.open_file["dict_"].item()
         return dict_
 
     def extract_mse_test(self):
