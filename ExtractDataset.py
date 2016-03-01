@@ -1,3 +1,5 @@
+import os
+
 import openpyxl
 import random
 from operator import itemgetter
@@ -142,18 +144,21 @@ class Libsvm_Dataset(Dataset):
 class Enel_dataset(Dataset):
     def __init__(self, folder_train, folder_test, label_file, start_data_train = ["24/08/2012", "23"], end_data_train = ["20/07/2013", "7"],
                  start_data_test = ["20/07/2013", "8"], end_data_test = ["31/12/2013", "23"], centerdata = True):
-        pass
-        # files = os.listdir(folder_train)
-        #
-        # X_indexes = [0,2]
-        # Y_indexes = [0]
-        # self.XTrain, self.YTrain = self.extract_data(folder_train, files, label_file, start_data_train, end_data_train, X_indexes, Y_indexes, test_flag = 0)
-        # self.XTest, self.YTest = self.extract_data(folder_test, files, label_file, start_data_test, end_data_test, X_indexes, Y_indexes, test_flag=1)
-        #
-        # if centerdata:
-        #     self.XTrain, self.YTrain, X_mean, y_mean, X_std = center_data(self.XTrain, self.YTrain, fit_intercept=True, normalize = True)
-        #     self.XTest, self.YTest = self.center_test(self.XTest,self.YTest,X_mean,y_mean,X_std)
-        #     self.YTest = self.YTest-y_mean
+        files = os.listdir(folder_train)
+
+        X_indexes = [0,2]
+        Y_indexes = [0]
+        self.XTrain, self.YTrain = self.extract_data(folder_train, files, label_file, start_data_train, end_data_train, X_indexes, Y_indexes, test_flag = 0)
+        self.XTest, self.YTest = self.extract_data(folder_test, files, label_file, start_data_test, end_data_test, X_indexes, Y_indexes, test_flag=1)
+
+        if centerdata:
+            self.XTrain, self.YTrain, X_mean, y_mean, X_std = center_data(self.XTrain, self.YTrain, fit_intercept=True, normalize = True)
+            self.XTest, self.YTest = self.center_test(self.XTest,self.YTest,X_mean,y_mean,X_std)
+            self.YTest = self.YTest-y_mean
+        dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
+        for key in (list)(dict_.keys()):
+            dict_[key] = np.arange(key*24,key*24+24)
+        self.dict_ = dict_
 
     def extract_coordinates(self, folder):
         file_name = "Coordinate.xlsx"
@@ -192,7 +197,6 @@ class Enel_dataset(Dataset):
 
 
     def extract_data(self, dir, files, label_file, start_data, end_data, X_indexes, Y_indexes, test_flag ):
-
         X_ = np.array([])
         start_data_ = start_data[:]
         end_data_ = end_data[:]
