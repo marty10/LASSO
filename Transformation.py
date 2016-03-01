@@ -34,7 +34,7 @@ class Enel_powerCurveTransformation(Transformation):
                     current_dim = x_transf.shape[1]
                     sum_component_u = self.get_component_value(x, dict_, k, current_values)
                     sum_component_v = self.get_component_value(x, dict_, k+12, current_values)
-                    wind_speed = np.sqrt(sum_component_u**2+sum_component_v**2)
+                    wind_speed = np.sqrt(sum_component_u**2+sum_component_v**2)/len(current_values)
                     power_value = self.enel_transf_power_curve(key, wind_speed, power_curve)
                     if x_transf.shape[1]==0:
                         x_transf = power_value.reshape([n,1])
