@@ -36,7 +36,7 @@ weights_data = results.extract_weights()
 
 index_mse = len(weights_data) - 1
 weights_data = weights_data[index_mse]
-print weights_data
+print (weights_data)
 print (len(weights_data))
 weights = assign_weights(weights_data.copy())
 
