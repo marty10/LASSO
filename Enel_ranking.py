@@ -15,6 +15,7 @@ file = "ENEL_2014/"+file_name+ext
 results = Result(file, "lasso")
 
 dict_ = results.extract_dict()
+print dict_
 
 XTrain, YTrain, XVal, YVal = results.extract_train_val()
 
@@ -35,6 +36,8 @@ weights_data = results.extract_weights()
 
 index_mse = len(weights_data) - 1
 weights_data = weights_data[index_mse]
+print weights_data
+print len(weights_data)
 weights = assign_weights(weights_data.copy())
 
 keys_ = np.array(list(dict_.keys())).astype("int64")
