@@ -22,7 +22,7 @@ class Enel_powerCurveTransformation(Transformation):
         x_transf = np.array([[]])
         if not sum_until_k:
             h_s = np.arange(l,l+1)
-        output_dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
+        output_dict_ = dict.fromkeys(np.arange(0,49),np.array([], dtype = "int64"))
         n = x.shape[0]
         keys_ = (list)(neigh_.keys())
         values = (list)(neigh_.values())
@@ -34,7 +34,6 @@ class Enel_powerCurveTransformation(Transformation):
                 current_values = current_value[:h+1]
                 start_dim = x_transf.shape[1]
                 for k in k_levels:
-                    current_dim = x_transf.shape[1]
                     sum_component_u = self.get_component_value(x, dict_, k, current_values)
                     sum_component_v = self.get_component_value(x, dict_, k+12, current_values)
                     wind_speed = np.sqrt(sum_component_u**2+sum_component_v**2)/len(current_values)
@@ -43,14 +42,9 @@ class Enel_powerCurveTransformation(Transformation):
                         x_transf = power_value.reshape([n,1])
                     else:
                         x_transf = np.concatenate((x_transf,power_value.reshape([n,1])), axis = 1)
-                l=0
+                current_dim = x_transf.shape[1]
                 for current_v in current_values:
-                    if current_v!=key:
-                        output_dict_[current_v] = np.append(output_dict_[current_v], current_dim+l)
-                    l+=1
-            end_dim = x_transf.shape[1]
-            output_dict_[key] = np.append(output_dict_[key], np.arange(start_dim, end_dim))
-
+                    output_dict_[current_v] = np.append(output_dict_[current_v], np.arange(start_dim,current_dim))
         return x_transf, output_dict_
 
     def get_component_value(self,x, dict_, k, current_values):
