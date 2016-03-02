@@ -20,12 +20,12 @@ enel_dict = results.extract_dict()
 Coord, Coord_turb, power_curve = results.extract_coords()
 
 ##transformation of data
-turbine_dict = find_nearest_turbine(Coord,Coord_turb,k = 10)
+turbine_dict = find_nearest_turbine(Coord,Coord_turb,k = 5)
 
 enel_transf = Enel_powerCurveTransformation()
-XTrain_transf, output_dict = enel_transf.transform(turbine_dict, enel_dict, XTrain, power_curve,10)
+XTrain_transf, output_dict = enel_transf.transform(turbine_dict, enel_dict, XTrain, power_curve,5)
 
-XTest_transf, _ = enel_transf.transform(turbine_dict,enel_dict,XTest,power_curve, 10)
+XTest_transf, _ = enel_transf.transform(turbine_dict,enel_dict,XTest,power_curve, 5)
 
 ##center data
 XTrain_noCenter, XVal_noCenter, YTrain_noCenter, YVal_noCenter = train_test_split(XTrain_transf, YTrain, test_size=0.33,random_state=0)
@@ -153,5 +153,5 @@ while num_cycle<cycles:
 
     countIter+=1
 
-    np.savez("Enel_cross_val_blocks_powerCurve.npz", dict_ = enel_dict,saved_indexes_list = saved_indexes_list, mses = mses, weights_list = weights_list, XTrain = XTrain, XTest = XTest, YTest = YTest, YTrain = YTrain, XTrainTransf_ = XTrain_transf, XTestTransf_ = XTest_transf, XTrain_ValNoCenter = XTrain_noCenter,
+    np.savez("Enel_cross_val_blocks_powerCurveMeanNeigh5.npz", dict_ = enel_dict,saved_indexes_list = saved_indexes_list, mses = mses, weights_list = weights_list, XTrain = XTrain, XTest = XTest, YTest = YTest, YTrain = YTrain, XTrainTransf_ = XTrain_transf, XTestTransf_ = XTest_transf, XTrain_ValNoCenter = XTrain_noCenter,
            XValTransf_noCenter = XVal_noCenter, YTrainVal_noCenter = YTrain_noCenter, YVal_noCenter = YVal_noCenter, XTrain_Val = XTrain_, XVal = XVal_ , YVal_ = YVal_, YTrain_Val = YTrain_ )
