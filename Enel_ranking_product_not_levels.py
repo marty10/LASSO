@@ -13,13 +13,13 @@ ext = ".npz"
 file = "ENEL_2014/"+file_name+ext
 
 
-file_dict = "ENEL_2014/"+file_name_dict+ext
+#file_dict = "ENEL_2014/"+file_name_dict+ext
 
-results_dict = Result(file_dict, "lasso")
+#results_dict = Result(file_dict, "lasso")
 results = Result(file, "lasso")
 
-#dict_ = results.extract_dict()
-dict_ = results_dict.extract_dict()
+dict_ = results.extract_dict()
+#dict_ = results_dict.extract_dict()
 
 XTrain, YTrain, XVal, YVal = results.extract_train_val()
 
