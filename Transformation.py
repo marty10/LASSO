@@ -18,9 +18,11 @@ class Enel_powerCurveTransformation(Transformation):
         pass
 
     def transform(self, neigh_, dict_, x, power_curve,l, sum_until_k):
+        print(sum_until_k)
         k_levels = np.arange(0,12)
         x_transf = np.array([[]])
         if not sum_until_k:
+            print("preso lo 0")
             h_s = np.arange(l,l+1)
         output_dict_ = dict.fromkeys(np.arange(0,49),np.array([], dtype = "int64"))
         n = x.shape[0]
