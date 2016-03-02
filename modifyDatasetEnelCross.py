@@ -7,7 +7,7 @@ import sys
 sys.argv[1:2] = [str(x) for x in sys.argv[1:2]]
 filename = sys.argv[1]
 until_k = sys.argv[2]
-
+print(until_k)
 results = Result(filename, "lasso")
 
 XTrain, YTrain, XTest, YTest = results.extract_train_test()
@@ -28,7 +28,7 @@ Coord, Coord_turb, power_curve = results.extract_coords()
 turbine_dict = find_nearest_turbine(Coord,Coord_turb,k=5)
 enel_transf = Enel_powerCurveTransformation()
 _, output_dict = enel_transf.transform(turbine_dict, enel_dict, XTrain, power_curve,5,until_k)
-
+print (output_dict)
 
 np.savez(filename, dict_ = output_dict, saved_indexes_list = saved_indexes_list,
             mses = mses, weights_list = weights_list, XTrain = XTrain, XTest = XTest, YTest = YTest,
