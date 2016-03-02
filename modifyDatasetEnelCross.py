@@ -6,7 +6,7 @@ import sys
 
 sys.argv[1:2] = [str(x) for x in sys.argv[1:2]]
 filename = sys.argv[1]
-until_k = sys.argv[2]
+until_k = (int)(sys.argv[2])
 
 results = Result(filename, "lasso")
 
