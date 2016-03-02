@@ -156,5 +156,5 @@ while num_cycle<cycles:
 
     countIter+=1
 
-    np.savez("Enel_cross_val_blocks_powerCurveMeanNeigh5.npz", dict_ = enel_dict,saved_indexes_list = saved_indexes_list, mses = mses, weights_list = weights_list, XTrain = XTrain, XTest = XTest, YTest = YTest, YTrain = YTrain, XTrainTransf_ = XTrain_transf, XTestTransf_ = XTest_transf, XTrain_ValNoCenter = XTrain_noCenter,
+    np.savez("Enel_cross_val_blocks_powerCurveMeanNeigh5_"+str(sum_until_k)+".npz", dict_ = enel_dict,saved_indexes_list = saved_indexes_list, mses = mses, weights_list = weights_list, XTrain = XTrain, XTest = XTest, YTest = YTest, YTrain = YTrain, XTrainTransf_ = XTrain_transf, XTestTransf_ = XTest_transf, XTrain_ValNoCenter = XTrain_noCenter,
            XValTransf_noCenter = XVal_noCenter, YTrainVal_noCenter = YTrain_noCenter, YVal_noCenter = YVal_noCenter, XTrain_Val = XTrain_, XVal = XVal_ , YVal_ = YVal_, YTrain_Val = YTrain_ )
