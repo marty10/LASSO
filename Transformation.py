@@ -17,16 +17,19 @@ class Enel_powerCurveTransformation(Transformation):
     def __init__(self):
         pass
 
-    def transform(self, neigh_, dict_, x, power_curve,l):
+    def transform(self, neigh_, dict_, x, power_curve,l, sum_until_k):
         k_levels = np.arange(0,12)
         x_transf = np.array([[]])
-        h_s = np.arange(l,l+1)
+        if not sum_until_k:
+            h_s = np.arange(l,l+1)
         output_dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
         n = x.shape[0]
         keys_ = (list)(neigh_.keys())
         values = (list)(neigh_.values())
         for key in keys_:
             current_value = values[key][:,0]
+            if sum_until_k:
+                h_s = np.arange(len(current_value))
             for h in h_s:
                 current_values = current_value[:h+1]
                 start_dim = x_transf.shape[1]
