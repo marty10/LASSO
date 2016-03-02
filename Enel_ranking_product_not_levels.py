@@ -8,7 +8,7 @@ import sys
 
 sys.argv[1:] = [str(x) for x in sys.argv[1:]]
 file_name = sys.argv[1]
-file_name_dict = sys.argv[2]
+#file_name_dict = sys.argv[2]
 ext = ".npz"
 file = "ENEL_2014/"+file_name+ext
 
