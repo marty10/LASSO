@@ -29,8 +29,9 @@ Coord, Coord_turb, power_curve = results.extract_coords()
 
 turbine_dict = find_nearest_turbine(Coord,Coord_turb,k=5)
 enel_transf = Enel_powerCurveTransformation()
-_, output_dict = enel_transf.transform(turbine_dict, enel_dict, XTrain, power_curve,5,until_k)
-
+d, output_dict = enel_transf.transform(turbine_dict, enel_dict, XTrain, power_curve,5,sum_until_k=until_k)
+print(d.shape[1])
+print(output_dict)
 
 np.savez(filename, dict_ = output_dict, saved_indexes_list = saved_indexes_list,
             mses = mses, weights_list = weights_list, XTrain = XTrain, XTest = XTest, YTest = YTest,
