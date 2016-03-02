@@ -33,9 +33,21 @@ class Result:
         YTest = self.open_file["YTest"]
         return XTrain, YTrain, XTest, YTest
 
-    def extract_mse(self):
+    def extract_mses(self):
         mses = self.open_file["mses"]
         return mses
+
+
+    def extract_train_val_no_centered(self):
+        YTrainVal_noCenter = self.open_file["YTrainVal_noCenter"]
+        XTrain_ValNoCenter = self.open_file["XTrain_ValNoCenter"]
+        XVal_noCenter = self.open_file["XValTransf_noCenter"]
+        YVal_noCenter = self.open_file["YVal_noCenter"]
+        return XTrain_ValNoCenter, YTrainVal_noCenter, XVal_noCenter,YVal_noCenter
+
+    def get_saved_indexes(self):
+        saved_indexes_list = self.open_file["saved_indexes_list"]
+        return saved_indexes_list
 
     def extract_active_sets_indexes_beta(self):
         active_sets = self.open_file["active_sets"]
