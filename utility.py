@@ -5,12 +5,9 @@ import numpy as np
 
 def extract_level(ordered_final_weights, values):
     weights_level = []
-    values_index = values[:,0]
-    values_level = values[:,1]
     for w in ordered_final_weights:
-        key = np.where(values_index==w)[0][0]
-        level = values_level[key]
-        weights_level.append([key, level])
+        key = np.where(values==w)[0][0]
+        weights_level.append(values[key])
     return np.array(weights_level, dtype="int64")
 
 
@@ -102,7 +99,7 @@ def get_current_samples(XTrain, blocks_generated_i):
 def print_features_active(keys_sel, indexes, dict_):
     for key in keys_sel:
         for i in indexes:
-            if i in dict_.get(key)[:,0]:
+            if i in dict_.get(key):
                 print (key)
                 break
 
