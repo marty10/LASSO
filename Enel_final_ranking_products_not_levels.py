@@ -58,8 +58,7 @@ ordered_indexes = ordered_final_weights
 
 indexes = ordered_final_weights[:iter].astype("int64")
 
-weights = assign_weights(weights_data.copy())
-weights = weights[indexes]
+weights = assign_weights(weights_data[indexes].copy())
 XTrain_current, XTest_current = get_current_data(XTrain, XTest,indexes)
 
 
