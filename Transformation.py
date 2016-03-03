@@ -18,35 +18,34 @@ class Enel_powerCurveTransformation(Transformation):
         pass
 
     def transform(self, neigh_, dict_, x, power_curve,l, sum_until_k):
-        print(sum_until_k)
         k_levels = np.arange(0,12)
         x_transf = np.array([[]])
         if not sum_until_k:
-            print("preso lo 0")
             h_s = np.arange(l,l+1)
         output_dict_ = dict.fromkeys(np.arange(0,49),np.array([], dtype = "int64"))
         n = x.shape[0]
         keys_ = (list)(neigh_.keys())
         values = (list)(neigh_.values())
         for key in keys_:
-            current_value = values[key][:,0]
-            if sum_until_k:
-                h_s = np.arange(len(current_value))
-            for h in h_s:
-                current_values = current_value[:h+1]
-                start_dim = x_transf.shape[1]
-                for k in k_levels:
-                    sum_component_u = self.get_component_value(x, dict_, k, current_values)
-                    sum_component_v = self.get_component_value(x, dict_, k+12, current_values)
-                    wind_speed = np.sqrt(sum_component_u**2+sum_component_v**2)/len(current_values)
-                    power_value = self.enel_transf_power_curve(key, wind_speed, power_curve)
-                    if x_transf.shape[1]==0:
-                        x_transf = power_value.reshape([n,1])
-                    else:
-                        x_transf = np.concatenate((x_transf,power_value.reshape([n,1])), axis = 1)
-                current_dim = x_transf.shape[1]
-                for current_v in current_values:
-                    output_dict_[current_v] = np.append(output_dict_[current_v], np.arange(start_dim,current_dim))
+            current_value = values[key]#[:,0]
+            if len(current_value)!=0:
+                if sum_until_k:
+                    h_s = np.arange(len(current_value))
+                for h in h_s:
+                    current_values = current_value[:h+1]
+                    start_dim = x_transf.shape[1]
+                    for k in k_levels:
+                        sum_component_u = self.get_component_value(x, dict_, k, current_values)
+                        sum_component_v = self.get_component_value(x, dict_, k+12, current_values)
+                        wind_speed = np.sqrt(sum_component_u**2+sum_component_v**2)/len(current_values)
+                        power_value = self.enel_transf_power_curve(key, wind_speed, power_curve)
+                        if x_transf.shape[1]==0:
+                            x_transf = power_value.reshape([n,1])
+                        else:
+                            x_transf = np.concatenate((x_transf,power_value.reshape([n,1])), axis = 1)
+                    current_dim = x_transf.shape[1]
+                    for current_v in current_values:
+                        output_dict_[current_v] = np.append(output_dict_[current_v], np.arange(start_dim,current_dim))
         return x_transf, output_dict_
 
     def get_component_value(self,x, dict_, k, current_values):

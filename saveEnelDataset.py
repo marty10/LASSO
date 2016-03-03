@@ -1,6 +1,5 @@
 from ExtractDataset import Enel_dataset
 import numpy as np
-
 from ExtractResult import Result
 
 file = "ENEL_2014/Enel_dataset.npz"

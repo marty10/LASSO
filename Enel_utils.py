@@ -5,25 +5,31 @@ from scipy import spatial
 def find_nearest(Coord,k):
     dim = Coord.shape[0]
     dict_ = dict.fromkeys(np.arange(0,dim),np.array([]))
-    x = Coord[:,0]
-    y = Coord[:,1]
-
-    tree = spatial.KDTree(np.column_stack((x.ravel(), y.ravel())))
+    tree = create_tree(Coord)
     for i in range(0,dim):
         d,j = tree.query(Coord[i,:],k = k)
         j = j[j>=i]
         dict_[i] = j
     return dict_
 
+def find_turbines_nearest_points(Coord,Coord_turb,k):
+    dim = Coord.shape[0]
+    dict_ = dict.fromkeys(np.arange(0,Coord_turb.shape[0]),np.array([]))
+    tree = create_tree(Coord_turb)
+    for i in range(0,dim):
+        d,k_nearest = tree.query(Coord[i,:],k = k)
+        if k==1:
+            dict_[k_nearest] = np.append(dict_[k_nearest], i)
+        else:
+            for j in (k_nearest):
+                dict_[j] = np.append(dict_[j], i)
+    return dict_
 
 def find_nearest_turbine(Coord,Coord_turb,k):
     dim = Coord_turb.shape[0]
     #dict_ = dict.fromkeys(np.arange(0,dim),np.array([k,2]))
     dict_ = {}
-    x = Coord[:,0]
-    y = Coord[:,1]
-
-    tree = spatial.KDTree(np.column_stack((x.ravel(), y.ravel())))
+    tree = create_tree(Coord)
     for i in range(0,dim):
         d,j = tree.query(Coord_turb[i,:],k = k)
         if i not in dict_:
@@ -32,6 +38,11 @@ def find_nearest_turbine(Coord,Coord_turb,k):
         dict_[i][:,1] = d
     return dict_
 
+def create_tree(points):
+    x = points[:,0]
+    y = points[:,1]
+    tree = spatial.KDTree(np.column_stack((x.ravel(), y.ravel())))
+    return tree
 
 def get_products_points(turb_dict):
 

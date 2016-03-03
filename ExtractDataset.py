@@ -1,18 +1,14 @@
 import os
-
 import openpyxl
 import random
 from operator import itemgetter
-
 import numpy as np
 import sklearn.feature_extraction
 from sklearn import datasets
 from sklearn.cross_validation import train_test_split
 from sklearn.linear_model.base import center_data
-
 from Transformation import NullTransformation
 from FeatureSelectionRules import null_rule
-
 
 class Dataset:
 
@@ -141,8 +137,8 @@ class Libsvm_Dataset(Dataset):
 
 
 class Enel_dataset(Dataset):
-    def __init__(self, folder_train, folder_test, label_file, start_data_train = ["24/08/2012", "23"], end_data_train = ["20/07/2013", "7"],
-                 start_data_test = ["20/07/2013", "8"], end_data_test = ["31/12/2013", "23"], centerdata = True):
+    def __init__(self, folder_train, folder_test, label_file, start_data_train = ["24/08/2012", "23"], end_data_train = ["31/05/2013", "23"],
+                 start_data_test = ["02/06/2013", "0"], end_data_test = ["01/01/2014", "23"], centerdata = True):
         files = os.listdir(folder_train)
 
         X_indexes = [0,2]
@@ -212,9 +208,11 @@ class Enel_dataset(Dataset):
                 X_ = current_X.copy()
             else:
                 X_ = np.concatenate((X_,current_X),axis = 1)
-        start_data_y = [" ".join(start_data)+".00"]
-        end_data_y = [" ".join(end_data)+".00"]
-        index_start,index_end = self.getRowsOfData(label_file, start_data_y, end_data_y, Y_indexes)
+
+        # non serve, gli indici per la y sono gli stessi
+        #start_data_y = [" ".join(start_data)+".00"]
+        #end_data_y = [" ".join(end_data)+".00"]
+        #index_start,index_end = self.getRowsOfData(label_file, start_data_y, end_data_y, Y_indexes)
         Y = np.genfromtxt(label_file, delimiter='\t', usecols=3)
         Y_ = Y[index_start:index_end+1]
         return X_, Y_
