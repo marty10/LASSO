@@ -51,7 +51,8 @@ for key in keys_:
 ordered_final_weights = np.argsort(final_weights)[::-1]
 if verbose:
     print("-------------")
-    pprint("ranking of the featues:", ordered_final_weights)
+    print("ranking of the features:")
+    pprint(ordered_final_weights)
     print("-------------")
 ordered_indexes = np.argsort(weights_data)[::-1]
 losses = []
@@ -99,6 +100,7 @@ for i in range(n_features):
         beta = np.abs(beta)
         beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
+        print("livelli selezionati")
         pprint(indexes[beta_indexes])
         print_features_active(keys_sel, indexes[beta_indexes], dict_)
 
