@@ -23,13 +23,13 @@ sys.argv[1:] = [int(x) for x in sys.argv[1:]]
 sum_until_k = sys.argv[1]
 
 ##transformation of data
-k = 2
+l = 2
 turbine_dict = find_turbines_nearest_points(Coord,Coord_turb,k = k)
 
 enel_transf = Enel_powerCurveTransformation()
-XTrain_transf, output_dict = enel_transf.transform(turbine_dict, enel_dict, XTrain, power_curve,k = k, sum_until_k=sum_until_k)
+XTrain_transf, output_dict = enel_transf.transform(turbine_dict, enel_dict, XTrain, power_curve,l = l, sum_until_k=sum_until_k)
 
-XTest_transf, _ = enel_transf.transform(turbine_dict,enel_dict,XTest,power_curve, k = k, sum_until_k=sum_until_k)
+XTest_transf, _ = enel_transf.transform(turbine_dict,enel_dict,XTest,power_curve, l = l, sum_until_k=sum_until_k)
 
 ##center data
 XTrain_noCenter, XVal_noCenter, YTrain_noCenter, YVal_noCenter = train_test_split(XTrain_transf, YTrain, test_size=0.33,random_state=0)
