@@ -29,9 +29,9 @@ def compute_weightedLASSO(lasso, XTrain_current, YTrain, XTest_current, YTest, s
         print ("mse_test weights "+lasso.__class__.__name__,mse_test)
     ##values[0] = 24, values[1] = 281, values[2] = 214
     if len(values_TM)!=0:
-        abs_error_train = 100*mean_absolute_error(YTrain,y_pred_train)*len(YTrain)/(89.7 * values_TM[0, 1] * values_TM[1, 1])
+        abs_error_train = 100*mean_absolute_error(YTrain,y_pred_train)*len(YTrain)/(89.7 * values_TM[0, 0] * values_TM[0, 1])
 
-        abs_error_test = 100*mean_absolute_error(YTest,y_pred_test)*len(YTest)/(89.7 * values_TM[1, 1] * values_TM[1,2])
+        abs_error_test = 100*mean_absolute_error(YTest,y_pred_test)*len(YTest)/(89.7 * values_TM[1, 0] * values_TM[1,1])
         if verbose:
             print("abs test", abs_error_test)
             print("abs train", abs_error_train)
@@ -49,17 +49,18 @@ def compute_lasso(XTrain, YTrain, XTest, YTest, score):
 
     return new_loss,beta
 
-def compute_mse(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest, score):
+def compute_mse(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest, score,values_TM):
     model.fit(x_train_current_tmp, YTrain)
     y_pred_train = model.predict(x_train_current_tmp)
     y_pred_test = model.predict(x_test_current_tmp)
 
-    abs_error_train = 100*mean_absolute_error(YTrain,y_pred_train)*len(YTrain)/(89.7*24*281)
+    if len(values_TM)!=0:
+        abs_error_train = 10*mean_absolute_error(YTrain,y_pred_train)*len(YTrain)/(89.7*values_TM[0, 0] * values_TM[0, 1])
+        print("abs train", abs_error_train)
 
-    print("abs train", abs_error_train)
-    abs_error_test = 100*mean_absolute_error(YTest,y_pred_test)*len(YTest)/(89.7*24*214)
+        abs_error_test = 100*mean_absolute_error(YTest,y_pred_test)*len(YTest)/(89.7* values_TM[1, 0] * values_TM[1,1])
+        print("abs test", abs_error_test)
 
-    print("abs test", abs_error_test)
     if score=="mean_squared_error":
         new_loss = mean_squared_error(YTest,y_pred_test)
     elif score== "mean_absolute_error":

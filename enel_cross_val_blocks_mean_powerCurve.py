@@ -75,6 +75,7 @@ compute_mse_current = 0
 lasso_cv = linear_model.LassoCV(fit_intercept=False, n_jobs = -1)
 flag_linear = 0
 score = "mean_squared_error"
+values_TM = np.array([[24,281], [24, 214]])
 
 while num_cycle<cycles:
 
@@ -105,7 +106,7 @@ while num_cycle<cycles:
         rand_vect = r1.choice(n_samples_val,active_set_samples, replace = False)
         x_val_i = x_val_i[rand_vect,:]
         YVal_i = YVal_[rand_vect]
-        new_loss, beta= compute_mse(model, x_train_i, YTrain_,x_val_i, YVal_i, score)
+        new_loss, beta= compute_mse(model, x_train_i, YTrain_,x_val_i, YVal_i, score, values_TM)
         losses.append(new_loss)
         betas.append(beta)
 
@@ -145,7 +146,7 @@ while num_cycle<cycles:
     if compute_mse_current:
         x_val_saved = x_val_saved[rand_vect,:]
         YVal_saved = YVal_[rand_vect]
-        mse_saved,_= compute_mse(model, x_train_saved, YTrain_,x_val_saved, YVal_saved, score)
+        mse_saved,_= compute_mse(model, x_train_saved, YTrain_,x_val_saved, YVal_saved, score,values_TM)
         mses.append(mse_saved)
         print("mse", mse_saved)
     weights_list.append(weights_abs)
