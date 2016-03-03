@@ -16,6 +16,7 @@ file = "ENEL_2014/"+file_name+ext
 results = Result(file, "lasso")
 
 dict_ = results.extract_dict()
+print(dict_)
 
 XTrain, YTrain, XVal, YVal = results.extract_train_val()
 
