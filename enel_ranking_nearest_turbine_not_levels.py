@@ -80,7 +80,8 @@ for i in range(n_features):
         beta = np.abs(beta)
         beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
-        pprint(indexes[beta_indexes])
+        print("livelli selezionati:")
+        pprint(weights_level[beta_indexes])
 
         np.savez(file_name+"ranking_not_levels"+ext, mses = losses, indexes = indexes_tot)
 
