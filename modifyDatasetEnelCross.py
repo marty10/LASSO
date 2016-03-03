@@ -3,7 +3,7 @@ from Enel_utils import find_turbines_nearest_points
 from ExtractResult import Result
 from Transformation import Enel_powerCurveTransformation
 import sys
-import pprint
+import pprint as pprint
 
 sys.argv[1:2] = [str(x) for x in sys.argv[1:2]]
 filename = sys.argv[1]
