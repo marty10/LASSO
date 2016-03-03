@@ -1,5 +1,5 @@
 import numpy as np
-from Enel_utils import find_nearest_turbine_points
+from Enel_utils import find_turbines_nearest_points
 from ExtractResult import Result
 from Transformation import Enel_powerCurveTransformation
 import sys
