@@ -7,9 +7,9 @@ from Enel_utils import find_nearest_turbine
 from ExtractDataset import Enel_dataset
 from ExtractResult import Result
 from Transformation import EnelTransformation, EnelWindSpeedTransformation, Enel_powerCurveTransformation
-from utility import generate_samples_dynamic_set, get_current_data, compute_mse, get_common_indexes, \
-    extract_chosen_indexes_from_start, center_test, compute_lasso
-
+from utility import generate_samples_dynamic_set, get_current_data,get_common_indexes, \
+    extract_chosen_indexes_from_start, center_test
+from Lasso_utils import compute_lasso, compute_mse
 ####load data
 file = "ENEL_2014/Enel_dataset.npz"
 results = Result(file, "lasso")
@@ -23,12 +23,13 @@ sys.argv[1:] = [int(x) for x in sys.argv[1:]]
 sum_until_k = sys.argv[1]
 
 ##transformation of data
-turbine_dict = find_nearest_turbine(Coord,Coord_turb,k = 5)
+k = 2
+turbine_dict = find_turbines_nearest_points(Coord,Coord_turb,k = k)
 
 enel_transf = Enel_powerCurveTransformation()
-XTrain_transf, output_dict = enel_transf.transform(turbine_dict, enel_dict, XTrain, power_curve,5, sum_until_k=sum_until_k)
+XTrain_transf, output_dict = enel_transf.transform(turbine_dict, enel_dict, XTrain, power_curve,k = k, sum_until_k=sum_until_k)
 
-XTest_transf, _ = enel_transf.transform(turbine_dict,enel_dict,XTest,power_curve, 5, sum_until_k=sum_until_k)
+XTest_transf, _ = enel_transf.transform(turbine_dict,enel_dict,XTest,power_curve, k = k, sum_until_k=sum_until_k)
 
 ##center data
 XTrain_noCenter, XVal_noCenter, YTrain_noCenter, YVal_noCenter = train_test_split(XTrain_transf, YTrain, test_size=0.33,random_state=0)
@@ -156,7 +157,7 @@ while num_cycle<cycles:
 
     countIter+=1
 
-    np.savez("Enel_cross_val_blocks_powerCurveMeanNeigh5_"+str(sum_until_k)+".npz", dict_ = output_dict,saved_indexes_list = saved_indexes_list,
+    np.savez("Enel_cross_val_blocks_powerCurveMeanNeighTurbine5_"+str(sum_until_k)+".npz", dict_ = output_dict,saved_indexes_list = saved_indexes_list,
              mses = mses, weights_list = weights_list, XTrain = XTrain, XTest = XTest, YTest = YTest, YTrain = YTrain,
              XTrainTransf_ = XTrain_transf, XTestTransf_ = XTest_transf, XTrain_ValNoCenter = XTrain_noCenter,
            XValTransf_noCenter = XVal_noCenter, YTrainVal_noCenter = YTrain_noCenter, YVal_noCenter = YVal_noCenter,
