@@ -1,18 +1,15 @@
 import math
 from scipy.stats import pearsonr
-from sklearn import linear_model
-from sklearn.grid_search import GridSearchCV
-from sklearn.linear_model.coordinate_descent import _alpha_grid
-from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import numpy as np
 
 
 def extract_level(ordered_final_weights, values):
     weights_level = []
+    values_index = values[:,0]
+    values_level = values[:,1]
     for w in ordered_final_weights:
-        key = np.where(values==w)[0][0]
-        a = values[key]
-        level = np.where(values[key]==w)[0][0]
+        key = np.where(values_index==w)[0][0]
+        level = values_level[key]
         weights_level.append([key, level])
     return np.array(weights_level, dtype="int64")
 
