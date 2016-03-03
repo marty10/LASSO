@@ -75,7 +75,7 @@ compute_mse_current = 0
 lasso_cv = linear_model.LassoCV(fit_intercept=False, n_jobs = -1)
 flag_linear = 0
 score = "mean_squared_error"
-values_TM = np.array([[24,281], [24, 214]])
+values_TM = []
 
 while num_cycle<cycles:
 
