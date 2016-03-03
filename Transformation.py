@@ -22,7 +22,7 @@ class Enel_powerCurveTransformation(Transformation):
         x_transf = np.array([[]])
         if not sum_until_k:
             h_s = np.arange(l,l+1)
-        output_dict_ = dict.fromkeys(np.arange(0,49),np.array([], dtype = "int64"))
+        output_dict_ = dict.fromkeys(np.arange(0,49),np.array([[]], dtype = "int64"))
         n = x.shape[0]
         keys_ = (list)(neigh_.keys())
         values = (list)(neigh_.values())
@@ -45,7 +45,12 @@ class Enel_powerCurveTransformation(Transformation):
                             x_transf = np.concatenate((x_transf,power_value.reshape([n,1])), axis = 1)
                     current_dim = x_transf.shape[1]
                     for current_v in current_values:
-                        output_dict_[current_v] = np.append(output_dict_[current_v], np.arange(start_dim,current_dim))
+                        vect_to_append = np.arange(start_dim,current_dim).reshape([len(np.arange(start_dim,current_dim)),1])
+                        vect_to_append = np.concatenate((vect_to_append, k_levels.reshape([len(k_levels),1])), axis = 1)
+                        if output_dict_[current_v].shape[1]==0:
+                            output_dict_[current_v] = vect_to_append
+                        else:
+                            output_dict_[current_v] = np.concatenate((output_dict_[current_v], vect_to_append),axis = 0)
         return x_transf, output_dict_
 
     def get_component_value(self,x, dict_, k, current_values):
