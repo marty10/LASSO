@@ -39,13 +39,13 @@ def compute_weightedLASSO(lasso, XTrain_current, YTrain, XTest_current, YTest, s
     return mse_test, lasso.beta
 
 
-def compute_lasso(XTrain, YTrain, XTest, YTest, score):
+def compute_lasso(XTrain, YTrain, XTest, YTest, score,values_TM):
     lasso_cv = linear_model.LassoCV(fit_intercept=False,  max_iter=10000, n_jobs = -1)
     lasso_cv.fit(XTrain,YTrain)
     best_alpha = lasso_cv.alpha_
 
     model = linear_model.Lasso(fit_intercept=False,alpha=best_alpha)
-    new_loss,beta = compute_mse(model, XTrain, YTrain,XTest, YTest, score)
+    new_loss,beta = compute_mse(model, XTrain, YTrain,XTest, YTest, score,values_TM)
 
     return new_loss,beta
 

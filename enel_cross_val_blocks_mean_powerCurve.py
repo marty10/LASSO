@@ -36,7 +36,7 @@ XTrain_noCenter, XVal_noCenter, YTrain_noCenter, YVal_noCenter = train_test_spli
 XTrain_, YTrain_, X_mean, y_mean, X_std = center_data(XTrain_noCenter, YTrain_noCenter, fit_intercept=True, normalize = True)
 XVal_, YVal_ = center_test(XVal_noCenter,YVal_noCenter,X_mean,y_mean,X_std)
 
-new_loss, _ = compute_lasso(XTrain_, YTrain_, XVal_, YVal_,score = "mean_squared_error")
+new_loss, _ = compute_lasso(XTrain_, YTrain_, XVal_, YVal_,score = "mean_squared_error",values_TM = [])
 print("loss", new_loss)
 
 n_features_transf = XTrain_.shape[1]
