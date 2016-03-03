@@ -19,9 +19,6 @@ dict_ = results.extract_dict()
 
 XTrain, YTrain, XVal, YVal = results.extract_train_val()
 
-new_loss, beta = compute_lasso(XTrain, YTrain, XVal, YVal,score = "mean_squared_error", values_TM=[])
-print("loss lineare", new_loss)
-
 score = "mean_squared_error"
 if score=="r2_score":
     score_f = r2_score
@@ -71,12 +68,15 @@ for i in range(n_features):
         ###compute LASSO
         indexes = []
         for k in ordered_final_weights[:i+1]:
-            indexes = np.union1d(indexes,dict_.get(k)[:,0])
+            current_value = dict_.get(k)[:,0]
+            indexes = np.union1d(indexes,current_value)
 
         del_ = np.array([], dtype = "int64")
         for key in ordered_final_weights[:i+1]:
             for key_1 in ordered_final_weights[i+1:]:
-                    del_ = np.append(del_,np.intersect1d((list)(dict_.values())[key][:,0], (list)(dict_.values())[key_1][:,0]))
+                value_key = dict_.get(key)[:,0]
+                value_key1 = dict_.get(key1)[:,0]
+                del_ = np.append(del_,np.intersect1d(value_key,value_key1))
 
         a = np.in1d(indexes,del_)
         indexes = np.delete(indexes, np.where(a==True)[0])
