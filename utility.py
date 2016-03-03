@@ -102,7 +102,7 @@ def get_current_samples(XTrain, blocks_generated_i):
 def print_features_active(keys_sel, indexes, dict_):
     for key in keys_sel:
         for i in indexes:
-            if i in dict_.get(key):
+            if i in dict_.get(key)[:,0]:
                 print (key)
                 break
 

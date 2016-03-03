@@ -16,7 +16,6 @@ file = "ENEL_2014/"+file_name+ext
 results = Result(file, "lasso")
 
 dict_ = results.extract_dict()
-values = dict_.values[:,0]
 
 XTrain, YTrain, XVal, YVal = results.extract_train_val()
 
@@ -47,7 +46,7 @@ original_features = len(keys_)
 final_weights = np.zeros(original_features)
 
 for key in keys_:
-    final_weights[key] += np.sum(weights_data[dict_.get(key).astype("int64")])
+    final_weights[key] += np.sum(weights_data[dict_.get(key)[:,0].astype("int64")])
 
 ordered_final_weights = np.argsort(final_weights)[::-1]
 if verbose:
@@ -72,12 +71,12 @@ for i in range(n_features):
         ###compute LASSO
         indexes = []
         for k in ordered_final_weights[:i+1]:
-            indexes = np.union1d(indexes,dict_.get(k))
+            indexes = np.union1d(indexes,dict_.get(k)[:,0])
 
         del_ = np.array([], dtype = "int64")
         for key in ordered_final_weights[:i+1]:
             for key_1 in ordered_final_weights[i+1:]:
-                    del_ = np.append(del_,np.intersect1d((list)(dict_.values())[key], (list)(dict_.values())[key_1]))
+                    del_ = np.append(del_,np.intersect1d((list)(dict_.values())[key][:,0], (list)(dict_.values())[key_1][:,0]))
 
         a = np.in1d(indexes,del_)
         indexes = np.delete(indexes, np.where(a==True)[0])
