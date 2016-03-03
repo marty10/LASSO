@@ -22,11 +22,12 @@ XTrain_, YTrain_, XVal_, YVal_ = results.extract_train_val()
 saved_indexes_list = results.get_saved_indexes()
 XTrain_ValNoCenter, YTrainVal_noCenter, XVal_noCenter,YVal_noCenter = results.extract_train_val_no_centered()
 
-enel_dict = results.extract_dict()
+
 
 file = "ENEL_2014/Enel_dataset.npz"
 results = Result(file, "lasso")
 
+enel_dict = results.extract_dict()
 Coord, Coord_turb, power_curve = results.extract_coords()
 
 turbine_dict = find_turbines_nearest_points(Coord,Coord_turb,k=k)
