@@ -3,7 +3,7 @@ from sklearn.cross_validation import train_test_split
 from sklearn.linear_model.base import center_data
 import numpy as np
 import sys
-from Enel_utils import find_nearest_turbine
+from Enel_utils import find_turbines_nearest_points
 from ExtractDataset import Enel_dataset
 from ExtractResult import Result
 from Transformation import EnelTransformation, EnelWindSpeedTransformation, Enel_powerCurveTransformation
