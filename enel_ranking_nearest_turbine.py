@@ -73,9 +73,9 @@ for i in range(n_features):
 
         del_ = np.array([], dtype = "int64")
         for key in ordered_final_weights[:i+1]:
+            value_key = dict_.get(key)[:,0]
             for key_1 in ordered_final_weights[i+1:]:
-                value_key = dict_.get(key)[:,0]
-                value_key1 = dict_.get(key1)[:,0]
+                value_key_1 = dict_.get(key1)[:,0]
                 del_ = np.append(del_,np.intersect1d(value_key,value_key1))
 
         a = np.in1d(indexes,del_)
