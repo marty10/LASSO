@@ -55,7 +55,7 @@ def compute_mse(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest, score
     y_pred_test = model.predict(x_test_current_tmp)
 
     if len(values_TM)!=0:
-        abs_error_train = 10*mean_absolute_error(YTrain,y_pred_train)*len(YTrain)/(89.7*values_TM[0, 0] * values_TM[0, 1])
+        abs_error_train = 100*mean_absolute_error(YTrain,y_pred_train)*len(YTrain)/(89.7*values_TM[0, 0] * values_TM[0, 1])
         print("abs train", abs_error_train)
 
         abs_error_test = 100*mean_absolute_error(YTest,y_pred_test)*len(YTest)/(89.7* values_TM[1, 0] * values_TM[1,1])
