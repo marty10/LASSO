@@ -6,8 +6,12 @@ import numpy as np
 def extract_level(ordered_final_weights, values):
     weights_level = []
     for w in ordered_final_weights:
-        key = np.where(values==w)[0][0]
-        weights_level.append(values[key])
+        for key,v in enumerate(values):
+            if len(v)!=0:
+                v_current = v[:,0]
+                if w in v_current:
+                    index = np.where(w==v_current)[0][0]
+                    weights_level.append([key,v[index,1]])
     return np.array(weights_level, dtype="int64")
 
 
