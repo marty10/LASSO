@@ -2,8 +2,6 @@ from abc import ABCMeta
 import abc
 import math
 import numpy as np
-from sklearn.preprocessing import PolynomialFeatures
-import numpy.linalg as li
 
 
 class Transformation:
@@ -13,26 +11,28 @@ class Transformation:
     def transform(self, X):
         """fit poly"""
 
+
 class Enel_powerCurveTransformation(Transformation):
     def __init__(self):
         pass
 
-    def transform(self, neigh_, dict_, x, power_curve,l, sum_until_k):
+    def transform(self, neigh_, dict_, x, power_curve,l, x_transf,output_dict_):
         k_levels = np.arange(0,12)
-        x_transf = np.array([[]])
-        if not sum_until_k:
-            h_s = np.arange(l,l+1)
-        output_dict_ = dict.fromkeys(np.arange(0,49),np.array([[]], dtype = "int64"))
         n = x.shape[0]
         keys_ = (list)(neigh_.keys())
         values = (list)(neigh_.values())
         for key in keys_:
-            current_value = values[key]#[:,0]
+            current_value = values[key]
             if len(current_value)!=0:
-                if sum_until_k:
-                    h_s = np.arange(len(current_value))
+                if l==0:
+                    h_s = np.arange(0,len(current_value))
+                else:
+                    h_s = np.arange(len(current_value)-1,len(current_value))
                 for h in h_s:
-                    current_values = current_value[:h+1]
+                    if l==0:
+                        current_values = np.array([current_value[h]])
+                    else:
+                        current_values = current_value[:h+1]
                     start_dim = x_transf.shape[1]
                     for k in k_levels:
                         sum_component_u = self.get_component_value(x, dict_, k, current_values)
@@ -53,8 +53,9 @@ class Enel_powerCurveTransformation(Transformation):
                             output_dict_[current_v] = np.concatenate((output_dict_[current_v], vect_to_append),axis = 0)
         return x_transf, output_dict_
 
+
     def get_component_value(self,x, dict_, k, current_values):
-        c = [dict_[j][k] for j in current_values]
+        c = [dict_[j].astype("int64")[k] for j in current_values]
         c = np.hstack(c).astype("int64")
         current_vect = x[:,c]
         sum_component = np.sum(current_vect, axis = 1)
@@ -74,179 +75,7 @@ class Enel_powerCurveTransformation(Transformation):
             powers.append(power)
         return np.array(powers)
 
-class EnelWindSpeedTransformation(Transformation):
-    def __init__(self):
-        pass
 
-    def transform(self,x):
-        n,m = x.shape
-        x_transf = np.array([[]])
-        dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
-
-        key = 0
-        for i in range(0,m,24):
-            start_dim = x_transf.shape[1]
-            for j in range(i,i+12):
-                if x_transf.shape[1]==0:
-                    x_transf = np.sqrt(np.power(x[:,j],2)+np.power(x[:,j+12],2)).reshape([n,1])
-                else:
-                    x_transf = np.concatenate((x_transf,np.sqrt(np.power(x[:,j],2)+np.power(x[:,j+12],2)).reshape([n,1])), axis = 1)
-            current_dim = x_transf.shape[1]
-            dict_[key] = np.append(dict_[key], np.arange(start_dim,current_dim))
-            key+=1
-
-        assert (x_transf.shape[1]==m/2)
-
-        return x_transf, dict_
-
-
-    def nearest_mean_turbine(self, neigh_, dict_, x, power_curve):
-        x_transf = np.array([[]])
-        output_dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
-        n = x.shape[0]
-        keys_ = (list)(neigh_.keys())
-        values = (list)(neigh_.values())
-        for key in keys_:
-            current_value = values[key][:,0]
-            current_dist = values[key][:,1]
-            for h,near in enumerate(current_value):
-                k_levels = dict_[near]
-                current_values = current_value[:h+1]
-                current_dists = current_dist[:h+1]
-                start_dim = x_transf.shape[1]
-                for k in k_levels:
-                    current_dim = x_transf.shape[1]
-                    v = [dict_[j][k%12] for j in current_values]
-                    v = np.hstack(v).astype("int64")
-                    current_vect = x[:,v]#/current_dists**2
-                    mean_value = np.mean(current_vect, axis = 1)
-                    power_value = self.enel_transf_power_curve(key, mean_value, power_curve)
-                    if x_transf.shape[1]==0:
-                        x_transf = power_value.reshape([n,1])
-                    else:
-                        x_transf = np.concatenate((x_transf,power_value.reshape([n,1])), axis = 1)
-                l=0
-                for current_v in current_values:
-                    if current_v!=key:
-                        output_dict_[current_v] = np.append(output_dict_[current_v], current_dim+l)
-                    l+=1
-            end_dim = x_transf.shape[1]
-            output_dict_[key] = np.append(output_dict_[key], np.arange(start_dim, end_dim))
-
-        return x_transf, output_dict_
-
-
-    def enel_transf_power_curve(self, key, mean_value, power_curve):
-        values = power_curve[:,key*2:key*2+2]
-        powers = []
-        for m in mean_value:
-            mean_values_rounded= int(m)+0.5
-            row_power = np.where(values[:,0]==mean_values_rounded)[0]
-            if len(row_power)!=0:
-                row_power = row_power[0]
-                power = values[row_power,1]
-            else:
-                power = 0
-            powers.append(power)
-        return np.array(powers)
-
-    def nearest_products_levels(self, neigh_, dict_, x):
-        x_transf = np.array([[]])
-        output_dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
-        n = x.shape[0]
-        keys_ = (list)(neigh_.keys())
-        values = (list)(neigh_.values())
-        for key in keys_:
-            current_values = values[key]
-            k_levels = dict_[key]
-            start_dim = x_transf.shape[1]
-            for k in k_levels:
-                current_dim = x_transf.shape[1]
-                v = [dict_[j][k%12] for j in current_values]
-                v = np.hstack(v).astype("int64")
-                prod = (x[:,k].reshape([n,1])*x[:,v])
-                if x_transf.shape[1]==0:
-                    x_transf = prod
-                else:
-                    x_transf = np.concatenate((x_transf,prod), axis = 1)
-                l=0
-                for current_v in current_values:
-                    if current_v!=key:
-                        output_dict_[current_v] = np.append(output_dict_[current_v], current_dim+l)
-                    l+=1
-            end_dim = x_transf.shape[1]
-            output_dict_[key] = np.append(output_dict_[key], np.arange(start_dim, end_dim))
-        #x_transf = np.concatenate((x_transf,x), axis = 1)
-        return x_transf, output_dict_
-
-    def nearest_products(self, neigh_, dict_, x):
-        x_transf = np.array([[]])
-        #output_dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
-        n = x.shape[0]
-        keys_ = (list)(neigh_.keys())
-        values = (list)(neigh_.values())
-        for key in keys_:
-            current_values = values[key]
-            v = [dict_[j] for j in current_values]
-            v = np.hstack(v).astype("int64")
-            k_levels = dict_[key]
-            for k in k_levels:
-                prod = x[:,k].reshape([n,1])*x[:,v]
-                if x_transf.shape[1]==0:
-                    x_transf = prod
-                else:
-                    x_transf = np.concatenate((x_transf,prod), axis = 1)
-        return x_transf
-
-
-class EnelTransformation(Transformation):
-    def __init__(self):
-        pass
-
-    def transform(self,x):
-        n,m = x.shape
-        x_transf = np.array([[]])
-        dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
-
-        key = 0
-
-        for i in range(0,m,24):
-            start_dim = x_transf.shape[1]
-            for j in range(i,i+12):
-                if x_transf.shape[1]==0:
-                    x_transf = np.power(np.sqrt(np.power(x[:,j],2)+np.power(x[:,j+12],2)).reshape([n,1]),3)
-                else:
-                    x_transf = np.concatenate((x_transf,np.power(np.sqrt(np.power(x[:,j],2)+np.power(x[:,j+12],2)).reshape([n,1]),3)), axis = 1)
-
-            x_transf = x_transf*59.3/100
-            current_dim = x_transf.shape[1]
-            dict_[key] = np.append(dict_[key], np.arange(start_dim,current_dim))
-            key+=1
-
-        assert (x_transf.shape[1]==m/2)
-
-        return x_transf, dict_
-
-
-class VariousTransformationsAllData(Transformation):
-    def __init__(self, degree):
-        self.degree = degree
-
-    def transform(self,x):
-        n = x.shape[0]
-        x_transf = np.array([])
-        for d in range(2,self.degree):
-            poly = PolynomialFeatures(degree=d)
-            if d==2:
-                x_transf=np.sum(poly.fit_transform(x)[:,1:],axis=1).reshape([n,1])
-            else:
-                x_transf = np.concatenate((x_transf,np.sum(poly.fit_transform(x)[:,1:],axis=1).reshape([n,1])), axis = 1)
-        x_transf = np.concatenate((x_transf,np.sum(np.sin(x),axis=1).reshape([n,1])), axis = 1)
-        x_transf = np.concatenate((x_transf,np.sum(np.cos(x),axis=1).reshape([n,1])), axis = 1)
-        #x_transf = np.concatenate((x_transf,np.sum(np.log(x),axis=1).reshape([n,1])), axis = 1)
-        x_transf = np.concatenate((x_transf,np.sum(np.exp(x),axis=1).reshape([n,1])), axis = 1)
-        x_transf = np.concatenate((x_transf,np.sum(1./x,axis=1).reshape([n,1])), axis = 1)
-        return x_transf
 
 class inverseTransformation(Transformation):
     def __init__(self):
@@ -289,70 +118,6 @@ class expTransformation(Transformation):
         x_transf = np.zeros([n, m*(self.degree)])
         for d in range(self.degree):
             x_transf[:,m*(d):m*(d)+m] = np.exp(x**(d+1))
-        return x_transf
-
-class PolinomialTransformation(Transformation):
-    def __init__(self, degree):
-        self.degree = degree
-
-    def transform(self,x):
-        n,m = x.shape
-        x_transf = np.zeros([n, m*(self.degree)])
-        for d in range(self.degree):
-            x_transf[:,m*(d):m*(d)+m] = np.power(x,d+1)
-        return x_transf
-
-class PolinomialTransformationExp(Transformation):
-    def __init__(self, degree):
-        self.degree = degree
-
-    def transform(self,x):
-        n,m = x.shape
-        x_transf = np.zeros([n, m*(self.degree)*2])
-        for d in range(self.degree):
-            x_transf[:,m*(d):m*(d)+m] = np.power(x,d+1)
-        count = 0
-        for d in range(self.degree, self.degree*2):
-            x_transf[:,m*(d):m*(d)+m] = np.exp(x**count)
-            count+=1
-        return x_transf
-
-class PolinomialTransformationProd(Transformation):
-    def __init__(self, degree, informative):
-        self.degree = degree
-        self.informative = informative
-
-    def transform(self,x):
-        n,m = x.shapew
-        for d in range(self.degree):
-            x_transf = np.power(x**(d))*np.exp(x**self.degree-1)
-        return x_transf
-
-class expTransformationProd(Transformation):
-    def __init__(self, degree):
-        self.degree = degree
-
-    def transform(self,x):
-        n,m = x.shape
-        x_transf = np.exp(x**(self.degree))*np.exp(x**self.degree-1)
-        return x_transf
-
-
-class AllTransformation(Transformation):
-    def __init__(self, degree):
-        self.degree = degree
-
-    def transform(self,x):
-        n,m = x.shape
-        x_transf = np.zeros([n, m*(self.degree)*2+3*m])
-        for d in range(self.degree):
-            x_transf[:,m*(d):m*(d)+m] = np.power(x,d+1)
-        count = 1
-        for d in range(self.degree, self.degree+m):
-            x_transf[:,m*(d):m*(d)+m] = np.exp(x**count)
-            count+=1
-        x_transf[:, m*(self.degree)*2+m: m*(self.degree)*2+2*m] = np.sin(x)
-        x_transf[:, m*(self.degree)*2+2*m: m*(self.degree)*2+3*m] = np.exp2(x)
         return x_transf
 
 
