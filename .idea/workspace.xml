@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7cc0c753-e9e6-4f8d-8f08-622b14ea6592" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Enel_cross_val_bloks_powerCurveSinglePlusMean.py" afterPath="$PROJECT_DIR$/Enel_cross_val_bloks_powerCurveSinglePlusMean.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Transformation.py" afterPath="$PROJECT_DIR$/Transformation.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modifyDatasetEnelCross.py" afterPath="$PROJECT_DIR$/modifyDatasetEnelCross.py" />
     </list>
     <ignored path="tesi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -57,13 +58,45 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Enel_cross_val_bloks_powerCurveSinglePlusMean.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Enel_cross_val_bloks_powerCurveSinglePlusMean.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Enel_cross_val_bloks_powerCurveSinglePlusMean.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4988067">
-              <caret line="67" column="0" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
+            <state vertical-scroll-proportion="-0.0">
+              <caret line="33" column="10" selection-start-line="33" selection-start-column="10" selection-end-line="33" selection-end-column="10" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="modifyDatasetEnelCross.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/modifyDatasetEnelCross.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.10501193">
+              <caret line="4" column="10" selection-start-line="4" selection-start-column="10" selection-end-line="4" selection-end-column="10" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Transformation.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Transformation.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-44.0">
+              <caret line="71" column="31" selection-start-line="71" selection-start-column="31" selection-end-line="71" selection-end-column="31" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Transformation_old.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../../PycharmProjects/tesi/Transformation_old.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="104" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#10#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -77,28 +110,6 @@
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Enel_final_ranking_products.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Enel_final_ranking_products.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="95" column="0" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#49#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="utility.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utility.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="42" column="35" selection-start-line="42" selection-start-column="35" selection-end-line="42" selection-end-column="35" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -125,18 +136,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Enel_ranking_not_levels.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Enel_ranking_not_levels.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="9" selection-end-column="23" />
-              <folding>
-                <element signature="e#0#56#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -152,7 +151,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/l1l2Py/slipguru-l1l2py-2cdc3fc3df94/__init__.py" />
         <option value="$PROJECT_DIR$/slipguru-l1l2py-2cdc3fc3df94/slipguru-l1l2py-2cdc3fc3df94/l1l2py/tests/prova.py" />
         <option value="$PROJECT_DIR$/slipguru-l1l2py-2cdc3fc3df94/slipguru-l1l2py-2cdc3fc3df94/proximal.py" />
         <option value="$PROJECT_DIR$/slipguru-l1l2py-2cdc3fc3df94/slipguru-l1l2py-2cdc3fc3df94/misc/test_path.py" />
@@ -176,7 +174,6 @@
         <option value="$PROJECT_DIR$/DistanceCorrelation.py" />
         <option value="$PROJECT_DIR$/DPPRule.py" />
         <option value="$PROJECT_DIR$/ciao.py" />
-        <option value="$PROJECT_DIR$/Transformation.py" />
         <option value="$PROJECT_DIR$/prova.py" />
         <option value="$PROJECT_DIR$/ExtractResult.py" />
         <option value="$PROJECT_DIR$/prova1.py" />
@@ -203,6 +200,8 @@
         <option value="$PROJECT_DIR$/Enel_ranking.py" />
         <option value="$PROJECT_DIR$/Enel_final_ranking_products_not_levels.py" />
         <option value="$PROJECT_DIR$/Enel_cross_val_bloks_powerCurveSinglePlusMean.py" />
+        <option value="$PROJECT_DIR$/Transformation.py" />
+        <option value="$PROJECT_DIR$/modifyDatasetEnelCross.py" />
       </list>
     </option>
   </component>
@@ -666,23 +665,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/save_dict.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="26" column="50" selection-start-line="26" selection-start-column="20" selection-end-line="26" selection-end-column="50" />
-          <folding>
-            <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../descent/tests/test_quadratic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../descent/tests/test_utils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.27031803">
@@ -833,13 +815,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Transformation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="23" column="14" selection-start-line="23" selection-start-column="14" selection-end-line="23" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/LARS_CGDrun.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -936,7 +911,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="26" column="50" selection-start-line="26" selection-start-column="20" selection-end-line="26" selection-end-column="50" />
           <folding>
-            <element signature="e#0#32#0" expanded="true" />
+            <element signature="e#0#32#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -946,7 +921,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
           <folding>
-            <element signature="e#0#32#0" expanded="true" />
+            <element signature="e#0#32#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1051,11 +1026,37 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Enel_cross_val_bloks_powerCurveSinglePlusMean.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4988067">
-          <caret line="67" column="0" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="33" column="10" selection-start-line="33" selection-start-column="10" selection-end-line="33" selection-end-column="10" />
           <folding>
             <element signature="e#0#32#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../PycharmProjects/tesi/Transformation_old.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="104" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Transformation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-44.0">
+          <caret line="71" column="31" selection-start-line="71" selection-start-column="31" selection-end-line="71" selection-end-column="31" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modifyDatasetEnelCross.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.10501193">
+          <caret line="4" column="10" selection-start-line="4" selection-start-column="10" selection-end-line="4" selection-end-column="10" />
+          <folding />
         </state>
       </provider>
     </entry>

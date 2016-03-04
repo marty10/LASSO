@@ -1,7 +1,7 @@
 import numpy as np
 from Enel_utils import find_turbines_nearest_points
 from ExtractResult import Result
-from Transformation import Enel_powerCurveTransformation
+from Transformation import Enel_powerCurveTransformation_old
 import sys
 from pprint import pprint
 
@@ -31,7 +31,7 @@ enel_dict = results.extract_dict()
 Coord, Coord_turb, power_curve = results.extract_coords()
 
 turbine_dict = find_turbines_nearest_points(Coord,Coord_turb,k=k)
-enel_transf = Enel_powerCurveTransformation()
+enel_transf = Enel_powerCurveTransformation_old()
 d, output_dict = enel_transf.transform(turbine_dict, enel_dict, XTrain, power_curve,k,sum_until_k=until_k)
 print(d.shape[1])
 pprint(output_dict)

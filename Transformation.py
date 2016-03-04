@@ -53,6 +53,67 @@ class Enel_powerCurveTransformation(Transformation):
                             output_dict_[current_v] = np.concatenate((output_dict_[current_v], vect_to_append),axis = 0)
         return x_transf, output_dict_
 
+class Enel_powerCurveTransformation_old(Transformation):
+    def __init__(self):
+        pass
+
+    def transform(self, neigh_, dict_, x, power_curve,l, sum_until_k):
+        k_levels = np.arange(0,12)
+        x_transf = np.array([[]])
+        if not sum_until_k:
+            h_s = np.arange(l,l+1)
+        output_dict_ = dict.fromkeys(np.arange(0,49),np.array([[]], dtype = "int64"))
+        n = x.shape[0]
+        keys_ = (list)(neigh_.keys())
+        values = (list)(neigh_.values())
+        for key in keys_:
+            current_value = values[key]#[:,0]
+            if len(current_value)!=0:
+                if sum_until_k:
+                    h_s = np.arange(len(current_value))
+                for h in h_s:
+                    current_values = current_value[:h+1]
+                    start_dim = x_transf.shape[1]
+                    for k in k_levels:
+                        sum_component_u = self.get_component_value(x, dict_, k, current_values)
+                        sum_component_v = self.get_component_value(x, dict_, k+12, current_values)
+                        wind_speed = np.sqrt(sum_component_u**2+sum_component_v**2)/len(current_values)
+                        power_value = self.enel_transf_power_curve(key, wind_speed, power_curve)
+                        if x_transf.shape[1]==0:
+                            x_transf = power_value.reshape([n,1])
+                        else:
+                            x_transf = np.concatenate((x_transf,power_value.reshape([n,1])), axis = 1)
+                    current_dim = x_transf.shape[1]
+                    for current_v in current_values:
+                        vect_to_append = np.arange(start_dim,current_dim).reshape([len(np.arange(start_dim,current_dim)),1])
+                        vect_to_append = np.concatenate((vect_to_append, k_levels.reshape([len(k_levels),1])), axis = 1)
+                        if output_dict_[current_v].shape[1]==0:
+                            output_dict_[current_v] = vect_to_append
+                        else:
+                            output_dict_[current_v] = np.concatenate((output_dict_[current_v], vect_to_append),axis = 0)
+        return x_transf, output_dict_
+
+    def get_component_value(self,x, dict_, k, current_values):
+        c = [dict_[j][k] for j in current_values]
+        c = np.hstack(c).astype("int64")
+        current_vect = x[:,c]
+        sum_component = np.sum(current_vect, axis = 1)
+        return sum_component
+
+    def enel_transf_power_curve(self, key, mean_value, power_curve):
+        values = power_curve[:,key*2:key*2+2]
+        powers = []
+        for m in mean_value:
+            mean_values_rounded= int(m)+0.5
+            row_power = np.where(values[:,0]==mean_values_rounded)[0]
+            if len(row_power)!=0:
+                row_power = row_power[0]
+                power = values[row_power,1]
+            else:
+                power = 0
+            powers.append(power)
+        return np.array(powers)
+
 
     def get_component_value(self,x, dict_, k, current_values):
         c = [dict_[j].astype("int64")[k] for j in current_values]
