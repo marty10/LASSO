@@ -46,7 +46,8 @@ weights_level = extract_level(ordered_final_weights, values)
 
 if verbose:
     print("-------------")
-    pprint("ranking of the featues:", weights_level)
+    print("ranking of the features:")
+    pprint(weights_level)
     print("-------------")
 
 losses = []
