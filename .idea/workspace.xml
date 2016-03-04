@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7cc0c753-e9e6-4f8d-8f08-622b14ea6592" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/DPPRule.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Distance_correlation.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/del_feature_cross.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/del_feature_cross_lasso.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nonLinearCompareAlgorithmResultsF3.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nonLinearCompareAlgorithmResultsLambda.py" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Transformation.py" afterPath="$PROJECT_DIR$/Transformation.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Enel_cross_val_bloks_powerCurveSinglePlusMean.py" afterPath="$PROJECT_DIR$/Enel_cross_val_bloks_powerCurveSinglePlusMean.py" />
     </list>
     <ignored path="tesi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -66,9 +60,11 @@
       <file leaf-file-name="Enel_cross_val_bloks_powerCurveSinglePlusMean.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Enel_cross_val_bloks_powerCurveSinglePlusMean.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.10501193">
-              <caret line="4" column="73" selection-start-line="4" selection-start-column="73" selection-end-line="4" selection-end-column="73" />
-              <folding />
+            <state vertical-scroll-proportion="0.4988067">
+              <caret line="67" column="0" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#32#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -156,7 +152,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/l1l2Py/__init__.py" />
         <option value="$PROJECT_DIR$/l1l2Py/slipguru-l1l2py-2cdc3fc3df94/__init__.py" />
         <option value="$PROJECT_DIR$/slipguru-l1l2py-2cdc3fc3df94/slipguru-l1l2py-2cdc3fc3df94/l1l2py/tests/prova.py" />
         <option value="$PROJECT_DIR$/slipguru-l1l2py-2cdc3fc3df94/slipguru-l1l2py-2cdc3fc3df94/proximal.py" />
@@ -207,6 +202,7 @@
         <option value="$PROJECT_DIR$/Enel_ranking_not_levels.py" />
         <option value="$PROJECT_DIR$/Enel_ranking.py" />
         <option value="$PROJECT_DIR$/Enel_final_ranking_products_not_levels.py" />
+        <option value="$PROJECT_DIR$/Enel_cross_val_bloks_powerCurveSinglePlusMean.py" />
       </list>
     </option>
   </component>
@@ -1055,9 +1051,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Enel_cross_val_bloks_powerCurveSinglePlusMean.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.10501193">
-          <caret line="4" column="73" selection-start-line="4" selection-start-column="73" selection-end-line="4" selection-end-column="73" />
-          <folding />
+        <state vertical-scroll-proportion="0.4988067">
+          <caret line="67" column="0" selection-start-line="67" selection-start-column="0" selection-end-line="67" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
