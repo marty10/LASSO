@@ -8,7 +8,10 @@ from utility import center_test, assign_weights, get_current_data, get_beta_div_
     print_features_active,extract_level
 import sys
 
-iter = 170
+sys.argv[1:2] = [int(x) for x in sys.argv[1:2]]
+iter = sys.argv[1]
+file_name = str(sys.argv[2])
+
 score = "mean_squared_error"
 if score=="r2_score":
     score_f = r2_score
@@ -18,8 +21,8 @@ else:
     scoring = "mean_squared_error"
 
 folder = "ENEL_2014/"
-
-file_cross_val =  folder+"Enel_cross_val_blocks.npz"
+ext = ".npz"
+file_cross_val =  folder+file_name+ext
 
 results_cross_val = Result(file_cross_val, "lasso")
 
@@ -27,7 +30,7 @@ XTrain, XTest = results_cross_val.extract_data_transf()
 _,YTrain,_, YTest = results_cross_val.extract_train_test()
 
 ### centratura dei dati
-XTrain, YTrain, X_mean, y_mean, X_std = center_data(XTrain, YTrain, fit_intercept=True, normalize = True,values_TM = [])
+XTrain, YTrain, X_mean, y_mean, X_std = center_data(XTrain, YTrain, fit_intercept=True, normalize = True)
 XTest, YTest = center_test(XTest,YTest,X_mean,y_mean,X_std)
 
 
@@ -55,7 +58,8 @@ if verbose:
 #resultsData = Result(file_data,"lasso")
 dict_ = results_cross_val.extract_dict()
 
-new_loss, beta = compute_lasso(XTrain, YTrain, XTest, YTest, score = score,values_TM = [])
+values_TM = np.array([[24,281], [24,214]])
+new_loss, beta = compute_lasso(XTrain, YTrain, XTest, YTest, score = score,values_TM = values_TM)
 beta = np.abs(beta[:, 0])
 beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
@@ -78,7 +82,7 @@ XTrain_current, XTest_current = get_current_data(XTrain, XTest,indexes)
 
 
 ###compute LASSO
-new_loss, beta = compute_lasso(XTrain_current, YTrain, XTest_current, YTest, score=score,values_TM = [])
+new_loss, beta = compute_lasso(XTrain_current, YTrain, XTest_current, YTest, score=score,values_TM = values_TM)
 beta = np.abs(beta[:, 0])
 beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
@@ -89,7 +93,7 @@ print(weights_level[beta_indexes])
 
 model = Shooting(weights)
 lasso = LASSOEstimator(model)
-loss, beta = compute_weightedLASSO(lasso,XTrain_current,YTrain, XTest_current, YTest,scoring, score_f, verbose)
+loss, beta = compute_weightedLASSO(lasso,XTrain_current,YTrain, XTest_current, YTest,scoring, score_f, verbose,values_TM = values_TM)
 
 beta = np.abs(beta)
 beta_indexes,beta_ordered = get_beta_div_zeros(beta)
