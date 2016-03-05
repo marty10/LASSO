@@ -4,7 +4,7 @@ from sklearn.metrics import r2_score, mean_squared_error
 import numpy as np
 from ExtractResult import Result
 from LASSOModel import Shooting, LASSOEstimator
-from utility import assign_weights, get_current_data, get_beta_div_zeros, print_features_active
+from utility import assign_weights, get_current_data, get_beta_div_zeros
 import sys
 from pprint import pprint
 
@@ -123,7 +123,7 @@ for i in range(n_features):
 
         print("livelli selezionati")
         pprint(indexes[beta_indexes])
-        print_features_active(keys_sel, indexes[beta_indexes], dict_)
+        pprint(matrix_point_level[indexes[beta_indexes]])
 
         np.savez(file_name+"ranking_point_level"+ext, mses = losses, indexes = indexes_tot)
 
