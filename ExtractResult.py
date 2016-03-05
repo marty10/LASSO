@@ -57,7 +57,7 @@ class Result:
         return active_sets, beta_div_zeros, ord_beta_div_zeros, indexes_to_extract
 
     def extract_indexes_tot(self):
-        indexes_tot = self.open_file["indexes_tot"]
+        indexes_tot = self.open_file["indexes"]
         return indexes_tot
 
     def extract_count_div_beta_zeros(self):
