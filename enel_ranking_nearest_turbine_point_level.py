@@ -44,7 +44,7 @@ weights = assign_weights(weights_data.copy())
 keys_ = np.array(list(dict_point_level.keys())).astype("int64")
 
 ## si prende la prima key perchè una vale l altra
-keys_level = np.array(dict_point_level[keys_[0]].keys()).astype("int64")
+keys_level = np.array(list(dict_point_level[keys_[0]].keys())).astype("int64")
 original_features = len(keys_)*len(keys_level)
 final_weights = np.zeros(original_features)
 
