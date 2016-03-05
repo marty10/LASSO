@@ -1,6 +1,22 @@
 import numpy as np
 from scipy import spatial
 
+def extract_new_dict(dict_):
+
+    levels = np.arange(0,12)
+    values = (list)(dict_.values())
+    output_dict = {}
+    for key, v in enumerate(values):
+        if key not in output_dict:
+            output_dict[key] = {}
+        for level in levels:
+            value_level = v[v[:,1]==level][:,0]
+            if level not in output_dict[key]:
+                output_dict[key][level] = np.array([], dtype = "int64")
+            output_dict[key][level] = np.append(output_dict[key][level],value_level)
+    return output_dict
+
+
 
 def find_nearest(Coord,k):
     dim = Coord.shape[0]

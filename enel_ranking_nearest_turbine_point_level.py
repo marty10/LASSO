@@ -1,3 +1,4 @@
+from Enel_utils import extract_new_dict
 from Lasso_utils import compute_lasso, compute_weightedLASSO
 from sklearn.metrics import r2_score, mean_squared_error
 import numpy as np
@@ -31,25 +32,38 @@ verbose = True
 
 
 ###compute ranking
-
+dict_point_level = extract_new_dict(dict_)
 weights_data = results.extract_weights()
 
 index_mse = len(weights_data) - 1
 weights_data = weights_data[index_mse]
 weights = assign_weights(weights_data.copy())
 
-keys_ = np.array(list(dict_.keys())).astype("int64")
-original_features = len(keys_)
+#weights_data = np.arange(0,XTrain.shape[1])
+
+keys_ = np.array(list(dict_point_level.keys())).astype("int64")
+
+## si prende la prima key perchè una vale l altra
+keys_level = np.array(dict_point_level[keys_[0]].keys()).astype("int64")
+original_features = len(keys_)*len(keys_level)
 final_weights = np.zeros(original_features)
 
+count = 0
+matrix_point_level = np.zeros([original_features,2])
 for key in keys_:
-    final_weights[key] += np.sum(weights_data[dict_.get(key)[:,0].astype("int64")])
+    current_values = dict_point_level.get(key)
+    for level in keys_level:
+        current_values_level = current_values[level]
+        final_weights[count] += np.sum(weights_data[current_values_level])
+        matrix_point_level[count,:] = [key,level]
+        count+=1
 
 ordered_final_weights = np.argsort(final_weights)[::-1]
+
 if verbose:
     print("-------------")
     print("ranking of the features:")
-    pprint(ordered_final_weights)
+    pprint(matrix_point_level[ordered_final_weights,:])
     print("-------------")
 ordered_indexes = np.argsort(weights_data)[::-1]
 losses = []
@@ -67,16 +81,21 @@ for i in range(n_features):
 
         ###compute LASSO
         indexes = []
-        print(ordered_final_weights[:i+1])
         for k in ordered_final_weights[:i+1]:
-            current_value = dict_.get(k)[:,0]
+            current_key = matrix_point_level[k,0]
+            current_level = matrix_point_level[k,1]
+            current_value = dict_point_level[current_key][current_level]
             indexes = np.union1d(indexes,current_value)
 
         del_ = np.array([], dtype = "int64")
         for key in ordered_final_weights[:i+1]:
-            value_key = dict_.get(key)[:,0]
+            current_key = matrix_point_level[key,0]
+            current_level = matrix_point_level[key,1]
+            value_key = dict_point_level[current_key][current_level]
             for key_1 in ordered_final_weights[i+1:]:
-                value_key1 = dict_.get(key_1)[:,0]
+                current_key_1 = matrix_point_level[key_1,0]
+                current_level_1 = matrix_point_level[key_1,1]
+                value_key1 = dict_point_level[current_key_1][current_level_1]
                 del_ = np.append(del_,np.intersect1d(value_key,value_key1))
 
         a = np.in1d(indexes,del_)
@@ -106,7 +125,7 @@ for i in range(n_features):
         pprint(indexes[beta_indexes])
         print_features_active(keys_sel, indexes[beta_indexes], dict_)
 
-        np.savez(file_name+"ranking"+ext, mses = losses, indexes = indexes_tot)
+        np.savez(file_name+"ranking_point_level"+ext, mses = losses, indexes = indexes_tot)
 
 print("min mse", np.min(losses), "with:", indexes_tot(np.argmin(losses)))
 
