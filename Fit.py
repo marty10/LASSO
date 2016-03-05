@@ -5,8 +5,8 @@ from sklearn.linear_model.base import center_data
 from sklearn.preprocessing import PolynomialFeatures
 import numpy as np
 from Kernel import Scalar_kernel, Gaussian_kernel
-from Transformation import EnelTransformation
-from utility import center_test, compute_lasso
+from Lasso_utils import compute_lasso
+from utility import center_test
 
 
 
@@ -67,24 +67,24 @@ class Enel_scalarKernel(Fit):
         print("loss enel velocita :", new_loss )
         return XTrain_transf, XTest_transf, dict_
 
-class Enel_power3(Fit):
-    def __init__(self,):
-        pass
-
-    def fitting(self,XTrain, YTrain, XTest,YTest):
-
-        transf = EnelTransformation()
-        XTrain_transf,_ = transf.transform(XTrain)
-        XTest_transf,_ = transf.transform(XTest)
-
-        ##centratura dei dati
-        XTrain_transf, YTrain_, X_mean, y_mean, X_std = center_data(XTrain_transf, YTrain, fit_intercept=True, normalize = True)
-        XTest_transf, YTest_ = center_test(XTest_transf,YTest,X_mean,y_mean,X_std, normalize=True)
-
-        new_loss, _ = compute_lasso(XTrain_transf, YTrain_, XTest_transf, YTest_, score ="r2_score")
-
-        print("loss enel velocita :", new_loss )
-        return XTrain_transf, XTest_transf
+# class Enel_power3(Fit):
+#     def __init__(self,):
+#         pass
+#
+#     def fitting(self,XTrain, YTrain, XTest,YTest):
+#
+#         transf = EnelTransformation()
+#         XTrain_transf,_ = transf.transform(XTrain)
+#         XTest_transf,_ = transf.transform(XTest)
+#
+#         ##centratura dei dati
+#         XTrain_transf, YTrain_, X_mean, y_mean, X_std = center_data(XTrain_transf, YTrain, fit_intercept=True, normalize = True)
+#         XTest_transf, YTest_ = center_test(XTest_transf,YTest,X_mean,y_mean,X_std, normalize=True)
+#
+#         new_loss, _ = compute_lasso(XTrain_transf, YTrain_, XTest_transf, YTest_, score ="r2_score")
+#
+#         print("loss enel velocita :", new_loss )
+#         return XTrain_transf, XTest_transf
 
 
 class Linear_fit(Fit):
@@ -94,11 +94,13 @@ class Linear_fit(Fit):
     def fitting(self, XTrain, YTrain, XTest,YTest ):
         ##center data
         XTrain_, YTrain_, X_mean, y_mean, X_std = center_data(XTrain, YTrain, fit_intercept=True, normalize = True)
-        XTest_, YTest_ = center_test(XTest,YTest,X_mean,y_mean,X_std)
+        XTest_, YTest_ = center_test(XTest,YTest,X_mean,y_mean,X_std, normalize=True)
 
         ##compute linear lasso
-        new_loss, beta = compute_lasso(XTrain_, YTrain_, XTest_, YTest_,score = "r2_score")
+        new_loss, beta = compute_lasso(XTrain_, YTrain_, XTest_, YTest_,score = "r2_score", values_TM = np.array([[24,281], [24,214]]))
         print("loss lineare", new_loss)
+
+
 
 class Power_fit(Fit):
     def __init__(self,):
