@@ -91,7 +91,7 @@ XTrain_current_val, XVal_current = get_current_data(XTrain_val, XVal, indexes)
 model = Shooting(weights)
 lasso = LASSOEstimator(model)
 
-loss, beta = compute_weightedLASSO(lasso,XTrain_current_val,YTrain_val, XVal_current, YVal,scoring, score_f, verbose, values_TM)
+loss, beta = compute_weightedLASSO(lasso,XTrain_current_val,YTrain_val, XVal_current, YVal,scoring, score_f, verbose, values_TM = [])
 
 beta = np.abs(beta)
 beta_indexes_,beta_ordered = get_beta_div_zeros(beta)
@@ -118,6 +118,9 @@ print(weights_level[beta_indexes])
 
 model = Shooting(weights)
 lasso = LASSOEstimator(model)
+print(XTrain_current.shape[1])
+print(XTest_current.shape[1])
+print(len(weights))
 loss, beta = compute_weightedLASSO(lasso,XTrain_current,YTrain, XTest_current, YTest,scoring, score_f, verbose,values_TM = values_TM)
 
 beta = np.abs(beta)
