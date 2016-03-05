@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7cc0c753-e9e6-4f8d-8f08-622b14ea6592" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Transformation.py" afterPath="$PROJECT_DIR$/Transformation.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/modifyDatasetEnelCross.py" afterPath="$PROJECT_DIR$/modifyDatasetEnelCross.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/enel_ranking_nearest_turbine_not_levels.py" afterPath="$PROJECT_DIR$/enel_ranking_nearest_turbine_not_levels.py" />
     </list>
     <ignored path="tesi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -61,7 +61,7 @@
       <file leaf-file-name="Enel_cross_val_bloks_powerCurveSinglePlusMean.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Enel_cross_val_bloks_powerCurveSinglePlusMean.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0">
+            <state vertical-scroll-proportion="0.0">
               <caret line="33" column="10" selection-start-line="33" selection-start-column="10" selection-end-line="33" selection-end-column="10" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
@@ -70,12 +70,36 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="modifyDatasetEnelCross.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="modifyDatasetEnelCross.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modifyDatasetEnelCross.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.10501193">
+            <state vertical-scroll-proportion="0.0">
               <caret line="4" column="10" selection-start-line="4" selection-start-column="10" selection-end-line="4" selection-end-column="10" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="enel_ranking_nearest_turbine_not_levels.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../../PycharmProjects/tesi/enel_ranking_nearest_turbine_not_levels.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.20183486">
+              <caret line="8" column="15" selection-start-line="8" selection-start-column="15" selection-end-line="8" selection-end-column="15" />
+              <folding>
+                <element signature="e#0#56#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="enel_ranking_nearest_turbine_not_levels.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/enel_ranking_nearest_turbine_not_levels.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-23.352942">
+              <caret line="92" column="73" selection-start-line="11" selection-start-column="0" selection-end-line="92" selection-end-column="73" />
+              <folding>
+                <element signature="e#0#56#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -83,7 +107,7 @@
       <file leaf-file-name="Transformation.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Transformation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-44.0">
+            <state vertical-scroll-proportion="0.0">
               <caret line="71" column="31" selection-start-line="71" selection-start-column="31" selection-end-line="71" selection-end-column="31" />
               <folding />
             </state>
@@ -105,33 +129,11 @@
       <file leaf-file-name="enel_cross_val_blocks_mean_powerCurve.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/enel_cross_val_blocks_mean_powerCurve.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-72.52941">
+            <state vertical-scroll-proportion="0.0">
               <caret line="160" column="58" selection-start-line="160" selection-start-column="58" selection-end-line="160" selection-end-column="58" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Enel_ranking.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Enel_ranking.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="97" column="0" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#56#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Enel_ranking_product_not_levels.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Enel_ranking_product_not_levels.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="9" column="18" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -151,8 +153,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/slipguru-l1l2py-2cdc3fc3df94/slipguru-l1l2py-2cdc3fc3df94/l1l2py/tests/prova.py" />
-        <option value="$PROJECT_DIR$/slipguru-l1l2py-2cdc3fc3df94/slipguru-l1l2py-2cdc3fc3df94/proximal.py" />
         <option value="$PROJECT_DIR$/slipguru-l1l2py-2cdc3fc3df94/slipguru-l1l2py-2cdc3fc3df94/misc/test_path.py" />
         <option value="$PROJECT_DIR$/slipguru-l1l2py-2cdc3fc3df94/slipguru-l1l2py-2cdc3fc3df94/misc/test_correlation.py" />
         <option value="$PROJECT_DIR$/base.py" />
@@ -202,6 +202,8 @@
         <option value="$PROJECT_DIR$/Enel_cross_val_bloks_powerCurveSinglePlusMean.py" />
         <option value="$PROJECT_DIR$/Transformation.py" />
         <option value="$PROJECT_DIR$/modifyDatasetEnelCross.py" />
+        <option value="$PROJECT_DIR$/enel_ranking_nearest_turbine_not_levels.py" />
+        <option value="$PROJECT_DIR$/../../PycharmProjects/tesi/enel_ranking_nearest_turbine_not_levels.py" />
       </list>
     </option>
   </component>
@@ -254,8 +256,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -276,6 +276,8 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -601,7 +603,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="0" width="1932" height="1038" extended-state="0" />
+    <frame x="-8" y="0" width="1932" height="1038" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17711599" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -665,20 +667,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../descent/tests/test_utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.27031803">
-          <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../descent/descent/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.09010601">
-          <caret line="3" column="19" selection-start-line="3" selection-start-column="19" selection-end-line="3" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../descent/descent/main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="2.949248">
@@ -910,9 +898,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="26" column="50" selection-start-line="26" selection-start-column="20" selection-end-line="26" selection-end-column="50" />
-          <folding>
-            <element signature="e#0#32#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -920,9 +905,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#32#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -952,9 +934,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="9" selection-end-column="23" />
-          <folding>
-            <element signature="e#0#56#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -962,9 +941,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="95" column="0" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -972,9 +948,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="97" column="0" selection-start-line="97" selection-start-column="0" selection-end-line="97" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#56#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -982,7 +955,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="9" column="18" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1016,7 +988,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/enel_cross_val_blocks_mean_powerCurve.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-72.52941">
+        <state vertical-scroll-proportion="0.0">
           <caret line="160" column="58" selection-start-line="160" selection-start-column="58" selection-end-line="160" selection-end-column="58" />
           <folding>
             <element signature="e#0#32#0" expanded="true" />
@@ -1046,7 +1018,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Transformation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-44.0">
+        <state vertical-scroll-proportion="0.0">
           <caret line="71" column="31" selection-start-line="71" selection-start-column="31" selection-end-line="71" selection-end-column="31" />
           <folding />
         </state>
@@ -1054,9 +1026,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/modifyDatasetEnelCross.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.10501193">
+        <state vertical-scroll-proportion="0.0">
           <caret line="4" column="10" selection-start-line="4" selection-start-column="10" selection-end-line="4" selection-end-column="10" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/enel_ranking_nearest_turbine_not_levels.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-23.352942">
+          <caret line="92" column="73" selection-start-line="11" selection-start-column="0" selection-end-line="92" selection-end-column="73" />
+          <folding>
+            <element signature="e#0#56#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../PycharmProjects/tesi/enel_ranking_nearest_turbine_not_levels.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.20183486">
+          <caret line="8" column="15" selection-start-line="8" selection-start-column="15" selection-end-line="8" selection-end-column="15" />
+          <folding>
+            <element signature="e#0#56#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -7,8 +7,10 @@ from utility import assign_weights, get_current_data, get_beta_div_zeros, print_
 import sys
 from pprint import pprint
 
-sys.argv[1:] = [str(x) for x in sys.argv[1:]]
+sys.argv[1:2] = [str(x) for x in sys.argv[1:2]]
 file_name = sys.argv[1]
+weights_all = (int)(sys.argv[2])
+
 ext = ".npz"
 file = "ENEL_2014/"+file_name+ext
 
@@ -31,7 +33,6 @@ else:
 
 verbose = True
 
-
 ###compute ranking
 
 weights_data = results.extract_weights()
@@ -52,14 +53,16 @@ if verbose:
 
 losses = []
 ordered_indexes = ordered_final_weights
-#new_loss, _ = compute_lasso(XTrain, YTrain, XVal, YVal, score)
 
-#print("new_loss", new_loss)
 
 losses = []
 indexes_tot = []
 n_features = len(ordered_final_weights)
 values_TM = np.array([])
+
+if weights_all:
+    weights_ = assign_weights(weights_data.copy())
+
 for i in range(n_features):
 
         indexes = ordered_final_weights[:i+1].astype("int64")
@@ -70,7 +73,8 @@ for i in range(n_features):
         print("----------------------------")
         print("iteration ", i)
 
-        weights_ = assign_weights(weights_data.copy()[indexes])
+        if not weights_all:
+            weights_ = assign_weights(weights_data.copy()[indexes])
 
         model = Shooting(weights_)
         lasso = LASSOEstimator(model)
@@ -84,6 +88,6 @@ for i in range(n_features):
         print("livelli selezionati:")
         pprint(weights_level[beta_indexes])
 
-        np.savez(file_name+"ranking_not_levels"+ext, mses = losses, indexes = indexes_tot)
+        np.savez(file_name+"ranking_not_levels_weights_all"+str(weights_all)+ext, mses = losses, indexes = indexes_tot)
 
 print("min mse", np.min(losses), "with:", indexes_tot(np.argmin(losses)))
