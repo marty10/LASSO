@@ -9,8 +9,8 @@ from utility import center_test, assign_weights, get_current_data, get_beta_div_
 import sys
 
 sys.argv[1:2] = [int(x) for x in sys.argv[1:2]]
-weights_all = sys.argv[2]
-file_name = str(sys.argv[3])
+weights_all = sys.argv[1]
+file_name = str(sys.argv[2])
 
 
 score = "mean_squared_error"
