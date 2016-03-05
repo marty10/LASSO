@@ -73,7 +73,7 @@ class Enel_powerCurveTransformation(Transformation):
                 power = 0
             powers.append(power)
         return np.array(powers)
-    
+
 class Enel_powerCurveTransformation_old(Transformation):
     def __init__(self):
         pass
