@@ -4,7 +4,7 @@ from sklearn.metrics import r2_score, mean_squared_error
 import numpy as np
 from ExtractResult import Result
 from LASSOModel import Shooting, LASSOEstimator
-from utility import assign_weights, get_current_data, get_beta_div_zeros
+from utility import assign_weights, get_current_data, get_beta_div_zeros, extract_point_level
 import sys
 from pprint import pprint
 
