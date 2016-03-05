@@ -61,7 +61,7 @@ n_features = len(ordered_final_weights)
 values_TM = np.array([])
 
 if weights_all:
-    weights_ = assign_weights(weights_data.copy())
+    weights = assign_weights(weights_data.copy())
 
 for i in range(n_features):
 
@@ -75,7 +75,9 @@ for i in range(n_features):
 
         if not weights_all:
             weights_ = assign_weights(weights_data.copy()[indexes])
-
+        else:
+            weights_ = weights[indexes]
+            
         model = Shooting(weights_)
         lasso = LASSOEstimator(model)
 
