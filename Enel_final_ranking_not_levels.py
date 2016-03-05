@@ -77,7 +77,6 @@ if verbose:
     print("loss LASSO test", new_loss)
     print("------------------")
 
-indexes = ordered_final_weights[:iter].astype("int64")
 
 if weights_all:
     weights = assign_weights(weights_data.copy())
@@ -89,21 +88,23 @@ else:
 ##ricompute weighted lasso on val
 XTrain_current_val, XVal_current = get_current_data(XTrain_val, XVal, indexes)
 
-if not weights_all:
-    weights_ = assign_weights(weights_data.copy()[indexes])
-else:
-    weights_ = weights[indexes]
+model = Shooting(weights)
+lasso = LASSOEstimator(model)
 
-    model = Shooting(weights_)
-    lasso = LASSOEstimator(model)
+loss, beta = compute_weightedLASSO(lasso,XTrain_current_val,YTrain_val, XVal_current, YVal,scoring, score_f, verbose, values_TM)
 
-    loss, beta = compute_weightedLASSO(lasso,XTrain_current_val,YTrain_val, XVal_current, YVal,scoring, score_f, verbose, values_TM)
-
-    beta = np.abs(beta)
-    beta_indexes_,beta_ordered = get_beta_div_zeros(beta)
-
+beta = np.abs(beta)
+beta_indexes_,beta_ordered = get_beta_div_zeros(beta)
 
 XTrain_current, XTest_current = get_current_data(XTrain, XTest,indexes[beta_indexes_])
+
+###recompute weights
+if weights_all:
+    weights = assign_weights(weights_data.copy())
+    weights = weights[indexes]
+else:
+    weights = assign_weights(weights_data.copy()[indexes[beta_indexes_]])
+
 ###compute LASSO
 new_loss, beta = compute_lasso(XTrain_current, YTrain, XTest_current, YTest, score=score,values_TM = values_TM)
 beta = np.abs(beta[:, 0])
