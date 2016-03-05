@@ -2,6 +2,18 @@ import math
 from scipy.stats import pearsonr
 import numpy as np
 
+def extract_point_level(indexes, dict_):
+    output_array = []
+    for key in list(dict_.keys()):
+        current_v = dict_.get(key)
+        current_value = current_v[:,0]
+        for i in indexes:
+            if i in current_value:
+                point_level = current_v[current_value==i][:,1][0]
+                output_array.append([key,point_level])
+    return output_array
+
+
 
 def extract_level(ordered_final_weights, values):
     weights_level = []
@@ -106,6 +118,7 @@ def print_features_active(keys_sel, indexes, dict_):
             if i in dict_.get(key):
                 print (key)
                 break
+
 
 def compute_mse_binary(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest):
     model.fit(x_train_current_tmp, YTrain)

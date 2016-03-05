@@ -79,7 +79,6 @@ n_features = len(ordered_final_weights)
 
 for i in range(n_features):
 
-        current_point_levels = matrix_point_level[ordered_final_weights[:i+1],:]
         ###compute LASSO
         indexes = []
         for k in ordered_final_weights[:i+1]:
@@ -123,7 +122,7 @@ for i in range(n_features):
         beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
         print("livelli selezionati")
-        pprint(current_point_levels[beta_indexes])
+        pprint (extract_point_level(indexes[beta_indexes], dict_))
 
 
         np.savez(file_name+"ranking_point_level"+ext, mses = losses, indexes = indexes_tot)
