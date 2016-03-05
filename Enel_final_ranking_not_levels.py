@@ -8,9 +8,10 @@ from utility import center_test, assign_weights, get_current_data, get_beta_div_
     print_features_active,extract_level
 import sys
 
-sys.argv[1:2] = [int(x) for x in sys.argv[1:2]]
+sys.argv[1:3] = [int(x) for x in sys.argv[1:3]]
 iter = sys.argv[1]
-file_name = str(sys.argv[2])
+weights_all = sys.argv[2]
+file_name = str(sys.argv[3])
 
 score = "mean_squared_error"
 if score=="r2_score":
@@ -65,19 +66,18 @@ beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
 real_indexes = []
 
-ordered_indexes = np.argsort(weights_data)[::-1]
-
-print_features_active(keys_, beta_indexes, dict_)
-
 if verbose:
-
     print("loss LASSO test", new_loss)
     print("------------------")
 
 indexes = ordered_final_weights[:iter].astype("int64")
 
-weights = assign_weights(weights_data.copy())
-weights = weights[indexes]
+if weights_all:
+    weights = assign_weights(weights_data.copy())
+    weights = weights[indexes]
+else:
+    weights = assign_weights(weights_data.copy()[indexes])
+
 XTrain_current, XTest_current = get_current_data(XTrain, XTest,indexes)
 
 
