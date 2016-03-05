@@ -71,21 +71,19 @@ for i in range(n_features):
         for k in ordered_final_weights[:i+1]:
             current_value = dict_.get(k)[:,0]
             indexes = np.union1d(indexes,current_value)
-        print("indexes", indexes)
-
+       
         del_ = np.array([], dtype = "int64")
         for key in ordered_final_weights[:i+1]:
             value_key = dict_.get(key)[:,0]
             for key_1 in ordered_final_weights[i+1:]:
                 value_key1 = dict_.get(key_1)[:,0]
                 del_ = np.append(del_,np.intersect1d(value_key,value_key1))
-        print(del_)
+
         a = np.in1d(indexes,del_)
-        print("position to delete", a)
+
         indexes = np.delete(indexes, np.where(a==True)[0])
 
         indexes = indexes.astype("int64")
-        print("indici rimasti", indexes)
         XTrain_current, XTest_current = get_current_data(XTrain, XVal, indexes)
 
         print("----------------------------")

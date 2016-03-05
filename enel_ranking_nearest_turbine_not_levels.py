@@ -77,7 +77,7 @@ for i in range(n_features):
             weights_ = assign_weights(weights_data.copy()[indexes])
         else:
             weights_ = weights[indexes]
-            
+
         model = Shooting(weights_)
         lasso = LASSOEstimator(model)
 

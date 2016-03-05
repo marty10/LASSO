@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7cc0c753-e9e6-4f8d-8f08-622b14ea6592" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/enel_ranking_nearest_turbine_not_levels.py" afterPath="$PROJECT_DIR$/enel_ranking_nearest_turbine_not_levels.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/enel_ranking_nearest_turbine.py" afterPath="$PROJECT_DIR$/enel_ranking_nearest_turbine.py" />
     </list>
     <ignored path="tesi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -79,11 +79,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="enel_ranking_nearest_turbine_not_levels.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="enel_ranking_nearest_turbine_not_levels.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/enel_ranking_nearest_turbine_not_levels.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8138425">
-              <caret line="79" column="12" selection-start-line="79" selection-start-column="12" selection-end-line="79" selection-end-column="12" />
+            <state vertical-scroll-proportion="-20.058823">
+              <caret line="79" column="0" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
               <folding>
                 <element signature="e#0#56#0" expanded="true" />
               </folding>
@@ -91,11 +91,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="enel_ranking_nearest_turbine.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="enel_ranking_nearest_turbine.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/enel_ranking_nearest_turbine.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-16.235294">
-              <caret line="95" column="35" selection-start-line="95" selection-start-column="35" selection-end-line="95" selection-end-column="35" />
+            <state vertical-scroll-proportion="1.7875896">
+              <caret line="73" column="7" selection-start-line="73" selection-start-column="7" selection-end-line="73" selection-end-column="7" />
               <folding>
                 <element signature="e#0#60#0" expanded="true" />
               </folding>
@@ -152,7 +152,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/slipguru-l1l2py-2cdc3fc3df94/slipguru-l1l2py-2cdc3fc3df94/misc/test_path.py" />
         <option value="$PROJECT_DIR$/slipguru-l1l2py-2cdc3fc3df94/slipguru-l1l2py-2cdc3fc3df94/misc/test_correlation.py" />
         <option value="$PROJECT_DIR$/base.py" />
         <option value="$PROJECT_DIR$/LASSOCoordinateDescent.py" />
@@ -203,6 +202,7 @@
         <option value="$PROJECT_DIR$/modifyDatasetEnelCross.py" />
         <option value="$PROJECT_DIR$/../../PycharmProjects/tesi/enel_ranking_nearest_turbine_not_levels.py" />
         <option value="$PROJECT_DIR$/enel_ranking_nearest_turbine_not_levels.py" />
+        <option value="$PROJECT_DIR$/enel_ranking_nearest_turbine.py" />
       </list>
     </option>
   </component>
@@ -1034,22 +1034,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/enel_ranking_nearest_turbine.py">
+    <entry file="file://$PROJECT_DIR$/enel_ranking_nearest_turbine_not_levels.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-16.235294">
-          <caret line="95" column="35" selection-start-line="95" selection-start-column="35" selection-end-line="95" selection-end-column="35" />
+        <state vertical-scroll-proportion="-20.058823">
+          <caret line="79" column="0" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
           <folding>
-            <element signature="e#0#60#0" expanded="true" />
+            <element signature="e#0#56#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/enel_ranking_nearest_turbine_not_levels.py">
+    <entry file="file://$PROJECT_DIR$/enel_ranking_nearest_turbine.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8138425">
-          <caret line="79" column="12" selection-start-line="79" selection-start-column="12" selection-end-line="79" selection-end-column="12" />
+        <state vertical-scroll-proportion="1.7875896">
+          <caret line="73" column="7" selection-start-line="73" selection-start-column="7" selection-end-line="73" selection-end-column="7" />
           <folding>
-            <element signature="e#0#56#0" expanded="true" />
+            <element signature="e#0#60#0" expanded="true" />
           </folding>
         </state>
       </provider>
