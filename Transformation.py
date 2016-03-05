@@ -53,6 +53,27 @@ class Enel_powerCurveTransformation(Transformation):
                             output_dict_[current_v] = np.concatenate((output_dict_[current_v], vect_to_append),axis = 0)
         return x_transf, output_dict_
 
+    def get_component_value(self,x, dict_, k, current_values):
+        c = [dict_[j][k] for j in current_values]
+        c = np.hstack(c).astype("int64")
+        current_vect = x[:,c]
+        sum_component = np.sum(current_vect, axis = 1)
+        return sum_component
+
+    def enel_transf_power_curve(self, key, mean_value, power_curve):
+        values = power_curve[:,key*2:key*2+2]
+        powers = []
+        for m in mean_value:
+            mean_values_rounded= int(m)+0.5
+            row_power = np.where(values[:,0]==mean_values_rounded)[0]
+            if len(row_power)!=0:
+                row_power = row_power[0]
+                power = values[row_power,1]
+            else:
+                power = 0
+            powers.append(power)
+        return np.array(powers)
+    
 class Enel_powerCurveTransformation_old(Transformation):
     def __init__(self):
         pass
@@ -93,26 +114,6 @@ class Enel_powerCurveTransformation_old(Transformation):
                             output_dict_[current_v] = np.concatenate((output_dict_[current_v], vect_to_append),axis = 0)
         return x_transf, output_dict_
 
-    def get_component_value(self,x, dict_, k, current_values):
-        c = [dict_[j][k] for j in current_values]
-        c = np.hstack(c).astype("int64")
-        current_vect = x[:,c]
-        sum_component = np.sum(current_vect, axis = 1)
-        return sum_component
-
-    def enel_transf_power_curve(self, key, mean_value, power_curve):
-        values = power_curve[:,key*2:key*2+2]
-        powers = []
-        for m in mean_value:
-            mean_values_rounded= int(m)+0.5
-            row_power = np.where(values[:,0]==mean_values_rounded)[0]
-            if len(row_power)!=0:
-                row_power = row_power[0]
-                power = values[row_power,1]
-            else:
-                power = 0
-            powers.append(power)
-        return np.array(powers)
 
 
     def get_component_value(self,x, dict_, k, current_values):
