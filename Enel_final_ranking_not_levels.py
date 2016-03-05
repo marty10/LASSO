@@ -8,10 +8,10 @@ from utility import center_test, assign_weights, get_current_data, get_beta_div_
     print_features_active,extract_level
 import sys
 
-sys.argv[1:3] = [int(x) for x in sys.argv[1:3]]
-iter = sys.argv[1]
+sys.argv[1:2] = [int(x) for x in sys.argv[1:2]]
 weights_all = sys.argv[2]
 file_name = str(sys.argv[3])
+
 
 score = "mean_squared_error"
 if score=="r2_score":
@@ -24,9 +24,16 @@ else:
 folder = "ENEL_2014/"
 ext = ".npz"
 file_cross_val =  folder+file_name+ext
+fine_name_weights = file_name+"ranking"
 
 results_cross_val = Result(file_cross_val, "lasso")
+results_weighted_lasso = Result(fine_name_weights, "lasso")
 
+iter = np.argmin(results_weighted_lasso.extract_mses())
+indexes = results_weighted_lasso.extract_indexes_tot()[iter]
+
+
+XTrain_val, YTrain_val, XVal, YVal = results_cross_val.extract_train_val()
 XTrain, XTest = results_cross_val.extract_data_transf()
 _,YTrain,_, YTest = results_cross_val.extract_train_test()
 
@@ -78,9 +85,25 @@ if weights_all:
 else:
     weights = assign_weights(weights_data.copy()[indexes])
 
-XTrain_current, XTest_current = get_current_data(XTrain, XTest,indexes)
+
+##ricompute weighted lasso on val
+XTrain_current_val, XVal_current = get_current_data(XTrain_val, XVal, indexes)
+
+if not weights_all:
+    weights_ = assign_weights(weights_data.copy()[indexes])
+else:
+    weights_ = weights[indexes]
+
+    model = Shooting(weights_)
+    lasso = LASSOEstimator(model)
+
+    loss, beta = compute_weightedLASSO(lasso,XTrain_current_val,YTrain_val, XVal_current, YVal,scoring, score_f, verbose, values_TM)
+
+    beta = np.abs(beta)
+    beta_indexes_,beta_ordered = get_beta_div_zeros(beta)
 
 
+XTrain_current, XTest_current = get_current_data(XTrain, XTest,indexes[beta_indexes_])
 ###compute LASSO
 new_loss, beta = compute_lasso(XTrain_current, YTrain, XTest_current, YTest, score=score,values_TM = values_TM)
 beta = np.abs(beta[:, 0])
@@ -90,6 +113,7 @@ print("loss insieme ridotto", new_loss)
 print(indexes[beta_indexes])
 
 print(weights_level[beta_indexes])
+
 
 model = Shooting(weights)
 lasso = LASSOEstimator(model)

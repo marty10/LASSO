@@ -108,8 +108,6 @@ for i in range(n_features):
         print("----------------------------")
         print("iteration ", i)
 
-        keys_sel = ordered_final_weights[:i+1]
-
         weights_ = weights[indexes]
 
         model = Shooting(weights_)

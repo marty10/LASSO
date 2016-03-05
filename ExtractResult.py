@@ -56,6 +56,10 @@ class Result:
         indexes_to_extract = self.open_file["indexes_to_extract"]
         return active_sets, beta_div_zeros, ord_beta_div_zeros, indexes_to_extract
 
+    def extract_indexes_tot(self):
+        indexes_tot = self.open_file["indexes_tot"]
+        return indexes_tot
+
     def extract_count_div_beta_zeros(self):
         count_div_beta_zeros = self.open_file["count_div_beta_zeros"]
         return count_div_beta_zeros
