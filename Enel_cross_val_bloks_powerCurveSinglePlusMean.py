@@ -8,6 +8,11 @@ from Lasso_utils import compute_lasso, compute_mse
 from Transformation import Enel_powerCurveTransformation
 from utility import generate_samples_dynamic_set, get_current_data,get_common_indexes, \
     extract_chosen_indexes_from_start, center_test
+import sys
+
+##sys parameter
+sys.argv[1:] = [int(x) for x in sys.argv[1:]]
+k = sys.argv[1]
 
 ####load data
 file = "ENEL_2014/Enel_dataset.npz"
@@ -28,9 +33,9 @@ turbine_dict = find_turbines_nearest_points(Coord,Coord_turb,k_1)
 XTrain_transf, output_dict_ = enel_transf.transform(turbine_dict, enel_dict, XTrain, power_curve,0, XTrain_transf, output_dict_)
 XTest_transf, _ = enel_transf.transform(turbine_dict, enel_dict, XTest, power_curve,0, XTest_transf, output_dict_.copy())
 
-k = 3
+
 for k_1 in range(1,k+1):
-    print(k, "vicini")
+    print(k_1, "vicini")
     turbine_dict = find_turbines_nearest_points(Coord,Coord_turb,k_1)
     XTrain_transf, output_dict_ = enel_transf.transform(turbine_dict, enel_dict, XTrain, power_curve,1, XTrain_transf, output_dict_)
     XTest_transf, _ = enel_transf.transform(turbine_dict, enel_dict, XTest, power_curve,1, XTest_transf, output_dict_.copy())
@@ -164,6 +169,6 @@ while num_cycle<cycles:
 
     countIter+=1
 
-    np.savez("Enel_cross_val_blocks_powerCurveSinglePlusMean3.npz", dict_ = output_dict_,saved_indexes_list = saved_indexes_list, mses = mses, weights_list = weights_list,
+    np.savez("Enel_cross_val_blocks_powerCurveSinglePlusMean"+str(k)+".npz", dict_ = output_dict_,saved_indexes_list = saved_indexes_list, mses = mses, weights_list = weights_list,
              XTrain = XTrain, XTest = XTest, YTest = YTest, YTrain = YTrain, XTrainTransf_ = XTrain_transf, XTestTransf_ = XTest_transf, XTrain_ValNoCenter = XTrain_noCenter,
            XValTransf_noCenter = XVal_noCenter, YTrainVal_noCenter = YTrain_noCenter, YVal_noCenter = YVal_noCenter, XTrain_Val = XTrain_, XVal = XVal_ , YVal_ = YVal_, YTrain_Val = YTrain_ )
