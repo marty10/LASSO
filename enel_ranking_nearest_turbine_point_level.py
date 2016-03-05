@@ -65,7 +65,7 @@ if verbose:
     print("ranking of the features:")
     pprint(matrix_point_level[ordered_final_weights,:])
     print("-------------")
-ordered_indexes = np.argsort(weights_data)[::-1]
+
 losses = []
 
 
@@ -79,6 +79,7 @@ n_features = len(ordered_final_weights)
 
 for i in range(n_features):
 
+        current_point_levels = matrix_point_level[ordered_final_weights[:i+1],:]
         ###compute LASSO
         indexes = []
         for k in ordered_final_weights[:i+1]:
@@ -122,8 +123,8 @@ for i in range(n_features):
         beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
         print("livelli selezionati")
-        pprint(indexes[beta_indexes])
-        pprint(matrix_point_level[indexes[beta_indexes]])
+        pprint(current_point_levels[beta_indexes])
+
 
         np.savez(file_name+"ranking_point_level"+ext, mses = losses, indexes = indexes_tot)
 
