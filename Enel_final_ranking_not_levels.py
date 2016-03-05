@@ -29,7 +29,10 @@ fine_name_weights = file_name+"ranking_not_levels"+ext
 results_cross_val = Result(file_cross_val, "lasso")
 results_weighted_lasso = Result(fine_name_weights, "lasso")
 
-iter = np.argmin(results_weighted_lasso.extract_mses())
+mses = results_weighted_lasso.extract_mses()
+iter = np.argmin(mses)
+print ("iter chosen:",iter, "with mse:",mses[iter])
+print("--------------")
 indexes = results_weighted_lasso.extract_indexes_tot()[iter]
 
 
@@ -106,6 +109,7 @@ else:
     weights = assign_weights(weights_data.copy()[indexes[beta_indexes_]])
 
 ###compute LASSO
+print("-------------")
 new_loss, beta = compute_lasso(XTrain_current, YTrain, XTest_current, YTest, score=score,values_TM = values_TM)
 beta = np.abs(beta[:, 0])
 beta_indexes,beta_ordered = get_beta_div_zeros(beta)
@@ -114,13 +118,13 @@ print("loss insieme ridotto", new_loss)
 print(indexes[beta_indexes])
 
 print(weights_level[beta_indexes])
+print("------------")
 
 
+print("----------------")
 model = Shooting(weights)
 lasso = LASSOEstimator(model)
-print(XTrain_current.shape[1])
-print(XTest_current.shape[1])
-print(len(weights))
+
 loss, beta = compute_weightedLASSO(lasso,XTrain_current,YTrain, XTest_current, YTest,scoring, score_f, verbose,values_TM = values_TM)
 
 beta = np.abs(beta)
@@ -128,3 +132,5 @@ beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
 print(indexes[beta_indexes])
 print(weights_level[beta_indexes])
+
+print("----------------")
