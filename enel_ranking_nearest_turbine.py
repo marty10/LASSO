@@ -1,4 +1,3 @@
-from __future__ import print_function
 from Lasso_utils import compute_lasso, compute_weightedLASSO
 from sklearn.metrics import r2_score, mean_squared_error
 import numpy as np
@@ -8,9 +7,6 @@ from utility import assign_weights, get_current_data, get_beta_div_zeros, print_
 import sys
 from pprint import pprint
 
-
-def warning(*objs):
-    print("WARNING: ", *objs, file=sys.stderr)
 
 sys.argv[1:] = [str(x) for x in sys.argv[1:]]
 file_name = sys.argv[1]
