@@ -6,7 +6,11 @@ from LASSOModel import Shooting, LASSOEstimator
 from utility import assign_weights, get_current_data, get_beta_div_zeros, print_features_active
 import sys
 from pprint import pprint
+from __future__ import print_function
 
+def warning(*objs):
+    print("WARNING: ", *objs, file=sys.stderr)
+    
 sys.argv[1:] = [str(x) for x in sys.argv[1:]]
 file_name = sys.argv[1]
 
@@ -60,8 +64,9 @@ print("new_loss", new_loss)
 
 losses = []
 indexes_tot = []
+beta_div_zeros = []
 n_features = len(ordered_final_weights)
-
+print(n_features)
 
 for i in range(n_features):
 
@@ -101,12 +106,13 @@ for i in range(n_features):
 
         beta = np.abs(beta)
         beta_indexes,beta_ordered = get_beta_div_zeros(beta)
+        beta_div_zeros.append(indexes[beta_indexes])
 
         print("livelli selezionati")
         pprint(indexes[beta_indexes])
         print_features_active(keys_sel, indexes[beta_indexes], dict_)
 
-        np.savez(file_name+"ranking"+ext, mses = losses, indexes = indexes_tot)
+        np.savez(file_name+"ranking"+ext, mses = losses, indexes = indexes_tot, beta_div_zeros = beta_div_zeros)
 
 print("min mse", np.min(losses), "with:", indexes_tot(np.argmin(losses)))
 
