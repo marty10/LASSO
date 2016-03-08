@@ -16,6 +16,49 @@ class Enel_powerCurveTransformation(Transformation):
     def __init__(self):
         pass
 
+    def transform1(self, neigh_, dict_, x, power_curve,l, x_transf,output_dict_):
+        n = x.shape[0]
+        keys_ = (list)(neigh_.keys())
+        values = (list)(neigh_.values())
+        for key in keys_:
+            current_value = values[key]
+            if len(current_value)!=0:
+                if l==0:
+                    h_s = np.arange(0,len(current_value[:,0]))
+                else:
+                    h_s = np.arange(len(current_value[:,0])-1,len(current_value[:,0]))
+                for h in h_s:
+                    if l==0:
+                        current_point_level = current_value[h]
+                        current_values = np.array([current_point_level])[:,0]
+                        k_levels = np.array([current_point_level])[:,1]
+                    else:
+                        current_point_level = current_value[:h+1]
+                        current_values = current_point_level[:,0]
+                        k_levels = current_point_level[:,1]
+                    start_dim = x_transf.shape[1]
+
+                    for k in np.unique(k_levels):
+                        index_k = np.where(k_levels==k)[0]
+                        values_k = current_values[index_k]
+
+                        sum_component_u = self.get_component_value(x, dict_, k, values_k)
+                        sum_component_v = self.get_component_value(x, dict_, k+12, values_k)
+                        wind_speed = np.sqrt(sum_component_u**2+sum_component_v**2)/len(values_k)
+                        power_value = self.enel_transf_power_curve(key, wind_speed, power_curve)
+                        if x_transf.shape[1]==0:
+                            x_transf = power_value.reshape([n,1])
+                        else:
+                            x_transf = np.concatenate((x_transf,power_value.reshape([n,1])), axis = 1)
+                        current_dim = x_transf.shape[1]
+                    for i, current_v in enumerate(current_values):
+                        vect_to_append = np.array([np.arange(start_dim,current_dim)[0], k_levels[i]]).reshape([1,2])
+                        if output_dict_[current_v].shape[1]==0:
+                            output_dict_[current_v] = vect_to_append
+                        else:
+                            output_dict_[current_v] = np.concatenate((output_dict_[current_v], vect_to_append),axis = 0)
+        return x_transf, output_dict_
+
     def transform(self, neigh_, dict_, x, power_curve,l, x_transf,output_dict_):
         k_levels = np.arange(0,12)
         n = x.shape[0]
