@@ -1,13 +1,12 @@
 import numpy as np
 from sklearn.cross_validation import train_test_split
-
 from Enel_utils import compute_angular_coefficient, extract_direction, create_dict_direction
 from ExtractResult import Result
+from Fit import Linear_fit
+from Transformation import Enel_powerCurveTransformation
+
 
 ##load the dataset
-from Fit import Linear_fit
-from Transformation_old import Enel_powerCurveTransformation
-
 file = "ENEL_2014/Enel_dataset.npz"
 results = Result(file, "lasso")
 enel_dict = results.extract_dict()
