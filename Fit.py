@@ -91,13 +91,13 @@ class Linear_fit(Fit):
     def __init__(self,):
         pass
 
-    def fitting(self, XTrain, YTrain, XTest,YTest ):
+    def fitting(self, XTrain, YTrain, XTest,YTest,values_TM ):
         ##center data
         XTrain_, YTrain_, X_mean, y_mean, X_std = center_data(XTrain, YTrain, fit_intercept=True, normalize = True)
         XTest_, YTest_ = center_test(XTest,YTest,X_mean,y_mean,X_std, normalize=True)
 
         ##compute linear lasso
-        new_loss, beta = compute_lasso(XTrain_, YTrain_, XTest_, YTest_,score = "r2_score", values_TM = np.array([[24,281], [24,214]]))
+        new_loss, beta = compute_lasso(XTrain_, YTrain_, XTest_, YTest_,score = "r2_score", values_TM = values_TM)
         print("loss lineare", new_loss)
 
 
