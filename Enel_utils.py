@@ -75,7 +75,7 @@ def get_products_points(turb_dict):
         output_dict[v] = np.append(output_dict[v],tmp_v[tmp_v>v])
     return output_dict
 
-def compute_angular_coefficient(Coord,Coord_turb):
+def compute_angle(Coord, Coord_turb):
     dim_points = Coord.shape[0]
     dim_turbines = Coord_turb.shape[0]
     angular_coeffs = np.zeros([dim_points, dim_turbines])
@@ -90,7 +90,7 @@ def extract_direction(angular_coeffs, num_directions = 180):
     dim_turbs = angular_coeffs.shape[1]
     directions = np.zeros([dim_points,dim_turbs])
     angle_slice = 180/num_directions
-    angle_slices = np.arange(0,180,angle_slice)
+    angle_slices = np.arange(-90,90,angle_slice)
     angle_slices = angle_slices.reshape([len(angle_slices),1])
     for i in range(dim_points):
         for j in range(dim_turbs):
