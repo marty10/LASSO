@@ -60,7 +60,7 @@ class Enel_powerCurveTransformation(Transformation):
         return x_transf, output_dict_
 
 
-    def compute_angle_matrix(self,x, num_directions = 180):
+    def compute_angle(self,x, num_directions = 180):
         n,m = x.shape
         x_transf = np.array([[]])
         dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
