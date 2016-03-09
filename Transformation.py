@@ -60,19 +60,26 @@ class Enel_powerCurveTransformation(Transformation):
         return x_transf, output_dict_
 
 
-    def compute_angle_matrix(self,x):
+    def compute_angle_matrix(self,x, num_directions = 180):
         n,m = x.shape
         x_transf = np.array([[]])
         dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
         key = 0
+        angle_slice = 180/num_directions
+        angle_slices = np.arange(-90,90,angle_slice)
+        angle_slices = angle_slices.reshape([len(angle_slices),1])
         for i in range(0,m,24):
             start_dim = x_transf.shape[1]
             for j in range(i,i+12):
-                current_angle = np.degrees(np.arctan2(x[:,j+12],x[:,j])).reshape([n,1])
+                current_angle_degree = np.degrees(np.arctan2(x[:,j+12],x[:,j]))
+                norm = np.abs(current_angle_degree-angle_slices)
+                min_norm = np.argmin(norm, axis = 0)
+                current_angle_dir = angle_slices[min_norm]
+
                 if x_transf.shape[1]==0:
-                    x_transf = current_angle
+                    x_transf = current_angle_dir
                 else:
-                    x_transf = np.concatenate((x_transf,current_angle), axis = 1)
+                    x_transf = np.concatenate((x_transf,current_angle_dir), axis = 1)
 
             current_dim = x_transf.shape[1]
             dict_[key] = np.append(dict_[key], np.arange(start_dim,current_dim))
