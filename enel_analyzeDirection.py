@@ -1,7 +1,7 @@
 import numpy as np
 from sklearn.cross_validation import train_test_split
 
-from Enel_utils import compute_angle, extract_direction, create_dict_direction, compute_angle_new
+from Enel_utils import compute_angle, extract_direction, create_dict_direction
 from ExtractResult import Result
 
 ##load the dataset
