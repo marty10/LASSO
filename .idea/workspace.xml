@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7cc0c753-e9e6-4f8d-8f08-622b14ea6592" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Enel_ranking_turbine.py" afterPath="$PROJECT_DIR$/Enel_ranking_turbine.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Enel_ranking_turbine_point_level.py" afterPath="$PROJECT_DIR$/Enel_ranking_turbine_point_level.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Enel_final_ranking_not_levels.py" afterPath="$PROJECT_DIR$/Enel_final_ranking_not_levels.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ExtractResult.py" afterPath="$PROJECT_DIR$/ExtractResult.py" />
     </list>
     <ignored path="tesi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -24,18 +25,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="Enel_cross_val_bloks_powerCurveSinglePlusMean.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Enel_cross_val_bloks_powerCurveSinglePlusMean.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="33" column="10" selection-start-line="33" selection-start-column="10" selection-end-line="33" selection-end-column="10" />
-              <folding>
-                <element signature="e#0#32#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="modifyDatasetEnelCross.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modifyDatasetEnelCross.py">
           <provider selected="true" editor-type-id="text-editor">
@@ -46,12 +35,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Enel_final_ranking_not_levels.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Enel_final_ranking_not_levels.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Enel_final_ranking_not_levels.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-16.82353">
-              <caret line="34" column="21" selection-start-line="34" selection-start-column="21" selection-end-line="34" selection-end-column="21" />
-              <folding />
+            <state vertical-scroll-proportion="3.071599">
+              <caret line="117" column="11" selection-start-line="117" selection-start-column="11" selection-end-line="117" selection-end-column="11" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -66,11 +57,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Enel_ranking_turbine.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Enel_ranking_turbine.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Enel_ranking_turbine.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.68257755">
-              <caret line="59" column="1" selection-start-line="59" selection-start-column="1" selection-end-line="59" selection-end-column="1" />
+            <state vertical-scroll-proportion="-20.705883">
+              <caret line="65" column="17" selection-start-line="65" selection-start-column="17" selection-end-line="65" selection-end-column="17" />
               <folding>
                 <element signature="e#0#60#0" expanded="true" />
               </folding>
@@ -81,8 +72,8 @@
       <file leaf-file-name="ExtractResult.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ExtractResult.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="60" column="26" selection-start-line="60" selection-start-column="26" selection-end-line="60" selection-end-column="26" />
+            <state vertical-scroll-proportion="-10.3529415">
+              <caret line="62" column="30" selection-start-line="62" selection-start-column="8" selection-end-line="62" selection-end-column="30" />
               <folding />
             </state>
           </provider>
@@ -135,7 +126,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Trasformation.py" />
         <option value="$PROJECT_DIR$/LASSO.py" />
         <option value="$PROJECT_DIR$/ADMM.py" />
         <option value="$PROJECT_DIR$/LASSOShootingRun.py" />
@@ -181,11 +171,12 @@
         <option value="$PROJECT_DIR$/Enel_utils.py" />
         <option value="$PROJECT_DIR$/../../PycharmProjects/tesi/Enel_final_ranking_not_levels.py" />
         <option value="$PROJECT_DIR$/enel_ranking_nearest_turbine_point_level.py" />
-        <option value="$PROJECT_DIR$/ExtractResult.py" />
-        <option value="$PROJECT_DIR$/Enel_final_ranking_not_levels.py" />
         <option value="$PROJECT_DIR$/Enel_ranking_turbine_not_levels.py" />
         <option value="$PROJECT_DIR$/Enel_ranking_turbine_point_level.py" />
         <option value="$PROJECT_DIR$/Enel_ranking_turbine.py" />
+        <option value="$PROJECT_DIR$/ExtractResult.py" />
+        <option value="$PROJECT_DIR$/d.py" />
+        <option value="$PROJECT_DIR$/Enel_final_ranking_not_levels.py" />
       </list>
     </option>
   </component>
@@ -644,19 +635,11 @@
           <option name="timeStamp" value="14" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="40" />
+      <option name="time" value="41" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Transformation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="71" column="31" selection-start-line="71" selection-start-column="31" selection-end-line="71" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../../PycharmProjects/tesi/Transformation_old.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -884,13 +867,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="42" column="35" selection-start-line="42" selection-start-column="35" selection-end-line="42" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Enel_ranking_not_levels.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="9" selection-end-column="23" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -972,25 +949,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../PycharmProjects/tesi/Enel_final_ranking_not_levels.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3027523">
-          <caret line="12" column="22" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Enel_utils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ExtractResult.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="60" column="26" selection-start-line="60" selection-start-column="26" selection-end-line="60" selection-end-column="26" />
           <folding />
         </state>
       </provider>
@@ -1000,16 +962,8 @@
         <state vertical-scroll-proportion="-0.39140812">
           <caret line="49" column="28" selection-start-line="49" selection-start-column="28" selection-end-line="49" selection-end-column="28" />
           <folding>
-            <element signature="e#0#56#0" expanded="true" />
+            <element signature="e#0#56#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Enel_final_ranking_not_levels.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-16.82353">
-          <caret line="34" column="21" selection-start-line="34" selection-start-column="21" selection-end-line="34" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1023,10 +977,44 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Enel_ranking_turbine.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.68257755">
-          <caret line="59" column="1" selection-start-line="59" selection-start-column="1" selection-end-line="59" selection-end-column="1" />
+        <state vertical-scroll-proportion="-20.705883">
+          <caret line="65" column="17" selection-start-line="65" selection-start-column="17" selection-end-line="65" selection-end-column="17" />
           <folding>
             <element signature="e#0#60#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ExtractResult.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-10.3529415">
+          <caret line="62" column="30" selection-start-line="62" selection-start-column="8" selection-end-line="62" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Enel_ranking_not_levels.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7899761">
+          <caret line="90" column="73" selection-start-line="90" selection-start-column="73" selection-end-line="90" selection-end-column="73" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../PycharmProjects/tesi/Enel_final_ranking_not_levels.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.68421054">
+          <caret line="96" column="114" selection-start-line="96" selection-start-column="111" selection-end-line="96" selection-end-column="114" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Enel_final_ranking_not_levels.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="3.071599">
+          <caret line="117" column="11" selection-start-line="117" selection-start-column="11" selection-end-line="117" selection-end-column="11" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
           </folding>
         </state>
       </provider>

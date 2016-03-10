@@ -60,9 +60,9 @@ class Result:
         indexes_tot = self.open_file["indexes"]
         return indexes_tot
 
-    def extract_count_div_beta_zeros(self):
-        count_div_beta_zeros = self.open_file["count_div_beta_zeros"]
-        return count_div_beta_zeros
+    def extract_beta_div_zeros(self):
+        beta_div_zeros = self.open_file["beta_div_zeros"]
+        return beta_div_zeros
 
     def extract_informative(self):
         informative_indexes = self.open_file["informative_indexes"]
