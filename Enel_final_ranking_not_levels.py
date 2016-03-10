@@ -71,15 +71,15 @@ if verbose:
 dict_ = results_cross_val.extract_dict()
 
 values_TM = np.array([[24,281], [24,214]])
-new_loss, beta = compute_lasso(XTrain, YTrain, XTest, YTest, score = score,values_TM = values_TM)
-beta = np.abs(beta[:, 0])
-beta_indexes,beta_ordered = get_beta_div_zeros(beta)
+#new_loss, beta = compute_lasso(XTrain, YTrain, XTest, YTest, score = score,values_TM = values_TM)
+#beta = np.abs(beta[:, 0])
+#beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
-real_indexes = []
+#real_indexes = []
 
-if verbose:
-    print("loss LASSO test", new_loss)
-    print("------------------")
+#if verbose:
+ #   print("loss LASSO test", new_loss)
+  #  print("------------------")
 
 
 ###recompute weights
