@@ -9,9 +9,9 @@ from utility import center_test, assign_weights, get_current_data, get_beta_div_
     print_features_active
 import sys
 
-sys.argv[1:] = [int(x) for x in sys.argv[1:2]]
-file_name = str(sys.argv[1])
-compute_lasso_current = 0
+sys.argv[1:] = [str(x) for x in sys.argv[1:2]]
+file_name = sys.argv[1]
+compute_lasso_current = 1
 
 score = "mean_squared_error"
 if score=="r2_score":

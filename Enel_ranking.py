@@ -5,6 +5,7 @@ from LASSOModel import Shooting, LASSOEstimator
 from Lasso_utils import compute_weightedLASSO, compute_lasso
 from utility import get_current_data, assign_weights, assign_weights_ordered, \
     get_beta_div_zeros, print_features_active
+import sys
 
 sys.argv[1:] = [str(x) for x in sys.argv[1:]]
 file_name = sys.argv[1]
