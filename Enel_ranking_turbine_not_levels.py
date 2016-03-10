@@ -63,6 +63,7 @@ values_TM = np.array([])
 if weights_all:
     weights = assign_weights(weights_data.copy())
 
+beta_div_zeros = []
 for i in range(n_features):
 
         indexes = ordered_final_weights[:i+1].astype("int64")
@@ -86,10 +87,11 @@ for i in range(n_features):
 
         beta = np.abs(beta)
         beta_indexes,beta_ordered = get_beta_div_zeros(beta)
+        beta_div_zeros.append(indexes[beta_indexes])
 
         print("livelli selezionati:")
         pprint(weights_level[beta_indexes])
 
-        np.savez(file_name+"ranking_not_levels_weights_all"+str(weights_all)+ext, mses = losses, indexes = indexes_tot)
+        np.savez(file_name+"ranking_not_levels_weights_all"+str(weights_all)+ext, mses = losses, indexes = indexes_tot, beta_div_zeros = beta_div_zeros)
 
 print("min mse", np.min(losses), "with:", indexes_tot(np.argmin(losses)))
