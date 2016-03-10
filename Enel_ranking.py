@@ -2,9 +2,9 @@ from sklearn.metrics import r2_score, mean_squared_error
 from ExtractResult import Result
 import numpy as np
 from LASSOModel import Shooting, LASSOEstimator
-from utility import get_current_data, assign_weights, compute_mse, assign_weights_ordered, compute_lasso, \
-    get_beta_div_zeros, print_features_active, compute_weightedLASSO
-import sys
+from Lasso_utils import compute_weightedLASSO, compute_lasso
+from utility import get_current_data, assign_weights, assign_weights_ordered, \
+    get_beta_div_zeros, print_features_active
 
 sys.argv[1:] = [str(x) for x in sys.argv[1:]]
 file_name = sys.argv[1]
@@ -15,7 +15,6 @@ file = "ENEL_2014/"+file_name+ext
 results = Result(file, "lasso")
 
 dict_ = results.extract_dict()
-print (dict_)
 
 XTrain, YTrain, XVal, YVal = results.extract_train_val()
 
@@ -33,11 +32,8 @@ verbose = True
 ###compute ranking
 
 weights_data = results.extract_weights()
-
 index_mse = len(weights_data) - 1
 weights_data = weights_data[index_mse]
-print (weights_data)
-print (len(weights_data))
 weights = assign_weights(weights_data.copy())
 
 keys_ = np.array(list(dict_.keys())).astype("int64")
@@ -56,20 +52,17 @@ ordered_indexes = np.argsort(weights_data)[::-1]
 losses = []
 
 
-#new_loss, _ = compute_lasso(XTrain, YTrain, XVal, YVal, score)
-
-#print("new_loss", new_loss)
+new_loss, _ = compute_lasso(XTrain, YTrain, XVal, YVal, score, [])
+print("new_loss", new_loss)
 
 losses = []
 indexes_tot = []
 n_features = len(ordered_final_weights)
-
+extracted_indexes = []
 
 for i in range(n_features):
 
-        ###compute LASSO
         indexes = []
-
         for k in ordered_final_weights[:i + 1]:
             indexes = np.union1d(indexes, dict_.get(k))
 
@@ -87,7 +80,7 @@ for i in range(n_features):
         model = Shooting(weights_)
         lasso = LASSOEstimator(model)
 
-        loss, beta = compute_weightedLASSO(lasso,XTrain_current,YTrain, XTest_current, YVal,scoring, score_f, verbose)
+        loss, beta = compute_weightedLASSO(lasso,XTrain_current,YTrain, XTest_current, YVal,scoring, score_f, verbose, values_TM=[])
         losses.append(loss)
 
         beta = np.abs(beta)
@@ -96,6 +89,7 @@ for i in range(n_features):
         print(indexes[beta_indexes])
         print_features_active(keys_sel, indexes[beta_indexes], dict_)
 
-        np.savez(file_name+"ranking"+ext, mses = losses, indexes = indexes_tot)
+        extracted_indexes.append(indexes[beta_indexes])
+        np.savez(file_name+"ranking"+ext, mses = losses, indexes = indexes_tot, extracted_indexes = extracted_indexes)
 
 print("min mse", np.min(losses), "with:", indexes_tot(np.argmin(losses)))
