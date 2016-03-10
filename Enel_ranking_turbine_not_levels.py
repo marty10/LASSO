@@ -20,8 +20,8 @@ dict_ = results.extract_dict()
 
 XTrain, YTrain, XVal, YVal = results.extract_train_val()
 
-new_loss, beta = compute_lasso(XTrain, YTrain, XVal, YVal,score = "mean_squared_error",values_TM = [])
-print("loss lineare", new_loss)
+#new_loss, beta = compute_lasso(XTrain, YTrain, XVal, YVal,score = "mean_squared_error",values_TM = [])
+#print("loss lineare", new_loss)
 
 score = "mean_squared_error"
 if score=="r2_score":
