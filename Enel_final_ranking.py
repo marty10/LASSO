@@ -68,7 +68,6 @@ if verbose:
 
 ###compute LASSO
 #resultsData = Result(file_data,"lasso")
-dict_ = results_cross_val.extract_dict()
 
 new_loss, beta = compute_lasso(XTrain, YTrain, XTest, YTest, score = score,values_TM = values_TM)
 beta = np.abs(beta[:, 0])
