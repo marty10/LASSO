@@ -99,7 +99,7 @@ values_TM = np.array([[24,281], [24,214]])
 
 
 ###recompute weights
-weights = assign_weights(weights_data.copy()[indexes_beta])
+weights = weights[indexes_beta]
 
 XTrain_current, XTest_current = get_current_data(XTrain, XTest,indexes_beta)
 ###compute LASSO
