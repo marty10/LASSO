@@ -39,8 +39,6 @@ index_mse = len(weights_data) - 1
 weights_data = weights_data[index_mse]
 weights = assign_weights(weights_data.copy())
 
-#weights_data = np.arange(0,XTrain.shape[1])
-
 keys_ = np.array(list(dict_point_level.keys())).astype("int64")
 
 ## si prende la prima key perchè una vale l altra
@@ -75,11 +73,10 @@ print("new_loss", new_loss)
 losses = []
 indexes_tot = []
 n_features = len(ordered_final_weights)
-
+beta_div_zeros = []
 
 for i in range(n_features):
 
-        ###compute LASSO
         indexes = []
         for k in ordered_final_weights[:i+1]:
             current_key = matrix_point_level[k,0]
@@ -121,9 +118,9 @@ for i in range(n_features):
 
         print("livelli selezionati")
         pprint (extract_point_level(indexes[beta_indexes], dict_))
+        beta_div_zeros.append(indexes[beta_indexes])
 
-
-        np.savez(file_name+"ranking_point_level"+ext, mses = losses, indexes = indexes_tot)
+        np.savez(file_name+"ranking_point_level"+ext, mses = losses, indexes = indexes_tot, beta_div_zeros = beta_div_zeros)
 
 print("min mse", np.min(losses), "with:", indexes_tot(np.argmin(losses)))
 
