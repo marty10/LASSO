@@ -5,7 +5,7 @@ from LASSOModel import Shooting, LASSOEstimator
 import numpy as np
 
 from Lasso_utils import compute_weightedLASSO
-from utility import center_test, assign_weights, get_current_data, compute_lasso, get_beta_div_zeros, \
+from utility import center_test, assign_weights, get_current_data, get_beta_div_zeros, \
     print_features_active
 import sys
 
