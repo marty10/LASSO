@@ -35,7 +35,7 @@ print ("iter chosen:",iter, "with mse:",mses[iter])
 print("--------------")
 
 #indexes = results_weighted_lasso.extract_indexes_tot()[iter]
-indexes_beta = results_weighted_lasso.extract_beta_div_zeros[iter]
+indexes_beta = results_weighted_lasso.extract_beta_div_zeros()[iter]
 
 # XTrain_val, YTrain_val, XVal, YVal = results_cross_val.extract_train_val()
 XTrain, XTest = results_cross_val.extract_data_transf()
