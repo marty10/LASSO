@@ -12,6 +12,58 @@ class Transformation:
         """fit poly"""
 
 
+class Enel_directionPowerCurveTransformation(Transformation):
+    def __init__(self):
+        pass
+
+    def transform(self, direction_train, directions, XTrain, power_curve, Coord, Coord_turb):
+        n,p = direction_train.shape
+        turbines_number = directions.shape[1]
+        X_turbines = np.zeros([n,p])
+        count = 0
+        for i in range(p):
+            selected_turbs = []
+            current_angles = direction_train[:,i].reshape([n,1])
+            point_direction = np.array(directions[count,:]).reshape([1,turbines_number])
+            current_diff = np.abs(current_angles-point_direction)
+            min_turbs = np.min(current_diff,axis = 1)
+            for s in range(n):
+                if min_turbs[s]<180:
+                    turb = np.where(current_diff[s,:] == min_turbs[s])[0]
+                    if len(turb)>1:
+                    #chooose neareast turbine in that direction
+                        tree = create_tree(Coord_turb[turb,:])
+                        d,sel_turb = tree.query(Coord[i%12,:])
+                        selected_turb = turb[sel_turb]
+                    else:
+                        selected_turb = turb
+                else:
+                    print("overcome trehold angle")
+                    selected_turb = -1
+                selected_turbs.append(selected_turb)
+            wind_speed = XTrain[:,i]
+            power_values = self.enel_transf_power_curve1(selected_turbs, wind_speed, power_curve)
+            X_turbines[:,i] = power_values
+        return X_turbines
+
+    def enel_transf_power_curve(self, keys, mean_value, power_curve):
+        powers = []
+        for k,key in enumerate(keys):
+            if key!=-1:
+                values = power_curve[:,key*2:key*2+2]
+                m = mean_value[k]
+                mean_values_rounded= int(m)+0.5
+                row_power = np.where(values[:,0]==mean_values_rounded)[0]
+                if len(row_power)!=0:
+                    row_power = row_power[0]
+                    power = values[row_power,1]
+                else:
+                    power = 0
+            else:
+                power = 0
+            powers.append(power)
+        return np.array(powers)
+
 class Enel_powerCurveTransformation(Transformation):
     def __init__(self):
         pass
