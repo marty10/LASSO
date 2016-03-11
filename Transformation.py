@@ -2,7 +2,7 @@ from abc import ABCMeta
 import abc
 import math
 import numpy as np
-
+from Enel_utils import create_tree
 
 class Transformation:
     __metaclass__ = ABCMeta
@@ -88,7 +88,7 @@ class EnelWindSpeedTransformation(Transformation):
         assert (x_transf.shape[1]==m/2)
 
         return x_transf, dict_
-    
+
 class Enel_powerCurveTransformation(Transformation):
     def __init__(self):
         pass
