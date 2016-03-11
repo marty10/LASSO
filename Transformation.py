@@ -64,6 +64,31 @@ class Enel_directionPowerCurveTransformation(Transformation):
             powers.append(power)
         return np.array(powers)
 
+class EnelWindSpeedTransformation(Transformation):
+    def __init__(self):
+        pass
+
+    def transform(self,x):
+        n,m = x.shape
+        x_transf = np.array([[]])
+        dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
+
+        key = 0
+        for i in range(0,m,24):
+            start_dim = x_transf.shape[1]
+            for j in range(i,i+12):
+                if x_transf.shape[1]==0:
+                    x_transf = np.sqrt(np.power(x[:,j],2)+np.power(x[:,j+12],2)).reshape([n,1])
+                else:
+                    x_transf = np.concatenate((x_transf,np.sqrt(np.power(x[:,j],2)+np.power(x[:,j+12],2)).reshape([n,1])), axis = 1)
+            current_dim = x_transf.shape[1]
+            dict_[key] = np.append(dict_[key], np.arange(start_dim,current_dim))
+            key+=1
+
+        assert (x_transf.shape[1]==m/2)
+
+        return x_transf, dict_
+    
 class Enel_powerCurveTransformation(Transformation):
     def __init__(self):
         pass
