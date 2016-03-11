@@ -42,7 +42,7 @@ class Enel_directionPowerCurveTransformation(Transformation):
                     selected_turb = -1
                 selected_turbs.append(selected_turb)
             wind_speed = XTrain[:,i]
-            power_values = self.enel_transf_power_curve1(selected_turbs, wind_speed, power_curve)
+            power_values = self.enel_transf_power_curve(selected_turbs, wind_speed, power_curve)
             X_turbines[:,i] = power_values
         return X_turbines
 
