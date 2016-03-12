@@ -1,13 +1,11 @@
 # coding: utf-8
 import numpy as np
 from sklearn.cross_validation import train_test_split
-
-from Enel_utils import compute_angle, extract_direction, create_dict_direction
+from Enel_utils import compute_angle, create_dict_direction
 from ExtractResult import Result
-
-##load the dataset
 from Fit import Linear_fit
-from Transformation import Enel_powerCurveTransformation
+from Transformation import Enel_powerCurveTransformation, EnelWindSpeedTransformation, \
+    Enel_directionPowerCurveTransformation
 
 file = "ENEL_2014/Enel_dataset.npz"
 results = Result(file, "lasso")
@@ -18,43 +16,57 @@ values_TM = np.array([[24,281], [24,214]])
 
 XTrain, YTrain, XTest, YTest = results.extract_train_test()
 
-angular_coeffs = compute_angle(Coord, Coord_turb)
+XTrain, YTrain, XTest, YTest = results.extract_train_test()
+enel_dict = results.extract_dict()
+Coord, Coord_turb, power_curve = results.extract_coords()
 
-print("fatto")
+angles_coord_turb = compute_angle(Coord, Coord_turb)
+
+##transformation of data
+X = np.concatenate((XTrain, XTest), axis = 0)
+#X = X[:,:24]
 enel_transf = Enel_powerCurveTransformation()
-XTrain_angle,dict_ = enel_transf.compute_angle_matrix(XTrain)
 
-turbine_dict = create_dict_direction(XTrain_angle,angular_coeffs)
-np.savez("ENEL_2014/turbine_180", turbine_dict = turbine_dict)
+enel_transf = Enel_powerCurveTransformation()
+X_angle,dict_ = enel_transf.compute_angle_matrix(X)
+output_dict = dict.fromkeys(np.arange(0,49),np.array([[]], dtype = "int64"))
 
-output_dict_ = dict.fromkeys(np.arange(0,49),np.array([[]], dtype = "int64"))
+k_levels = np.arange(0,12).reshape([12,1])
+for key in np.arange(0,49):
+    current_values = np.arange(key*12,key*12+12).reshape([12,1])
+    output_dict[key] = np.concatenate((current_values,k_levels), axis = 1)
 
-XTrain_transf = np.array([[]])
-XTest_transf = np.array([[]])
 
-XTrain_transf, output_dict_ = enel_transf.transform1(turbine_dict, enel_dict, XTrain, power_curve,0, XTrain_transf, output_dict_)
-np.savez("ENEL_2014/turbine_180", turbine_dict = turbine_dict, XTrain_transf = XTrain_transf)
+X_transf = np.array([[]])
 
-XTest_transf, _ = enel_transf.transform1(turbine_dict, enel_dict, XTest, power_curve,0, XTest_transf, output_dict_.copy())
-np.savez("ENEL_2014/turbine_180", turbine_dict = turbine_dict, XTrain_transf = XTrain_transf, XTest_transf = XTest_transf)
+X_speed,_ = EnelWindSpeedTransformation().transform(X)
+print("wind speed computed")
 
-##analyze turbine alone
-print("loss 1 turibina solo sul validation")
+enel_transf = Enel_directionPowerCurveTransformation()
+X_transf, matrix_turbs = enel_transf.transform(X_angle, angles_coord_turb, X_speed, power_curve, Coord, Coord_turb)
+
+X_transf_1,_ = enel_transf.transformPerTurbine(matrix_turbs, enel_dict, X, power_curve, np.array([[]]),output_dict)
+print("transformation done")
+XTrain_transf = X_transf_1[:XTrain.shape[0],:]
+XTest_transf = X_transf_1[XTrain.shape[0]:,:]
+
+
+print("loss mean turbina solo sul validation")
 XTrain_, XVal_, YTrain_, YVal_ = train_test_split(XTrain_transf, YTrain, test_size=0.33,random_state=0)
 Linear_fit().fitting(XTrain_, YTrain_, XVal_,YVal_, [])
 
-print("loss 1 turibina solo sul test")
+print("loss mean turbina solo sul test")
 Linear_fit().fitting(XTrain_transf, YTrain, XTest_transf,YTest,values_TM)
 
 
-##compute mean turbine
-enel_transf = Enel_powerCurveTransformation()
-XTrain_transf, output_dict_ = enel_transf.transform1(turbine_dict, enel_dict, XTrain, power_curve,1, XTrain_transf, output_dict_)
-XTest_transf, _ = enel_transf.transform1(turbine_dict, enel_dict, XTest, power_curve,1, XTest_transf, output_dict_.copy())
+print("loss mean turbine insieme")
+X_transf = np.concatenate((X_transf,X_transf_1), axis = 1)
+XTrain_transf = X_transf[:XTrain.shape[0],:]
+XTest_transf = X_transf[XTrain.shape[0]:,:]
 
-print("loss media turibina solo sul validation")
+print("loss mean turbina solo sul validation")
 XTrain_, XVal_, YTrain_, YVal_ = train_test_split(XTrain_transf, YTrain, test_size=0.33,random_state=0)
-Linear_fit().fitting(XTrain_, YTrain_, XVal_,YVal_,[])
+Linear_fit().fitting(XTrain_, YTrain_, XVal_,YVal_, [])
 
-print("loss media turibina solo sul test")
+print("loss mean turbina solo sul test")
 Linear_fit().fitting(XTrain_transf, YTrain, XTest_transf,YTest,values_TM)

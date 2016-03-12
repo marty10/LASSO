@@ -76,6 +76,75 @@ class Enel_directionPowerCurveTransformation(Transformation):
             powers.append(power)
         return np.array(powers)
 
+    def enel_transf_power_curve_singleKey(self, key, mean_value, power_curve):
+        values = power_curve[:,key*2:key*2+2]
+        powers = []
+        for m in mean_value:
+            mean_values_rounded= int(m)+0.5
+            row_power = np.where(values[:,0]==mean_values_rounded)[0]
+            if len(row_power)!=0:
+                row_power = row_power[0]
+                power = values[row_power,1]
+            else:
+                power = 0
+            powers.append(power)
+        return np.array(powers)
+
+    def get_component_value_sample(self,x, dict_, k, current_values, samples_to_delete):
+        c = [dict_[j].astype("int64")[k] for j in current_values]
+        c = np.hstack(c).astype("int64")
+        current_vect = x[:,c]
+        for j in enumerate(current_values):
+            current_vect[samples_to_delete[j],j] = 0
+        sum_component = np.sum(current_vect, axis = 1)
+        return sum_component
+
+    def transformPerTurbine(self, neigh_, dict_, x, power_curve,x_transf,output_dict_):
+        n = x.shape[0]
+        keys_ = (list)(neigh_.keys())
+        values = (list)(neigh_.values())
+        for key in keys_:
+            current_value = values[key]
+            if key==5:
+                print(key)
+            if current_value.shape[1]!=0:
+                current_point_level = current_value
+                current_features = current_point_level[:,0:2]
+                current_samples = current_point_level[:,2]
+                b = np.ascontiguousarray(current_features).view(np.dtype((np.void, current_features.dtype.itemsize * current_features.shape[1])))
+                _, idx = np.unique(b, return_index=True)
+
+                unique_a = current_features[idx]
+                x_tmp_u = np.zeros([n, unique_a.shape[0]])
+                x_tmp_v = np.zeros([n, unique_a.shape[0]])
+                for j,f in enumerate(unique_a):
+                    index_f = np.where(np.all(current_features==f, axis =1))[0]
+                    index_sample = current_samples[index_f]
+                    absent_s = np.delete(np.arange(n), index_sample)
+                    start_dim = x_transf.shape[1]
+                    column_u = dict_[f[0]][f[1]]
+                    x_tmp_u[:,j] = x[:,column_u]
+                    x_tmp_u[absent_s,j] = 0
+                    column_v = dict_[f[0]][f[1]+12]
+                    x_tmp_v[:,j] = x[:,column_v]
+                    x_tmp_v[absent_s,j] = 0
+                sum_component_u = np.sum(x_tmp_u, axis = 1)
+                sum_component_v = np.sum(x_tmp_v, axis = 1)
+                wind_speed = np.sqrt(sum_component_u**2+sum_component_v**2)/len(np.unique(current_features))
+                power_value = self.enel_transf_power_curve_singleKey(key, wind_speed, power_curve)
+                if x_transf.shape[1]==0:
+                    x_transf = power_value.reshape([n,1])
+                else:
+                    x_transf = np.concatenate((x_transf,power_value.reshape([n,1])), axis = 1)
+                current_dim = x_transf.shape[1]
+                # for i, current_v in enumerate(current_values):
+                #     vect_to_append = np.array([np.arange(start_dim,current_dim)[0], k_levels[i]]).reshape([1,2])
+                #     if output_dict_[current_v].shape[1]==0:
+                #         output_dict_[current_v] = vect_to_append
+                #     else:
+                #         output_dict_[current_v] = np.concatenate((output_dict_[current_v], vect_to_append),axis = 0)
+        return x_transf, output_dict_
+
 class EnelWindSpeedTransformation(Transformation):
     def __init__(self):
         pass
