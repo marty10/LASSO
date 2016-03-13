@@ -30,7 +30,7 @@ X = np.concatenate((XTrain, XTest), axis = 0)
 enel_transf = Enel_powerCurveTransformation()
 
 enel_transf = Enel_powerCurveTransformation()
-X_angle,dict_ = enel_transf.compute_angle_matrix(X)
+X_angle,_,_ = enel_transf.compute_angle_matrix(X)
 output_dict = dict.fromkeys(np.arange(0,49),np.array([[]], dtype = "int64"))
 
 k_levels = np.arange(0,12).reshape([12,1])
