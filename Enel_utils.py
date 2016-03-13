@@ -1,4 +1,3 @@
-import math
 import numpy as np
 from scipy import spatial
 
@@ -44,7 +43,6 @@ def find_turbines_nearest_points(Coord,Coord_turb,k):
 
 def find_nearest_turbine(Coord,Coord_turb,k):
     dim = Coord_turb.shape[0]
-    #dict_ = dict.fromkeys(np.arange(0,dim),np.array([k,2]))
     dict_ = {}
     tree = create_tree(Coord)
     for i in range(0,dim):
@@ -82,6 +80,7 @@ def compute_angle(Coord, Coord_turb, num_directions = 360):
     angle_slice = 180./num_directions
     angle_slices = np.arange(-90,90,angle_slice)
     angle_slices = angle_slices.reshape([len(angle_slices),1])
+    verso_turb_point = np.zeros([dim_points, dim_turbines])
     for i,point in enumerate(Coord):
         point_xi = point[0]
         point_yi = point[1]
@@ -90,8 +89,41 @@ def compute_angle(Coord, Coord_turb, num_directions = 360):
         min_norm = np.argmin(norm, axis = 0)
         a = angle_slices[min_norm][:,0]
         angular_coeffs[i,:]= a
-    return angular_coeffs
 
+        verso = compute_verso_punto_turbina(Coord_turb, point_xi, point_yi)
+        verso_turb_point[i,:] = verso
+    return angular_coeffs, verso_turb_point
+
+def compute_verso_punto_turbina(Coord_turb, point_xi, point_yi):
+    diff_versus_x = np.sign(Coord_turb[:,0]-point_xi).reshape(Coord_turb.shape[0],1)
+    diff_versus_y = np.sign(Coord_turb[:,1]-point_yi).reshape(Coord_turb.shape[0],1)
+
+    verso = compute_final_verso(diff_versus_x,diff_versus_y)
+    return verso
+
+def compute_final_verso(verso_u,verso_v):
+    verso = np.ones(len(verso_v))
+    position_compared = np.any(verso_u == verso_v, axis=1)
+
+    verso[np.intersect1d(np.where(position_compared==True)[0],np.where(verso_u == -1)[0])] = -1
+    verso[np.intersect1d(np.where(position_compared==False)[0],np.where(verso_u == -1)[0])] = -0.5
+    verso[np.intersect1d(np.where(position_compared==False)[0],np.where(verso_u == 1)[0])] = 0.5
+
+    return verso
+
+def compute_verso(u, v):
+    verso_u = np.sign(u).reshape(len(u),1)
+    verso_u = invert_direction(verso_u)
+    verso_v = np.sign(v).reshape(len(v),1)
+    verso_v = invert_direction(verso_v)
+    verso = compute_final_verso(verso_u, verso_v)
+    return verso
+
+def invert_direction(verso_dir):
+    verso_dir_copy = verso_dir.copy()
+    verso_dir[verso_dir_copy==-1] = 1
+    verso_dir[verso_dir_copy==1] = -1
+    return verso_dir
 
 def create_dict_direction(direction_train,directions):
     output_dict = {}
