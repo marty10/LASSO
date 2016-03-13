@@ -39,7 +39,7 @@ class Enel_directionPowerCurveTransformation(Transformation):
                     if len(turb)>1:
                     #chooose neareast turbine in that direction
                         tree = create_tree(Coord_turb[turb,:])
-                        d,sel_turb = tree.query(Coord[i%12,:])
+                        d,sel_turb = tree.query(Coord[count,:])
                         selected_turb = turb[sel_turb]
                         key = selected_turb
                     else:

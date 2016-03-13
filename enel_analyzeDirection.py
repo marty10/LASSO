@@ -24,7 +24,7 @@ angles_coord_turb = compute_angle(Coord, Coord_turb)
 
 ##transformation of data
 X = np.concatenate((XTrain, XTest), axis = 0)
-#X = X[:,:24]
+X = X[:,:24]
 enel_transf = Enel_powerCurveTransformation()
 
 enel_transf = Enel_powerCurveTransformation()
