@@ -45,7 +45,7 @@ X_speed,_ = EnelWindSpeedTransformation().transform(X)
 print("wind speed computed")
 
 enel_transf = Enel_directionPowerCurveTransformation()
-X_transf = enel_transf.transform(X_angle, angles_coord_turb, X_speed, power_curve, Coord, Coord_turb)
+X_transf,_ = enel_transf.transform(X_angle, angles_coord_turb, X_speed, power_curve, Coord, Coord_turb)
 
 print("transformation done")
 XTrain_transf = X_transf[:XTrain.shape[0],:]
