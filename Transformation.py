@@ -228,7 +228,7 @@ class Enel_directionPowerCurveTransformation(Transformation):
                 sum_component_u = np.sum(x_tmp_u, axis = 1)
                 sum_component_v = np.sum(x_tmp_v, axis = 1)
                 wind_speed = np.sqrt(sum_component_u**2+sum_component_v**2)/len(np.unique(current_features))
-                power_value = self.enel_transf_power_curve_singleKey(key, wind_speed, power_curve)
+                power_value = self.enel_transf_power_curve(key, wind_speed, power_curve)
                 if x_transf.shape[1]==0:
                     x_transf = power_value.reshape([n,1])
                 else:

@@ -23,7 +23,7 @@ XTrain, YTrain, XTest, YTest = results.extract_train_test()
 enel_dict = results.extract_dict()
 Coord, Coord_turb, power_curve = results.extract_coords()
 
-angles_coord_turb = compute_angle(Coord, Coord_turb)
+angles_coord_turb,_ = compute_angle(Coord, Coord_turb)
 
 ##transformation of data
 X = np.concatenate((XTrain, XTest), axis = 0)
