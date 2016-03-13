@@ -95,8 +95,8 @@ def compute_angle(Coord, Coord_turb, num_directions = 360):
     return angular_coeffs, verso_turb_point
 
 def compute_verso_punto_turbina(Coord_turb, point_xi, point_yi):
-    diff_versus_x = np.sign(Coord_turb[:,0]-point_xi).reshape(Coord_turb.shape[0],1)
-    diff_versus_y = np.sign(Coord_turb[:,1]-point_yi).reshape(Coord_turb.shape[0],1)
+    diff_versus_x = np.sign(point_xi-Coord_turb[:,0]).reshape(Coord_turb.shape[0],1)
+    diff_versus_y = np.sign(point_yi-Coord_turb[:,1]).reshape(Coord_turb.shape[0],1)
 
     verso = compute_final_verso(diff_versus_x,diff_versus_y)
     return verso
