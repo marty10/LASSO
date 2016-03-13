@@ -1,4 +1,5 @@
 import math
+from pprint import pprint
 from scipy.stats import pearsonr
 import numpy as np
 
@@ -113,11 +114,13 @@ def get_current_samples(XTrain, blocks_generated_i):
 
 
 def print_features_active(keys_sel, indexes, dict_):
+    found_keys = []
     for key in keys_sel:
         for i in indexes:
             if i in dict_.get(key):
-                print (key)
+                found_keys.append(key)
                 break
+    pprint("punti trovati", found_keys)
 
 
 def compute_mse_binary(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest):

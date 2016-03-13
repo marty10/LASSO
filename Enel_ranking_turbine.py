@@ -63,13 +63,14 @@ losses = []
 indexes_tot = []
 beta_div_zeros = []
 n_features = len(ordered_final_weights)
-print(n_features)
 
 for i in range(n_features):
 
+        print("----------------------------")
+        print("iteration ", i)
+
         ###compute LASSO
         indexes = []
-        print(ordered_final_weights[:i+1])
         for k in ordered_final_weights[:i+1]:
             current_value = dict_.get(k)[:,0]
             indexes = np.union1d(indexes,current_value)
@@ -87,9 +88,6 @@ for i in range(n_features):
 
         indexes = indexes.astype("int64")
         XTrain_current, XTest_current = get_current_data(XTrain, XVal, indexes)
-
-        print("----------------------------")
-        print("iteration ", i)
 
         keys_sel = ordered_final_weights[:i+1]
 
