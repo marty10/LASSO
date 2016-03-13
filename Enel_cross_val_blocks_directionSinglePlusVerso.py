@@ -11,7 +11,8 @@ from utility import generate_samples_dynamic_set, get_current_data,get_common_in
     extract_chosen_indexes_from_start, center_test
 
 
-output_folder = ""
+sys.argv[1:] = [str(x) for x in sys.argv[1:]]
+output_folder = sys.argv[1]
 ####load data
 file = "ENEL_2014/Enel_dataset.npz"
 results = Result(file, "lasso")
