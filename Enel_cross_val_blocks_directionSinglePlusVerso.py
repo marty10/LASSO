@@ -9,7 +9,7 @@ from Transformation import Enel_powerCurveTransformation, EnelWindSpeedTransform
     Enel_directionPowerCurveTransformation, Enel_directionVersoPowerCurveTransformation
 from utility import generate_samples_dynamic_set, get_current_data,get_common_indexes, \
     extract_chosen_indexes_from_start, center_test
-
+import sys
 
 sys.argv[1:] = [str(x) for x in sys.argv[1:]]
 output_folder = sys.argv[1]
