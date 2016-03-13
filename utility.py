@@ -120,7 +120,8 @@ def print_features_active(keys_sel, indexes, dict_):
             if i in dict_.get(key):
                 found_keys.append(key)
                 break
-    pprint("punti trovati", found_keys)
+    print("punti trovati:")
+    pprint(found_keys)
 
 
 def compute_mse_binary(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest):
