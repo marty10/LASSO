@@ -35,7 +35,7 @@ X_speed,_ = EnelWindSpeedTransformation().transform(X)
 
 current_dim =0
 k_levels = np.arange(0,12).reshape([12,1])
-for current_dim in range(5):
+for current_dim in range(4):
     for key in np.arange(0,49):
         current_values = np.arange(current_dim*X_speed.shape[1]+key*12,current_dim*X_speed.shape[1]+key*12+12).reshape([12,1])
         values_plus_key = np.concatenate((current_values,k_levels), axis = 1)
