@@ -32,7 +32,7 @@ results_cross_val = Result(file_cross_val, "lasso")
 results_weighted_lasso = Result(fine_name_weights, "lasso")
 
 mses = results_weighted_lasso.extract_mses()
-mses_int = map(int, mses)
+mses_int = list(map(int, mses))
 iter = np.argmin(mses_int)
 print ("iter chosen:",iter, "with mse:",mses_int[iter])
 print("--------------")
