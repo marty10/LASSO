@@ -3,8 +3,7 @@ from sklearn.metrics import mean_squared_error, r2_score
 from ExtractResult import Result
 from LASSOModel import Shooting, LASSOEstimator
 import numpy as np
-
-from Lasso_utils import compute_weightedLASSO
+from Lasso_utils import compute_weightedLASSO, compute_lasso
 from utility import center_test, assign_weights, get_current_data, get_beta_div_zeros, \
     print_features_active
 import sys
