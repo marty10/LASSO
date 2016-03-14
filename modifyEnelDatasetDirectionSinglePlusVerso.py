@@ -7,7 +7,6 @@ from Transformation import Enel_powerCurveTransformation, EnelWindSpeedTransform
 
 sys.argv[1:] = [str(x) for x in sys.argv[1:]]
 filename = sys.argv[1]
-output_dir = sys.argv[2]
 
 results = Result(filename, "lasso")
 
@@ -54,15 +53,17 @@ if filename=="Enel_cross_val_blocks_direction_single_plus_verso.npz":
     #             output_dict[key] = np.concatenate((output_dict[key],values_plus_key), axis = 0)
     # print("wind speed computed")
 
-elif filename=="Enel_cross_val_blocks_direction_singleranking.npz":
+elif filename=="Enel_cross_val_blocks_direction_single.npz":
 
     print("trasformazione direzione")
 
     enel_transf = Enel_directionPowerCurveTransformation()
     XTest_transf,_ = enel_transf.transform(X_angle, angles_coord_turb, X_speed, power_curve, Coord, Coord_turb)
 
+else:
+    assert 6==5
 
-np.savez(output_dir+"/"+filename, dict_ = output_dict, saved_indexes_list = saved_indexes_list,
+np.savez(filename, dict_ = output_dict, saved_indexes_list = saved_indexes_list,
             mses = mses, weights_list = weights_list, XTrain = XTrain, XTest = XTest, YTest = YTest,
             YTrain = YTrain, XTrainTransf_ = XTrain_transf, XTestTransf_ = XTest_transf, XTrain_ValNoCenter = XTrain_ValNoCenter,
            XValTransf_noCenter = XVal_noCenter, YTrainVal_noCenter = YTrainVal_noCenter, YVal_noCenter = YVal_noCenter,
