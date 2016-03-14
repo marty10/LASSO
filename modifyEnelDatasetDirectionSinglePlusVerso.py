@@ -14,7 +14,7 @@ results = Result(tot_filename, "lasso")
 
 weights_list = results.extract_weights()
 mses = results.extract_mses()
-XTrain_transf, XTest_transf = results.extract_data_transf()
+XTrain_transf, _ = results.extract_data_transf()
 XTrain_, YTrain_, XVal_, YVal_ = results.extract_train_val()
 saved_indexes_list = results.get_saved_indexes()
 XTrain_ValNoCenter, YTrainVal_noCenter, XVal_noCenter,YVal_noCenter = results.extract_train_val_no_centered()

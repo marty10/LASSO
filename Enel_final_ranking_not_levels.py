@@ -11,7 +11,6 @@ import sys
 sys.argv[1:2] = [int(x) for x in sys.argv[1:2]]
 weights_all = sys.argv[1]
 file_name = str(sys.argv[2])
-folder = str(sys.argv[3])
 
 
 score = "mean_squared_error"
@@ -22,9 +21,10 @@ else:
     score_f = mean_squared_error
     scoring = "mean_squared_error"
 
+folder = "ENEL_2014/"
 ext = ".npz"
 
-file_cross_val = folder+"/"+file_name+ext
+file_cross_val = folder+file_name+ext
 fine_name_weights = file_name+"ranking_not_levels_weights_all"+str(weights_all)+ext
 
 results_cross_val = Result(file_cross_val, "lasso")
@@ -38,8 +38,7 @@ print("--------------")
 indexes_beta = results_weighted_lasso.extract_beta_div_zeros()[iter]
 
 XTrain, XTest = results_cross_val.extract_data_transf()
-_,YTrain,XTest,YTest = results_cross_val.extract_train_test()
-print(XTest)
+_,YTrain,_, YTest = results_cross_val.extract_train_test()
 
 ### centratura dei dati
 XTrain, YTrain, X_mean, y_mean, X_std = center_data(XTrain, YTrain, fit_intercept=True, normalize = True)
