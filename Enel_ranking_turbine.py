@@ -42,6 +42,8 @@ weights = assign_weights(weights_data.copy())
 keys_ = np.array(list(dict_.keys())).astype("int64")
 original_features = len(keys_)
 final_weights = np.zeros(original_features)
+print("original features", original_features)
+print("keys", keys)
 
 for key in keys_:
     final_weights[key] += np.sum(weights_data[dict_.get(key)[:,0].astype("int64")])
