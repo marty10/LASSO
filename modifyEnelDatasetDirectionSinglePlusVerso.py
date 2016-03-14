@@ -29,10 +29,7 @@ angles_coord_turb,verso_turb_point = compute_angle(Coord, Coord_turb)
 enel_transf = Enel_powerCurveTransformation()
 X_angle,x_verso,_ = enel_transf.compute_angle_matrix(XTest)
 
-if (filename=="Enel_cross_val_blocks_direction_single_plus_versoranking.npz" or
-    filename=="Enel_cross_val_blocks_direction_single_plus_versoranking_not_levels_weights_all0.npz" or
-     filename == "Enel_cross_val_blocks_direction_single_plus_versoranking_not_levels_weights_all1.npz"
-    or filename=="Enel_cross_val_blocks_direction_single_plus_versoranking_point_level.npz"):
+if filename=="Enel_cross_val_blocks_direction_single_plus_verso.npz":
 
     print("trasformazione direzione verso")
     enel_transf = Enel_directionVersoPowerCurveTransformation()
@@ -57,10 +54,7 @@ if (filename=="Enel_cross_val_blocks_direction_single_plus_versoranking.npz" or
     #             output_dict[key] = np.concatenate((output_dict[key],values_plus_key), axis = 0)
     # print("wind speed computed")
 
-elif (filename=="Enel_cross_val_blocks_direction_singleranking.npz" or
-      filename=="Enel_cross_val_blocks_direction_singleranking_not_levels_weights_all0.npz"
-      or filename=="Enel_cross_val_blocks_direction_singleranking_not_levels_weights_all1.npz"
-      or filename=="Enel_cross_val_blocks_direction_singleranking_point_level.npz"):
+elif filename=="Enel_cross_val_blocks_direction_singleranking.npz":
 
     print("trasformazione direzione")
 
