@@ -36,7 +36,7 @@ if filename=="Enel_cross_val_blocks_direction_single_plus_verso.npz":
     enel_transf = Enel_directionVersoPowerCurveTransformation()
 
     for d,dir_turbine in enumerate(np.array([-0.5,0.5,1,-1])):
-        X_1, matrix_turbs = enel_transf.transform(X_angle, angles_coord_turb, X_speed, power_curve, Coord, Coord_turb, x_verso, dir_turbine,verso_turb_point)
+        X_1, _ = enel_transf.transform(X_angle, angles_coord_turb, X_speed, power_curve, Coord, Coord_turb, x_verso, dir_turbine,verso_turb_point)
         if d==0:
             XTest_transf = X_1.copy()
         else:
