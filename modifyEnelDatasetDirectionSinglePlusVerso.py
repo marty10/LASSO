@@ -65,7 +65,7 @@ elif filename=="Enel_cross_val_blocks_direction_single.npz":
 else:
     assert 6==5
 
-np.savez(tot_filename, dict_ = output_dict, saved_indexes_list = saved_indexes_list,
+np.savez("ENEL_2014/"+filename, dict_ = output_dict, saved_indexes_list = saved_indexes_list,
             mses = mses, weights_list = weights_list, XTrain = XTrain, XTest = XTest, YTest = YTest,
             YTrain = YTrain, XTrainTransf_ = XTrain_transf, XTestTransf_ = XTest_transf, XTrain_ValNoCenter = XTrain_ValNoCenter,
            XValTransf_noCenter = XVal_noCenter, YTrainVal_noCenter = YTrainVal_noCenter, YVal_noCenter = YVal_noCenter,
