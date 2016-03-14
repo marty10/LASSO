@@ -11,7 +11,6 @@ output_dir = sys.argv[2]
 
 results = Result(filename, "lasso")
 
-XTrain, YTrain, _, _ = results.extract_train_test()
 weights_list = results.extract_weights()
 mses = results.extract_mses()
 XTrain_transf, XTest_transf = results.extract_data_transf()
@@ -23,7 +22,7 @@ output_dict = results.extract_dict()
 file = "ENEL_2014/Enel_dataset.npz"
 results = Result(file, "lasso")
 
-_, _, XTest, YTest = results.extract_train_test()
+XTrain, YTrain, XTest, YTest = results.extract_train_test()
 X_speed,_ = EnelWindSpeedTransformation().transform(XTest)
 Coord, Coord_turb, power_curve = results.extract_coords()
 angles_coord_turb,verso_turb_point = compute_angle(Coord, Coord_turb)
