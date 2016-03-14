@@ -38,7 +38,8 @@ print("--------------")
 indexes_beta = results_weighted_lasso.extract_beta_div_zeros()[iter]
 
 XTrain, XTest = results_cross_val.extract_data_transf()
-_,YTrain,_, YTest = results_cross_val.extract_train_test()
+_,YTrain,XTest,YTest = results_cross_val.extract_train_test()
+print(XTest)
 
 ### centratura dei dati
 XTrain, YTrain, X_mean, y_mean, X_std = center_data(XTrain, YTrain, fit_intercept=True, normalize = True)
