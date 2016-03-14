@@ -19,7 +19,7 @@ results = Result(file, "lasso")
 dict_ = results.extract_dict()
 
 XTrain, YTrain, XVal, YVal = results.extract_train_val()
-
+print(XTrain.shape[1])
 score = "mean_squared_error"
 if score=="r2_score":
     score_f = r2_score
