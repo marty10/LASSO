@@ -138,13 +138,12 @@ class Libsvm_Dataset(Dataset):
 
 class Enel_dataset(Dataset):
     def __init__(self, folder_train, folder_test, label_file, start_data_train = ["24/08/2012", "23"], end_data_train = ["31/05/2013", "23"],
-                 start_data_test = ["02/06/2013", "0"], end_data_test = ["01/01/2014", "23"], centerdata = True):
+                 start_data_test = ["01/06/2013", "0"], end_data_test = ["31/12/2013", "23"], centerdata = True):
         files = os.listdir(folder_train)
 
         X_indexes = [0,2]
-        Y_indexes = [0]
-        self.XTrain, self.YTrain = self.extract_data(folder_train, files, label_file, start_data_train, end_data_train, X_indexes, Y_indexes, test_flag = 0)
-        self.XTest, self.YTest = self.extract_data(folder_test, files, label_file, start_data_test, end_data_test, X_indexes, Y_indexes, test_flag=1)
+        self.XTrain, self.YTrain = self.extract_data(folder_train, files, label_file, start_data_train, end_data_train, X_indexes, test_flag = 0)
+        self.XTest, self.YTest = self.extract_data(folder_test, files, label_file, start_data_test, end_data_test, X_indexes, test_flag=1)
 
         if centerdata:
             self.XTrain, self.YTrain, X_mean, y_mean, X_std = center_data(self.XTrain, self.YTrain, fit_intercept=True, normalize = True)
@@ -191,7 +190,7 @@ class Enel_dataset(Dataset):
 
 
 
-    def extract_data(self, dir, files, label_file, start_data, end_data, X_indexes, Y_indexes, test_flag ):
+    def extract_data(self, dir, files, label_file, start_data, end_data, X_indexes, test_flag ):
         X_ = np.array([])
         start_data_ = start_data[:]
         end_data_ = end_data[:]
@@ -210,6 +209,9 @@ class Enel_dataset(Dataset):
                 X_ = np.concatenate((X_,current_X),axis = 1)
 
         # non serve, gli indici per la y sono gli stessi
+        if test_flag==1:
+            index_start = index_start+24
+            index_end = index_end+24
         #start_data_y = [" ".join(start_data)+".00"]
         #end_data_y = [" ".join(end_data)+".00"]
         #index_start,index_end = self.getRowsOfData(label_file, start_data_y, end_data_y, Y_indexes)

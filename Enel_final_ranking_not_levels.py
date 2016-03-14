@@ -37,8 +37,9 @@ print("--------------")
 
 indexes_beta = results_weighted_lasso.extract_beta_div_zeros()[iter]
 
-
-XTrain, XTest = results_cross_val.extract_data_transf()
+file_dataset = folder+"Enel_dataset"+ext
+XTest = Result(file_dataset, "lasso").extract_train_test()
+XTrain, _ = results_cross_val.extract_data_transf()
 _,YTrain,_, YTest = results_cross_val.extract_train_test()
 
 ### centratura dei dati
