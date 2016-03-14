@@ -24,7 +24,7 @@ else:
 
 ext = ".npz"
 
-file_cross_val = folder+file_name+ext
+file_cross_val = folder+"/"+file_name+ext
 fine_name_weights = file_name+"ranking_not_levels_weights_all"+str(weights_all)+ext
 
 results_cross_val = Result(file_cross_val, "lasso")
