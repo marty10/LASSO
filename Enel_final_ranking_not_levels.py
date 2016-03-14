@@ -11,6 +11,7 @@ import sys
 sys.argv[1:2] = [int(x) for x in sys.argv[1:2]]
 weights_all = sys.argv[1]
 file_name = str(sys.argv[2])
+folder = str(sys.argv[3])
 
 
 score = "mean_squared_error"
@@ -21,8 +22,8 @@ else:
     score_f = mean_squared_error
     scoring = "mean_squared_error"
 
-folder = "ENEL_2014/"
 ext = ".npz"
+
 file_cross_val = folder+file_name+ext
 fine_name_weights = file_name+"ranking_not_levels_weights_all"+str(weights_all)+ext
 
