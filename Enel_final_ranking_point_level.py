@@ -23,9 +23,8 @@ else:
     score_f = mean_squared_error
     scoring = "mean_squared_error"
 
-folder = "ENEL_2014/"
 ext = ".npz"
-file_cross_val = folder+file_name+ext
+file_cross_val = file_name+ext
 fine_name_weights = file_name+"ranking_point_level"+ext
 
 results_cross_val = Result(file_cross_val, "lasso")
