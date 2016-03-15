@@ -44,7 +44,7 @@ print("wind speed computed")
 enel_transf = Enel_directionPowerCurveTransformation()
 X_transf, matrix_turbs = enel_transf.transform(X_angle, angles_coord_turb, X_speed, power_curve, Coord, Coord_turb)
 print("single transformation done")
-X_transf_1,_ = enel_transf.transformPerTurbine(matrix_turbs, enel_dict, X, power_curve, np.array([[]]),output_dict)
+X_transf_1,_ = enel_transf.transformPerTurbineLevel(matrix_turbs, enel_dict, X, power_curve, np.array([[]]),output_dict)
 print("transformation per turbine done")
 XTrain_transf = X_transf_1[:XTrain.shape[0],:]
 XTest_transf = X_transf_1[XTrain.shape[0]:,:]

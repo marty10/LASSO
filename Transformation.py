@@ -203,6 +203,55 @@ class Enel_directionPowerCurveTransformation(Transformation):
             X_turbines[:,i] = power_values
         return X_turbines,dict_turbs
 
+    def transformPerTurbineLevel(self, neigh_, dict_, x, power_curve,x_transf,output_dict_):
+        n = x.shape[0]
+        keys_ = (list)(neigh_.keys())
+        values = (list)(neigh_.values())
+        for key in keys_:
+            current_value = values[key]
+            if current_value.shape[1]!=0:
+                current_point_level = current_value
+                current_features = current_point_level[:,0:2]
+                current_samples = current_point_level[:,2]
+                b = np.ascontiguousarray(current_features).view(np.dtype((np.void, current_features.dtype.itemsize * current_features.shape[1])))
+                _, idx = np.unique(b, return_index=True)
+
+                unique_feat_point_level = current_features[idx]
+                x_tmp_u = np.zeros([n, unique_feat_point_level.shape[0]])
+                x_tmp_v = np.zeros([n, unique_feat_point_level.shape[0]])
+
+                index_to_sum = {}
+                for j,f in enumerate(unique_feat_point_level):
+                    index_f = np.where(np.all(current_features==f, axis =1))[0]
+                    index_sample = current_samples[index_f]
+                    absent_s = np.delete(np.arange(n), index_sample)
+                    column_u = dict_[f[0]][f[1]]
+                    x_tmp_u[:,j] = x[:,column_u]
+                    x_tmp_u[absent_s,j] = 0
+                    column_v = dict_[f[0]][f[1]+12]
+                    x_tmp_v[:,j] = x[:,column_v]
+                    x_tmp_v[absent_s,j] = 0
+                    if f[1] not in index_to_sum:
+                        index_to_sum[f[1]] = []
+                    index_to_sum[f[1]].append(j)
+                for level in index_to_sum:
+                    equal_levels = index_to_sum[level]
+                    sum_component_u = np.sum(x_tmp_u[:,equal_levels], axis = 1)
+                    sum_component_v = np.sum(x_tmp_v[:,equal_levels], axis = 1)
+                    wind_speed = np.sqrt(sum_component_u**2+sum_component_v**2)/len(equal_levels)
+                    power_value = self.enel_transf_power_curve(key, wind_speed, power_curve)
+                    if x_transf.shape[1]==0:
+                        x_transf = power_value.reshape([n,1])
+                    else:
+                        x_transf = np.concatenate((x_transf,power_value.reshape([n,1])), axis = 1)
+                    for feat in unique_feat_point_level[equal_levels,0]:
+                        vect_to_append = np.array([unique_feat_point_level[feat,0],level]).reshape(1,2)
+                        if output_dict_[feat].shape[1]==0:
+                            output_dict_[feat] = vect_to_append
+                        else:
+                            output_dict_[feat] = np.concatenate((output_dict_[feat], vect_to_append),axis = 0)
+        return x_transf, output_dict_
+
     def transformPerTurbine(self, neigh_, dict_, x, power_curve,x_transf,output_dict_):
         n = x.shape[0]
         keys_ = (list)(neigh_.keys())
