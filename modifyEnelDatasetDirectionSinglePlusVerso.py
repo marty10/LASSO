@@ -43,19 +43,19 @@ if filename=="Enel_cross_val_blocks_direction_single_plus_verso.npz":
         else:
             XTest_transf = np.concatenate((XTest_transf, X_1), axis = 1)
 
-            if compute_dict:
-                output_dict = dict.fromkeys(np.arange(0,49),np.array([[]], dtype = "int64"))
-                current_dim =0
-                k_levels = np.arange(0,12).reshape([12,1])
-                for current_dim in range(4):
-                    for key in np.arange(0,49):
-                        current_values = np.arange(current_dim*X_speed.shape[1]+key*12,current_dim*X_speed.shape[1]+key*12+12).reshape([12,1])
-                        values_plus_key = np.concatenate((current_values,k_levels), axis = 1)
-                        if output_dict[key].shape[1]==0:
-                            output_dict[key] = values_plus_key
-                        else:
-                            output_dict[key] = np.concatenate((output_dict[key],values_plus_key), axis = 0)
-                print("dict computed")
+        if compute_dict:
+            output_dict = dict.fromkeys(np.arange(0,49),np.array([[]], dtype = "int64"))
+            current_dim =0
+            k_levels = np.arange(0,12).reshape([12,1])
+            for current_dim in range(4):
+                for key in np.arange(0,49):
+                    current_values = np.arange(current_dim*X_speed.shape[1]+key*12,current_dim*X_speed.shape[1]+key*12+12).reshape([12,1])
+                    values_plus_key = np.concatenate((current_values,k_levels), axis = 1)
+                    if output_dict[key].shape[1]==0:
+                        output_dict[key] = values_plus_key
+                    else:
+                        output_dict[key] = np.concatenate((output_dict[key],values_plus_key), axis = 0)
+            print("dict computed")
 
 elif filename=="Enel_cross_val_blocks_direction_single.npz":
 

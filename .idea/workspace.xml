@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7cc0c753-e9e6-4f8d-8f08-622b14ea6592" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Enel_ranking_turbine.py" afterPath="$PROJECT_DIR$/Enel_ranking_turbine.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Enel_ranking_turbine_not_levels.py" afterPath="$PROJECT_DIR$/Enel_ranking_turbine_not_levels.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Enel_ranking_turbine_point_level.py" afterPath="$PROJECT_DIR$/Enel_ranking_turbine_point_level.py" />
-    </list>
+    <list default="true" id="7cc0c753-e9e6-4f8d-8f08-622b14ea6592" name="Default" comment="" />
     <ignored path="tesi.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -33,16 +29,6 @@
               <folding>
                 <element signature="e#0#49#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Enel_final_ranking_products.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Enel_final_ranking_products.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="95" column="0" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -105,14 +91,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Enel_ranking_turbine.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Enel_ranking_turbine.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Enel_ranking_turbine.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.36754176">
+            <state vertical-scroll-proportion="-9.058824">
               <caret line="14" column="7" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="7" />
               <folding>
                 <element signature="e#0#60#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Transformation.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Transformation.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.045346063">
+              <caret line="251" column="8" selection-start-line="251" selection-start-column="8" selection-end-line="251" selection-end-column="8" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -618,7 +614,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="4" y="0" width="1922" height="1038" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25892857" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1030,13 +1026,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Transformation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.34606206">
-          <caret line="251" column="8" selection-start-line="251" selection-start-column="8" selection-end-line="251" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/modifyEnelDatasetDirectionSinglePlusVerso.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-13.588235">
@@ -1067,11 +1056,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Enel_ranking_turbine.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.36754176">
+        <state vertical-scroll-proportion="-9.058824">
           <caret line="14" column="7" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="7" />
           <folding>
             <element signature="e#0#60#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Transformation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.045346063">
+          <caret line="251" column="8" selection-start-line="251" selection-start-column="8" selection-end-line="251" selection-end-column="8" />
+          <folding />
         </state>
       </provider>
     </entry>
