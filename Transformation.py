@@ -145,7 +145,7 @@ class Enel_directionVersoPowerCurveTransformation(Transformation):
 
 class Enel_directionPowerCurveTransformation(Transformation):
 
-    def transform(self, direction_train, directions, XTrain, power_curve, Coord, Coord_turb):
+    def transform(self, direction_train, directions, X_speed, power_curve, Coord, Coord_turb):
         n,p = direction_train.shape
         turbines_number = directions.shape[1]
         X_turbines = np.zeros([n,p])
@@ -161,6 +161,7 @@ class Enel_directionPowerCurveTransformation(Transformation):
             current_dict_values[:,1] = current_level
             if current_level==0 and i!=0:
                 count+=1
+                print("punto", count)
                 current_dict_values[:,0] = count
             current_angles = direction_train[:,i].reshape([n,1])
             point_direction = np.array(directions[count,:]).reshape([1,turbines_number])
@@ -211,8 +212,6 @@ class Enel_directionPowerCurveTransformation(Transformation):
         values = (list)(neigh_.values())
         for key in keys_:
             current_value = values[key]
-            if key==5:
-                print(key)
             if current_value.shape[1]!=0:
                 current_point_level = current_value
                 current_features = current_point_level[:,0:2]
