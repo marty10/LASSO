@@ -12,7 +12,7 @@ file_name = sys.argv[1]
 weights_all = (int)(sys.argv[2])
 
 ext = ".npz"
-file = "ENEL_2014/"+file_name+ext
+file = file_name+ext
 
 results = Result(file, "lasso")
 

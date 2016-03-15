@@ -12,7 +12,7 @@ sys.argv[1:] = [str(x) for x in sys.argv[1:]]
 file_name = sys.argv[1]
 
 ext = ".npz"
-file = "ENEL_2014/"+file_name+ext
+file = file_name+ext
 
 results = Result(file, "lasso")
 
