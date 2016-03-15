@@ -62,7 +62,7 @@ elif filename=="Enel_cross_val_blocks_direction_single.npz":
     print("trasformazione direzione")
 
     enel_transf = Enel_directionPowerCurveTransformation()
-    XTest_transf,_ = enel_transf.transform(X_angle, angles_coord_turb, X_speed, power_curve, Coord, Coord_turb)
+    XTest_transf,_ = enel_transf.transform(X_angle, angles_coord_turb, X_speed, power_curve, Coord, Coord_turb, compute_dict)
 
 else:
     assert 6==5
