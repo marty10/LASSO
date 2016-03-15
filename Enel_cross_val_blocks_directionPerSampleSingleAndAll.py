@@ -41,9 +41,12 @@ X_speed,_ = EnelWindSpeedTransformation().transform(X)
 print("wind speed computed")
 
 enel_transf = Enel_directionPowerCurveTransformation()
-X_transf,_ = enel_transf.transform(X_angle, angles_coord_turb, X_speed, power_curve, Coord, Coord_turb)
+X_transf, dict_sample_turb = enel_transf.transform(X_angle, angles_coord_turb, X_speed, power_curve, Coord, Coord_turb)
+print("single transformation done")
 
-print("transformation done")
+X_transf, output_dict = enel_transf.transformPerTurbine(dict_sample_turb, enel_dict, X, power_curve, X_transf,output_dict)
+print("transformation per turbine done")
+
 XTrain_transf = X_transf[:XTrain.shape[0],:]
 XTest_transf = X_transf[XTrain.shape[0]:,:]
 
@@ -88,7 +91,7 @@ max_set = min_set+5
 max_active_set = 49
 active_set = 0
 
-compute_mse_current = 1
+compute_mse_current = 0
 lasso_cv = linear_model.LassoCV(fit_intercept=False, n_jobs = -1)
 flag_linear = 0
 score = "mean_squared_error"
@@ -175,6 +178,6 @@ while num_cycle<cycles:
 
     countIter+=1
 
-    np.savez(output_folder+"/Enel_cross_val_blocks_direction_single.npz", dict_ = output_dict,saved_indexes_list = saved_indexes_list, mses = mses, weights_list = weights_list,
+    np.savez(output_folder+"/Enel_cross_val_blocks_direction_single_and_all.npz", dict_ = output_dict,saved_indexes_list = saved_indexes_list, mses = mses, weights_list = weights_list,
              XTrain = XTrain, XTest = XTest, YTest = YTest, YTrain = YTrain, XTrainTransf_ = XTrain_transf, XTestTransf_ = XTest_transf, XTrain_ValNoCenter = XTrain_noCenter,
            XValTransf_noCenter = XVal_noCenter, YTrainVal_noCenter = YTrain_noCenter, YVal_noCenter = YVal_noCenter, XTrain_Val = XTrain_, XVal = XVal_ , YVal_ = YVal_, YTrain_Val = YTrain_ )

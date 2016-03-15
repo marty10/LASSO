@@ -203,15 +203,6 @@ class Enel_directionPowerCurveTransformation(Transformation):
             X_turbines[:,i] = power_values
         return X_turbines,dict_turbs
 
-    def get_component_value_sample(self,x, dict_, k, current_values, samples_to_delete):
-        c = [dict_[j].astype("int64")[k] for j in current_values]
-        c = np.hstack(c).astype("int64")
-        current_vect = x[:,c]
-        for j in enumerate(current_values):
-            current_vect[samples_to_delete[j],j] = 0
-        sum_component = np.sum(current_vect, axis = 1)
-        return sum_component
-
     def transformPerTurbine(self, neigh_, dict_, x, power_curve,x_transf,output_dict_):
         n = x.shape[0]
         keys_ = (list)(neigh_.keys())
@@ -225,14 +216,14 @@ class Enel_directionPowerCurveTransformation(Transformation):
                 b = np.ascontiguousarray(current_features).view(np.dtype((np.void, current_features.dtype.itemsize * current_features.shape[1])))
                 _, idx = np.unique(b, return_index=True)
 
-                unique_a = current_features[idx]
-                x_tmp_u = np.zeros([n, unique_a.shape[0]])
-                x_tmp_v = np.zeros([n, unique_a.shape[0]])
-                for j,f in enumerate(unique_a):
+                unique_feat_point_level = current_features[idx]
+                x_tmp_u = np.zeros([n, unique_feat_point_level.shape[0]])
+                x_tmp_v = np.zeros([n, unique_feat_point_level.shape[0]])
+                start_dim = x_transf.shape[1]
+                for j,f in enumerate(unique_feat_point_level):
                     index_f = np.where(np.all(current_features==f, axis =1))[0]
                     index_sample = current_samples[index_f]
                     absent_s = np.delete(np.arange(n), index_sample)
-                    start_dim = x_transf.shape[1]
                     column_u = dict_[f[0]][f[1]]
                     x_tmp_u[:,j] = x[:,column_u]
                     x_tmp_u[absent_s,j] = 0
@@ -248,14 +239,19 @@ class Enel_directionPowerCurveTransformation(Transformation):
                 else:
                     x_transf = np.concatenate((x_transf,power_value.reshape([n,1])), axis = 1)
                 current_dim = x_transf.shape[1]
-                # for i, current_v in enumerate(current_values):
-                #     vect_to_append = np.array([np.arange(start_dim,current_dim)[0], k_levels[i]]).reshape([1,2])
-                #     if output_dict_[current_v].shape[1]==0:
-                #         output_dict_[current_v] = vect_to_append
-                #     else:
-                #         output_dict_[current_v] = np.concatenate((output_dict_[current_v], vect_to_append),axis = 0)
+                unique_feat_point = np.unique(unique_feat_point_level[:,0])
+                for current_v in unique_feat_point:
+                    current_index_levels = np.where(unique_feat_point_level[:,0]==current_v)[0]
+                    current_levels = np.sort(unique_feat_point_level[current_index_levels,1])
+                    indexes_col = np.arange(start_dim,current_dim)
+                    vect_to_append = np.zeros([len(indexes_col)*len(current_levels),2])
+                    vect_to_append[:,0] = indexes_col
+                    vect_to_append[:,1] = current_levels
+                    if output_dict_[current_v].shape[1]==0:
+                        output_dict_[current_v] = vect_to_append
+                    else:
+                        output_dict_[current_v] = np.concatenate((output_dict_[current_v], vect_to_append),axis = 0)
         return x_transf, output_dict_
-
 
 
 
