@@ -21,7 +21,7 @@ else:
     scoring = "mean_squared_error"
 
 ext = ".npz"
-file_cross_val =  file_name+ext
+file_cross_val = file_name+ext
 fine_name_weights = file_name+"ranking"+ext
 
 results_cross_val = Result(file_cross_val, "lasso")
@@ -83,8 +83,8 @@ if verbose:
     print("loss LASSO test", new_loss)
     print("------------------")
 
-keys_sel = ordered_final_weights[:iter]
-
+keys_sel = ordered_final_weights[:iter+1]
+print("chiavi considerate", keys_sel)
 indexes = results_weighted_lasso.extract_beta_div_zeros()[iter]
 weights = assign_weights(weights_data.copy())
 weights = weights[indexes]
