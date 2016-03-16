@@ -175,7 +175,6 @@ class Enel_directionPowerCurveTransformation(Transformation):
 
             for s in range(n):
                 if min_turbs[s] < threshold_dir:
-                    sum_turb += 1
                     turb = np.where(current_diff[s, :] == min_turbs[s])[0]
                     if len(turb) > 1:
                         # chooose neareast turbine in that direction
