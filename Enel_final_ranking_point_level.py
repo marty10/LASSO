@@ -72,7 +72,7 @@ matrix_point_level = np.zeros([original_features,2])
 for key in keys_:
     current_values = dict_point_level.get(key)
     for level in keys_level:
-        current_values_level = current_values[level]
+        current_values_level = current_values[level].astype("int64")
         final_weights[count] += np.sum(weights_data[current_values_level])
         matrix_point_level[count,:] = [key,level]
         count+=1
