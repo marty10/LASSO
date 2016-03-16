@@ -11,9 +11,9 @@ from utility import generate_samples_dynamic_set, get_current_data,get_common_in
     extract_chosen_indexes_from_start, center_test
 import sys
 
-sys.argv[1:] = [str(x) for x in sys.argv[1:]]
+sys.argv[1:2] = [str(x) for x in sys.argv[1:2]]
 output_folder = sys.argv[1]
-
+threshold_dir = (int)(sys.argv[2])
 ####load data
 file = "ENEL_2014/Enel_dataset.npz"
 results = Result(file, "lasso")
@@ -41,7 +41,7 @@ X_speed,_ = EnelWindSpeedTransformation().transform(X)
 print("wind speed computed")
 
 enel_transf = Enel_directionPowerCurveTransformation()
-X_transf, dict_sample_turb = enel_transf.transform(X_angle, angles_coord_turb, X_speed, power_curve, Coord, Coord_turb)
+X_transf, dict_sample_turb = enel_transf.transform(X_angle, angles_coord_turb, X_speed, power_curve, Coord, Coord_turb, threshold_dir=threshold_dir)
 print("single transformation done")
 
 X_transf, output_dict = enel_transf.transformPerTurbineLevel(dict_sample_turb, enel_dict, X, power_curve, X_transf,output_dict)
@@ -178,6 +178,6 @@ while num_cycle<cycles:
 
     countIter+=1
 
-    np.savez(output_folder+"/Enel_cross_val_blocks_direction_single_and_all_levels.npz", dict_ = output_dict,saved_indexes_list = saved_indexes_list, mses = mses, weights_list = weights_list,
+    np.savez(output_folder+"/Enel_cross_val_blocks_direction_single_and_all_levels_threshold_dir"+str(threshold_dir)+".npz", dict_ = output_dict,saved_indexes_list = saved_indexes_list, mses = mses, weights_list = weights_list,
              XTrain = XTrain, XTest = XTest, YTest = YTest, YTrain = YTrain, XTrainTransf_ = XTrain_transf, XTestTransf_ = XTest_transf, XTrain_ValNoCenter = XTrain_noCenter,
            XValTransf_noCenter = XVal_noCenter, YTrainVal_noCenter = YTrain_noCenter, YVal_noCenter = YVal_noCenter, XTrain_Val = XTrain_, XVal = XVal_ , YVal_ = YVal_, YTrain_Val = YTrain_ )
