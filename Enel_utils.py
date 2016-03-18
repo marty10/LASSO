@@ -84,8 +84,10 @@ def compute_angle(Coord, Coord_turb, num_directions = 360):
     for i,point in enumerate(Coord):
         point_xi = point[0]
         point_yi = point[1]
-        current_angles = np.degrees(np.arctan2(Coord_turb[:,1]-point_yi,Coord_turb[:,0]-point_xi))
-        norm = np.abs(current_angles-angle_slices)
+        current_angles = np.arctan2(Coord_turb[:,1]-point_yi,Coord_turb[:,0]-point_xi)
+        current_angles_degree = np.degrees(current_angles)
+        current_angles_degree = map_angle(current_angles_degree)
+        norm = np.abs(current_angles_degree-angle_slices)
         min_norm = np.argmin(norm, axis = 0)
         a = angle_slices[min_norm][:,0]
         angular_coeffs[i,:]= a
@@ -148,4 +150,14 @@ def create_dict_direction(direction_train,directions):
 
 
 
-
+def map_angle(angle_to_map):
+    extracted_angles = angle_to_map[np.logical_and(90 < angle_to_map,angle_to_map <=180)]
+    if len(extracted_angles)!=0:
+        extracted_angles = extracted_angles-180
+    extracted_angles_neg = angle_to_map[np.logical_and(-180 < angle_to_map, angle_to_map <= -90)]
+    if len(extracted_angles_neg)!=0:
+        extracted_angles_neg = extracted_angles_neg+180
+        angle_to_map[np.logical_and(-180 < angle_to_map, angle_to_map <= -90)] = extracted_angles_neg
+    if len(extracted_angles)!=0:
+        angle_to_map[np.logical_and(90 < angle_to_map,angle_to_map <=180)] = extracted_angles
+    return angle_to_map

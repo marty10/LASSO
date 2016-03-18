@@ -37,7 +37,7 @@ for key in np.arange(0,49):
     current_values = np.arange(key*12,key*12+12).reshape([12,1])
     output_dict[key] = np.concatenate((current_values,k_levels), axis = 1)
 
-X_speed,_ = EnelWindSpeedTransformation().transform(X)
+X_speed,_, wind_direction = EnelWindSpeedTransformation().transform(X)
 print("wind speed computed")
 
 enel_transf = Enel_directionPowerCurveTransformation()

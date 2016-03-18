@@ -4,7 +4,7 @@ import math
 import numpy as np
 import pandas as pd
 
-from Enel_utils import create_tree, compute_verso
+from Enel_utils import create_tree, compute_verso, map_angle
 
 
 class Transformation:
@@ -46,6 +46,60 @@ class Transformation:
             powers.append(power)
         return np.array(powers)
 
+class Enel_conversionPowerCurve(Transformation):
+    def __init__(self):
+        pass
+
+    def transform(self, XTrain, power_curve, Coord, Coord_turb, x_verso, dir_turbine,
+                  x_verso_turbine):
+        XTrain
+        X_turbines = np.zeros([n, p])
+        count = 0
+        dict_turbs = dict.fromkeys(np.arange(0, turbines_number), np.array([[]], dtype="int64"))
+
+        for i in range(p):
+            selected_turbs = []
+            current_level = i % 12
+            if current_level == 0 and i != 0:
+                count += 1
+            current_angles = direction_train[:, i].reshape([n, 1])
+            x_verso_current = x_verso[:, i]
+            x_verso_turbine_current = x_verso_turbine[count, :].reshape(turbines_number, 1)
+            point_direction = np.array(directions[count, :]).reshape([1, turbines_number])
+            current_diff = np.abs(current_angles - point_direction)
+            # min_turbs = np.min(current_diff,axis = 1)
+            selected_turb_same_verso = np.any(x_verso_turbine_current == dir_turbine, axis=1)
+            if np.any(selected_turb_same_verso):
+                turb_same_verso = np.where(selected_turb_same_verso)[0]
+                if len(turb_same_verso) != 0:
+                    for s in range(n):
+                        if x_verso_current[s] == dir_turbine:
+                            min_turbs = np.min(current_diff[s, turb_same_verso])
+                            turb = np.intersect1d(turb_same_verso, np.where(current_diff[s, :] == min_turbs)[0])
+
+                            if len(turb) > 1:
+                                # chooose neareast turbine in that direction
+                                tree = create_tree(Coord_turb[turb, :])
+                                d, sel_turb = tree.query(Coord[count, :])
+                                selected_turb = turb[sel_turb]
+                                key = selected_turb
+                            else:
+                                selected_turb = turb
+                                key = selected_turb[0]
+                        else:
+                            # print("overcome trehold angle")
+                            selected_turb = -1
+                            # current_dict_values = np.array([count,current_level,s]).reshape([1,3])
+                            # if dict_turbs[key].shape[1]==0:
+                            #   dict_turbs[key] = current_dict_values
+                            # else:
+                            #   dict_turbs[key] = np.concatenate((dict_turbs[key],current_dict_values), axis = 0)
+                        selected_turbs.append(selected_turb)
+                    wind_speed = XTrain[:, i]
+                    power_values = self.enel_transf_power_curve_multiple_key(selected_turbs, wind_speed, power_curve)
+
+                    X_turbines[:, i] = power_values
+        return X_turbines, dict_turbs
 
 class Enel_directionVersoPowerCurveTransformation(Transformation):
     def __init__(self):
@@ -314,36 +368,38 @@ class Enel_powerCurveTransformation(Transformation):
     def __init__(self):
         pass
 
-    def compute_angle_matrix(self, x, num_directions=360):
-        n, m = x.shape
+    def compute_angle_matrix(self,x, num_directions = 360):
+        n,m = x.shape
         x_transf = np.array([[]])
         x_verso = np.array([[]])
-        dict_ = dict.fromkeys(np.arange(0, 49), np.array([]))
+        dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
         key = 0
-        angle_slice = 180. / num_directions
-        angle_slices = np.arange(-90, 90, angle_slice)
-        angle_slices = angle_slices.reshape([len(angle_slices), 1])
-        for i in range(0, m, 24):
+        angle_slice = 180./num_directions
+        angle_slices = np.arange(-90,90,angle_slice)
+        angle_slices = angle_slices.reshape([len(angle_slices),1])
+        for i in range(0,m,24):
             start_dim = x_transf.shape[1]
-            for j in range(i, i + 12):
-                current_angle_degree = np.degrees(np.arctan2(x[:, j + 12], x[:, j]))
-                norm = np.abs(current_angle_degree - angle_slices)
-                min_norm = np.argmin(norm, axis=0)
+            for j in range(i,i+12):
+                current_angle = np.arctan2(x[:,j+12],x[:,j])
+                current_angle_degree = np.degrees(current_angle)
+                current_angle_degree = map_angle(current_angle_degree)
+                norm = np.abs(current_angle_degree-angle_slices)
+                min_norm = np.argmin(norm, axis = 0)
                 current_angle_dir = angle_slices[min_norm]
                 verso_current = compute_verso(x[:, j], x[:, j + 12])
-                verso_current = verso_current.reshape(len(verso_current), 1)
-                if x_transf.shape[1] == 0:
+                verso_current = verso_current.reshape(len(verso_current),1)
+                if x_transf.shape[1]==0:
                     x_transf = current_angle_dir
                     x_verso = verso_current
                 else:
-                    x_transf = np.concatenate((x_transf, current_angle_dir), axis=1)
-                    x_verso = np.concatenate((x_verso, verso_current), axis=1)
+                    x_transf = np.concatenate((x_transf,current_angle_dir), axis = 1)
+                    x_verso = np.concatenate((x_verso,verso_current), axis = 1)
 
             current_dim = x_transf.shape[1]
-            dict_[key] = np.append(dict_[key], np.arange(start_dim, current_dim))
-            key += 1
+            dict_[key] = np.append(dict_[key], np.arange(start_dim,current_dim))
+            key+=1
 
-        assert (x_transf.shape[1] == m / 2)
+        assert (x_transf.shape[1]==m/2)
         return x_transf, x_verso, dict_
 
     def transform(self, neigh_, dict_, x, power_curve, l, x_transf, output_dict_):
@@ -451,23 +507,27 @@ class EnelWindSpeedTransformation(Transformation):
         n, m = x.shape
         x_transf = np.array([[]])
         dict_ = dict.fromkeys(np.arange(0, 49), np.array([]))
-
+        wind_direction = []
         key = 0
         for i in range(0, m, 24):
             start_dim = x_transf.shape[1]
             for j in range(i, i + 12):
+                wind_speed = np.sqrt(np.power(x[:, j], 2) + np.power(x[:, j + 12], 2)).reshape([n, 1])
                 if x_transf.shape[1] == 0:
-                    x_transf = np.sqrt(np.power(x[:, j], 2) + np.power(x[:, j + 12], 2)).reshape([n, 1])
+                    x_transf = wind_speed
                 else:
-                    x_transf = np.concatenate(
-                        (x_transf, np.sqrt(np.power(x[:, j], 2) + np.power(x[:, j + 12], 2)).reshape([n, 1])), axis=1)
+                    x_transf = np.concatenate((x_transf, wind_speed), axis=1)
+            current_u = np.sum(x[:, :j])
+            current_v = np.sum(x[:, :j+12])
+            current_dir = np.degrees(np.arctan2(current_v, current_u))
+            wind_direction.append(current_dir)
             current_dim = x_transf.shape[1]
             dict_[key] = np.append(dict_[key], np.arange(start_dim, current_dim))
             key += 1
 
         assert (x_transf.shape[1] == m / 2)
 
-        return x_transf, dict_
+        return x_transf, dict_, wind_direction
 
 
 class inverseTransformation(Transformation):
