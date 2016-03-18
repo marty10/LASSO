@@ -106,7 +106,7 @@ class Enel_directionVersoPowerCurveTransformation(Transformation):
         pass
 
     def transform(self, direction_train, directions, XTrain, power_curve, Coord, Coord_turb, x_verso, dir_turbine,
-                  x_verso_turbine):
+                  x_verso_turbine, compute_dict):
         n, p = direction_train.shape
         turbines_number = directions.shape[1]
         X_turbines = np.zeros([n, p])
@@ -145,11 +145,12 @@ class Enel_directionVersoPowerCurveTransformation(Transformation):
                         else:
                             # print("overcome trehold angle")
                             selected_turb = -1
-                            # current_dict_values = np.array([count,current_level,s]).reshape([1,3])
-                            # if dict_turbs[key].shape[1]==0:
-                            #   dict_turbs[key] = current_dict_values
-                            # else:
-                            #   dict_turbs[key] = np.concatenate((dict_turbs[key],current_dict_values), axis = 0)
+                            if compute_dict:
+                                current_dict_values = np.array([count,current_level,s]).reshape([1,3])
+                                if dict_turbs[key].shape[1]==0:
+                                  dict_turbs[key] = current_dict_values
+                                else:
+                                  dict_turbs[key] = np.concatenate((dict_turbs[key],current_dict_values), axis = 0)
                         selected_turbs.append(selected_turb)
                     wind_speed = XTrain[:, i]
                     power_values = self.enel_transf_power_curve_multiple_key(selected_turbs, wind_speed, power_curve)

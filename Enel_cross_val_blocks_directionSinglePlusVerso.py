@@ -31,7 +31,7 @@ output_dict = dict.fromkeys(np.arange(0,49),np.array([[]], dtype = "int64"))
 
 X_angle,x_verso,dict_ = enel_transf.compute_angle_matrix(X)
 
-X_speed,_ = EnelWindSpeedTransformation().transform(X)
+X_speed,_,_ = EnelWindSpeedTransformation().transform(X)
 
 current_dim =0
 k_levels = np.arange(0,12).reshape([12,1])
@@ -47,7 +47,7 @@ print("wind speed computed")
 
 enel_transf = Enel_directionVersoPowerCurveTransformation()
 for d,dir_turbine in enumerate(np.array([-0.5,0.5,1,-1])):
-    X_1, matrix_turbs = enel_transf.transform(X_angle, angles_coord_turb, X_speed, power_curve, Coord, Coord_turb, x_verso, dir_turbine,verso_turb_point)
+    X_1, _ = enel_transf.transform(X_angle, angles_coord_turb, X_speed, power_curve, Coord, Coord_turb, x_verso, dir_turbine,verso_turb_point, compute_dict = 0)
     if d==0:
         X_transf = X_1.copy()
     else:
