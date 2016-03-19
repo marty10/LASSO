@@ -500,6 +500,7 @@ class Enel_powerCurveTransformation(Transformation):
         return sum_component
 
 
+
 class EnelWindSpeedTransformation(Transformation):
     def __init__(self):
         pass
@@ -508,6 +509,7 @@ class EnelWindSpeedTransformation(Transformation):
         n, m = x.shape
         x_transf = np.array([[]])
         dict_ = dict.fromkeys(np.arange(0, 49), np.array([]))
+        wind_direction = []
         key = 0
         for i in range(0, m, 24):
             start_dim = x_transf.shape[1]
@@ -517,13 +519,17 @@ class EnelWindSpeedTransformation(Transformation):
                     x_transf = wind_speed
                 else:
                     x_transf = np.concatenate((x_transf, wind_speed), axis=1)
+            current_u = np.sum(x[:, :j], axis = 1)
+            current_v = np.sum(x[:, :j+12], axis = 1)
+            current_dir = np.degrees(np.arctan2(current_v, current_u))
+            wind_direction.append(current_dir)
             current_dim = x_transf.shape[1]
             dict_[key] = np.append(dict_[key], np.arange(start_dim, current_dim))
             key += 1
 
         assert (x_transf.shape[1] == m / 2)
 
-        return x_transf, dict_
+        return x_transf, dict_, wind_direction
 
 
 class inverseTransformation(Transformation):
