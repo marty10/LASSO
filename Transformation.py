@@ -369,31 +369,27 @@ class Enel_powerCurveTransformation(Transformation):
     def __init__(self):
         pass
 
-    def compute_angle_matrix(self,x, num_directions = 360):
+    def compute_angle_matrix(self,x):
         n,m = x.shape
         x_transf = np.array([[]])
         x_verso = np.array([[]])
         dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
         key = 0
-        angle_slice = 180./num_directions
-        angle_slices = np.arange(-90,90,angle_slice)
-        angle_slices = angle_slices.reshape([len(angle_slices),1])
+
         for i in range(0,m,24):
             start_dim = x_transf.shape[1]
             for j in range(i,i+12):
                 current_angle = np.arctan2(x[:,j+12],x[:,j])
                 current_angle_degree = np.degrees(current_angle)
-                current_angle_degree = map_angle(current_angle_degree)
-                norm = np.abs(current_angle_degree-angle_slices)
-                min_norm = np.argmin(norm, axis = 0)
-                current_angle_dir = angle_slices[min_norm]
+                current_angle_degree = map_angle(current_angle_degree).reshape([n,1])
+
                 verso_current = compute_verso(x[:, j], x[:, j + 12])
                 verso_current = verso_current.reshape(len(verso_current),1)
                 if x_transf.shape[1]==0:
-                    x_transf = current_angle_dir
+                    x_transf = current_angle_degree
                     x_verso = verso_current
                 else:
-                    x_transf = np.concatenate((x_transf,current_angle_dir), axis = 1)
+                    x_transf = np.concatenate((x_transf,current_angle_degree), axis = 1)
                     x_verso = np.concatenate((x_verso,verso_current), axis = 1)
 
             current_dim = x_transf.shape[1]
