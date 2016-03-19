@@ -197,9 +197,11 @@ class Enel_dataset(Dataset):
         if test_flag==1:
             start_data_[1] = str(int(start_data[1])+24)
             end_data_[1] = str(int(end_data[1])+24)
-        for enel_file in files:
+
+        for e,enel_file in enumerate(files):
             current_enel_file = dir + enel_file
-            index_start,index_end = self.getRowsOfData(current_enel_file, start_data_, end_data_,X_indexes)
+            if e==0:
+                index_start,index_end, number_of_days = self.getRowsOfData(current_enel_file, start_data_, end_data_,X_indexes)
             X = np.genfromtxt(current_enel_file, delimiter='\t', usecols=(np.arange(27,51)))
 
             current_X = X[index_start:index_end+1,:]
@@ -212,12 +214,15 @@ class Enel_dataset(Dataset):
         if test_flag==1:
             index_start = index_start+24
             index_end = index_end+24
+            number_of_days_test = number_of_days
+        else:
+            number_of_days_train = number_of_days
         #start_data_y = [" ".join(start_data)+".00"]
         #end_data_y = [" ".join(end_data)+".00"]
         #index_start,index_end = self.getRowsOfData(label_file, start_data_y, end_data_y, Y_indexes)
         Y = np.genfromtxt(label_file, delimiter='\t', usecols=3)
         Y_ = Y[index_start:index_end+1]
-        return X_, Y_
+        return X_, Y_,number_of_days_train,number_of_days_test
 
     def getRowsOfData(self, file_name, start_data, end_data, indexes):
         columns = []
@@ -225,7 +230,16 @@ class Enel_dataset(Dataset):
             columns.append((np.array(line.split('\t'))[indexes]).tolist())
         index_start = columns.index(start_data)
         index_end = columns.index(end_data)
-        return index_start, index_end
+        number_days = self.extract_number_of_days(columns, index_start, index_end)
+        return index_start, index_end,number_days
+
+    def extract_number_of_days(self,columns, index_start, index_end):
+        columns_of_interest = columns[index_start:index_end+1]
+        data_columns = zip(*columns_of_interest)
+        data_column = list(data_columns[0])
+        unique_data = np.unique(data_column)
+        unique_data_len = len(unique_data)
+        return unique_data_len
 
     def get_data(self):
         return self.XTrain, self.YTrain, self.XTest, self.YTest
