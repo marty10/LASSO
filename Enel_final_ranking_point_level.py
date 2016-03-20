@@ -32,12 +32,23 @@ results_weighted_lasso = Result(fine_name_weights, "lasso")
 
 mses = results_weighted_lasso.extract_mses()
 mses_int = list(map(int, mses))
-iter = np.argmin(mses_int)
+min_mse = np.min(mses_int)
+iter_min = np.where(mses_int==min_mse)[0]
+
+indexes_beta_min = results_weighted_lasso.extract_beta_div_zeros()[iter_min]
+print(indexes_beta_min)
+print("-----------")
+print(indexes_beta_min.shape)
+
+print("--------------")
+print(len(indexes_beta_min))
+iter = np.argmin(len(indexes_beta_min))
+
 print ("iter chosen:",iter, "with mse:",mses_int[iter])
 print("--------------")
 
 
-indexes_beta = results_weighted_lasso.extract_beta_div_zeros()[iter]
+indexes_beta = indexes_beta_min[iter]
 
 
 XTrain, XTest = results_cross_val.extract_data_transf()
