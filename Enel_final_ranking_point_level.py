@@ -42,14 +42,14 @@ print(indexes_beta_min.shape)
 
 print("--------------")
 len_mylist = (list)(map(len, indexes_beta_min))
-
-iter = iter_min[len_mylist.index(min(len_mylist))]
+current_iter = len_mylist.index(min(len_mylist))
+iter = iter_min[current_iter]
 
 print ("iter chosen:",iter, "with mse:",mses_int[iter])
 print("--------------")
 
 
-indexes_beta = indexes_beta_min[iter]
+indexes_beta = indexes_beta_min[current_iter]
 
 
 XTrain, XTest = results_cross_val.extract_data_transf()
