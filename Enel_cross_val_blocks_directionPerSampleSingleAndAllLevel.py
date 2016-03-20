@@ -62,7 +62,7 @@ print("loss", new_loss)
 n_features_transf = XTrain_.shape[1]
 
 ####generation blocks
-num_blocks = 1000
+num_blocks = 10000
 
 r = np.random.RandomState(11)
 r1 = np.random.RandomState(12)
