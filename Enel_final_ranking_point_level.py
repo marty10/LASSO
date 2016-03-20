@@ -41,8 +41,9 @@ print("-----------")
 print(indexes_beta_min.shape)
 
 print("--------------")
-print(len(indexes_beta_min))
-iter = np.argmin(len(indexes_beta_min))
+len_mylist = map(len, indexes_beta_min)
+print("",len_mylist)
+iter = len_mylist.index(min(len_mylist))
 
 print ("iter chosen:",iter, "with mse:",mses_int[iter])
 print("--------------")
