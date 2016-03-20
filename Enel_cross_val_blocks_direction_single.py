@@ -89,7 +89,7 @@ max_set = min_set+5
 max_active_set = 49
 active_set = 0
 
-compute_mse_current = 1
+compute_mse_current = 0
 lasso_cv = linear_model.LassoCV(fit_intercept=False, n_jobs = -1)
 flag_linear = 0
 score = "mean_squared_error"
