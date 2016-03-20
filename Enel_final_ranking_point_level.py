@@ -41,8 +41,8 @@ print("-----------")
 print(indexes_beta_min.shape)
 
 print("--------------")
-len_mylist = map(len, indexes_beta_min)
-print("",len_mylist)
+len_mylist = (list)(map(len, indexes_beta_min))
+
 iter = len_mylist.index(min(len_mylist))
 
 print ("iter chosen:",iter, "with mse:",mses_int[iter])
