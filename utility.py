@@ -2,7 +2,7 @@ import math
 from pprint import pprint
 from scipy.stats import pearsonr
 import numpy as np
-from sklearn.preprocessing import Normalizer
+from sklearn.preprocessing import Normalizer, MinMaxScaler
 
 def extract_point_level(indexes, dict_):
     output_array = []
