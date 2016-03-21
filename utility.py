@@ -510,7 +510,7 @@ def assign_weights(weights_ordered_indexes):
     return weights_ordered_indexes
 
 def assign_weights_inverse(weights_ordered_indexes):
-    normalizer = Normalizer(copy=False)
+    normalizer = MinMaxScaler()
     weights_ordered_indexes = normalizer.fit_transform(weights_ordered_indexes)
     weights_ordered_indexes = 1-weights_ordered_indexes
     return weights_ordered_indexes
