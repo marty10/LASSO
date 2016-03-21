@@ -38,8 +38,7 @@ weights_data = results.extract_weights()
 
 index_mse = len(weights_data) - 1
 weights_data = weights_data[index_mse]
-weights = assign_weights_inverse(weights_data.copy())
-print(weights)
+weights = assign_weights(weights_data.copy())
 
 keys_ = np.array(list(dict_point_level.keys())).astype("int64")
 
