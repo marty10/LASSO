@@ -508,6 +508,12 @@ def assign_weights(weights_ordered_indexes):
     weights_ordered_indexes[weights_ordered_indexes>=mean_weigths] = float(mean_weigths)/(weights_ordered_indexes[weights_ordered_indexes>=mean_weigths])
     return weights_ordered_indexes
 
+def assign_weights_inverse(weights_ordered_indexes):
+    normalizer = Normalizer(copy=False)
+    weights_ordered_indexes = normalizer.fit_transform(weights_ordered_indexes)
+    weights_ordered_indexes = 1-weights_ordered_indexes
+    return weights_ordered_indexes
+
 def assign_weights_ordered(weights_ordered_indexes,active_set):
      weights_ordered_indexes[:active_set-1] = 0
      weights_ordered_indexes[active_set-1:] = 1
