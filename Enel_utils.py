@@ -73,18 +73,23 @@ def get_products_points(turb_dict):
         output_dict[v] = np.append(output_dict[v],tmp_v[tmp_v>v])
     return output_dict
 
-def compute_angle(Coord, Coord_turb):
+def compute_angle(Coord, Coord_turb, directions = 360):
     dim_points = Coord.shape[0]
     dim_turbines = Coord_turb.shape[0]
     angular_coeffs = np.zeros([dim_points, dim_turbines])
     verso_turb_point = np.zeros([dim_points, dim_turbines])
+    step = 180./directions
+    directions_vect = np.arange(-90,90.1,step)
     for i,point in enumerate(Coord):
         point_xi = point[0]
         point_yi = point[1]
-        current_angles = np.arctan2(Coord_turb[:,1]-point_yi,Coord_turb[:,0]-point_xi)
+        current_angles = np.arctan2(-point_yi+Coord_turb[:,1],-point_xi+Coord_turb[:,0])
         current_angles_degree = np.degrees(current_angles)
-        current_angles_degree = map_angle(current_angles_degree)
+        current_angles_degree = map_angle(current_angles_degree).reshape([dim_turbines,1])
+        map_vect = np.argmin(np.abs(current_angles_degree-directions_vect.reshape(1,len(directions_vect))), axis = 1)
+        current_angles_degree = directions_vect[map_vect]
         assert(np.logical_and(-90 <= np.all(current_angles_degree),np.all(current_angles_degree <=90)))
+
         angular_coeffs[i,:]= current_angles_degree
         verso = compute_verso_punto_turbina(Coord_turb, point_xi, point_yi)
         verso_turb_point[i,:] = verso
