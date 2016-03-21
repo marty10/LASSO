@@ -15,12 +15,13 @@ sys.argv[1:2] = [str(x) for x in sys.argv[1:2]]
 output_folder = sys.argv[1]
 threshold_dir = (int)(sys.argv[2])
 num_blocks = (int)(sys.argv[3])
+compute_mse_current = (int)(sys.argv[4])
 
 ####load data
 file = "ENEL_2014/Enel_dataset.npz"
 results = Result(file, "lasso")
 
-compute_mse_current = 1
+
 XTrain, YTrain, XTest, YTest = results.extract_train_test()
 enel_dict = results.extract_dict()
 Coord, Coord_turb, power_curve = results.extract_coords()
