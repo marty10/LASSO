@@ -12,7 +12,7 @@ results = Result(file, "lasso")
 enel_dict = results.extract_dict()
 Coord, Coord_turb, power_curve = results.extract_coords()
 
-threshold_dir = 90
+threshold_dir = 75
 values_TM = np.array([[24,281], [24,214]])
 
 XTrain, YTrain, XTest, YTest = results.extract_train_test()
