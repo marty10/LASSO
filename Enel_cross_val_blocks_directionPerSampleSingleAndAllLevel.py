@@ -14,6 +14,7 @@ import sys
 sys.argv[1:2] = [str(x) for x in sys.argv[1:2]]
 output_folder = sys.argv[1]
 threshold_dir = (int)(sys.argv[2])
+num_blocks = (int)(sys.argv[3])
 ####load data
 file = "ENEL_2014/Enel_dataset.npz"
 results = Result(file, "lasso")
@@ -62,8 +63,6 @@ print("loss", new_loss)
 n_features_transf = XTrain_.shape[1]
 
 ####generation blocks
-num_blocks = 10000
-
 r = np.random.RandomState(11)
 r1 = np.random.RandomState(12)
 r2 = np.random.RandomState(13)
