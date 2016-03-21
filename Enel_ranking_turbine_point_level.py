@@ -7,6 +7,7 @@ from LASSOModel import Shooting, LASSOEstimator
 from utility import assign_weights, get_current_data, get_beta_div_zeros, extract_point_level
 import sys
 from pprint import pprint
+from utility import assign_weights_inverse
 
 sys.argv[1:] = [str(x) for x in sys.argv[1:]]
 file_name = sys.argv[1]
