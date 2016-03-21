@@ -16,6 +16,7 @@ output_folder = sys.argv[1]
 threshold_dir = (int)(sys.argv[2])
 num_blocks = (int)(sys.argv[3])
 compute_mse_current = (int)(sys.argv[4])
+cycles = (int)(sys.argv[5])
 
 ####load data
 file = "ENEL_2014/Enel_dataset.npz"
@@ -83,7 +84,6 @@ r3 = np.random.RandomState(14)
 countIter = 4
 
 num_cycle = 0
-cycles = 10
 min_set = 5
 max_set = min_set+5
 max_active_set = 49
