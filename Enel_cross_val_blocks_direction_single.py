@@ -14,12 +14,13 @@ import sys
 sys.argv[1:2] = [str(x) for x in sys.argv[1:2]]
 output_folder = sys.argv[1]
 threshold_dir = (int)(sys.argv[2])
+num_blocks = (int)(sys.argv[3])
 
 ####load data
 file = "ENEL_2014/Enel_dataset.npz"
 results = Result(file, "lasso")
 
-
+compute_mse_current = 1
 XTrain, YTrain, XTest, YTest = results.extract_train_test()
 enel_dict = results.extract_dict()
 Coord, Coord_turb, power_curve = results.extract_coords()
@@ -60,8 +61,6 @@ print("loss", new_loss)
 n_features_transf = XTrain_.shape[1]
 
 ####generation blocks
-num_blocks = 10000
-
 r = np.random.RandomState(11)
 r1 = np.random.RandomState(12)
 r2 = np.random.RandomState(13)
@@ -89,18 +88,18 @@ max_set = min_set+5
 max_active_set = 49
 active_set = 0
 
-compute_mse_current = 0
 lasso_cv = linear_model.LassoCV(fit_intercept=False, n_jobs = -1)
 flag_linear = 0
 score = "mean_squared_error"
-
+mse_saved = new_loss+1
 
 while num_cycle<cycles:
 
     losses = []
     betas = []
 
-    if len(saved_indexes)>=max_active_set:
+    if len(saved_indexes)>=max_active_set or mse_saved<=new_loss:
+        print("indici salvati",len(saved_indexes))
         num_cycle +=1
         print ("ciclo", num_cycle)
         saved_indexes = []
