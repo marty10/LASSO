@@ -369,24 +369,24 @@ class Enel_powerCurveTransformation(Transformation):
     def __init__(self):
         pass
 
-    def compute_angle_matrix(self,x, directions = 360):
+    def compute_angle_matrix(self,x, directions = None):
         n,m = x.shape
         x_transf = np.array([[]])
         x_verso = np.array([[]])
         dict_ = dict.fromkeys(np.arange(0,49),np.array([]))
         key = 0
-
-        step = 180./directions
-        directions_vect = np.arange(-90,90.1,step)
+        if directions is not None:
+            step = 180./directions
+            directions_vect = np.arange(-90,90.1,step)
         for i in range(0,m,24):
             start_dim = x_transf.shape[1]
             for j in range(i,i+12):
                 current_angle = np.arctan2(x[:,j+12],x[:,j])
                 current_angle_degree = np.degrees(current_angle)
                 current_angle_degree = map_angle(current_angle_degree).reshape([n,1])
-
-                map_vect = np.argmin(np.abs(current_angle_degree-directions_vect.reshape(1,len(directions_vect))), axis = 1)
-                current_angle_degree = directions_vect[map_vect].reshape([n,1])
+                if directions is not None:
+                    map_vect = np.argmin(np.abs(current_angle_degree-directions_vect.reshape(1,len(directions_vect))), axis = 1)
+                    current_angle_degree = directions_vect[map_vect].reshape([n,1])
 
                 verso_current = compute_verso(x[:, j], x[:, j + 12])
                 verso_current = verso_current.reshape(len(verso_current),1)
