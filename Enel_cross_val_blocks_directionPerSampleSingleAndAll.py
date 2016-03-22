@@ -13,6 +13,8 @@ import sys
 
 sys.argv[1:] = [str(x) for x in sys.argv[1:]]
 output_folder = sys.argv[1]
+threshold_dir = (int)(sys.argv[2])
+num_blocks = (int)(sys.argv[3])
 
 ####load data
 file = "ENEL_2014/Enel_dataset.npz"
@@ -41,7 +43,7 @@ X_speed,_,_ = EnelWindSpeedTransformation().transform(X)
 print("wind speed computed")
 
 enel_transf = Enel_directionPowerCurveTransformation()
-X_transf, dict_sample_turb = enel_transf.transform(X_angle, angles_coord_turb, X_speed, power_curve, Coord, Coord_turb)
+X_transf, dict_sample_turb = enel_transf.transform(X_angle, angles_coord_turb, X_speed, power_curve, Coord, Coord_turb, threshold_dir=threshold_dir)
 print("single transformation done")
 
 X_transf, output_dict = enel_transf.transformPerTurbine(dict_sample_turb, enel_dict, X, power_curve, X_transf,output_dict)
@@ -62,7 +64,6 @@ print("loss", new_loss)
 n_features_transf = XTrain_.shape[1]
 
 ####generation blocks
-num_blocks = 1000
 
 r = np.random.RandomState(11)
 r1 = np.random.RandomState(12)
@@ -178,6 +179,6 @@ while num_cycle<cycles:
 
     countIter+=1
 
-    np.savez(output_folder+"/Enel_cross_val_blocks_direction_single_and_all.npz", dict_ = output_dict,saved_indexes_list = saved_indexes_list, mses = mses, weights_list = weights_list,
+    np.savez(output_folder+"/Enel_cross_val_blocks_direction_single_and_all_threshold_dir"+str(threshold_dir)+".npz", dict_ = output_dict,saved_indexes_list = saved_indexes_list, mses = mses, weights_list = weights_list,
              XTrain = XTrain, XTest = XTest, YTest = YTest, YTrain = YTrain, XTrainTransf_ = XTrain_transf, XTestTransf_ = XTest_transf, XTrain_ValNoCenter = XTrain_noCenter,
            XValTransf_noCenter = XVal_noCenter, YTrainVal_noCenter = YTrain_noCenter, YVal_noCenter = YVal_noCenter, XTrain_Val = XTrain_, XVal = XVal_ , YVal_ = YVal_, YTrain_Val = YTrain_ )
