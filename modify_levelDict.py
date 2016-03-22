@@ -5,9 +5,9 @@ from ExtractResult import Result
 from Transformation import Enel_powerCurveTransformation, EnelWindSpeedTransformation, \
     Enel_directionPowerCurveTransformation
 
-sys.argv[1:] = [str(x) for x in sys.argv[1:]]
+sys.argv[1:2] = [str(x) for x in sys.argv[1:2]]
 filename = sys.argv[1]
-threshold_dir = sys.argv[2]
+threshold_dir = (int)(sys.argv[2])
 
 results = Result(filename, "lasso")
 
