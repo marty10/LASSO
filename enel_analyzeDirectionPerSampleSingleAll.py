@@ -22,7 +22,7 @@ values_TM = np.array([[24,281], [24,214]])
 
 XTrain, YTrain, XTest, YTest = results.extract_train_test()
 
-dir = [9,12,18]
+dir = [180,90,45]
 
 ##transformation of data
 X = np.concatenate((XTrain, XTest), axis = 0)

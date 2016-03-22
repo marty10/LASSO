@@ -296,7 +296,6 @@ class Enel_directionPowerCurveTransformation(Transformation):
                     index_to_sum[f[1]].append(j)
                 for level in index_to_sum:
                     equal_levels = index_to_sum[level]
-                    assert(len(equal_levels)==1)
                     sum_component_u = np.sum(x_tmp_u[:,equal_levels], axis = 1)
                     sum_component_v = np.sum(x_tmp_v[:,equal_levels], axis = 1)
                     wind_speed = np.sqrt(sum_component_u**2+sum_component_v**2)/len(equal_levels)

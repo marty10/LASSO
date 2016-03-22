@@ -1,8 +1,10 @@
+# coding: utf-8
 from sklearn import linear_model
 from sklearn.grid_search import GridSearchCV
 from sklearn.linear_model.coordinate_descent import _alpha_grid
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import numpy as np
+
 
 def compute_weightedLASSO(lasso, XTrain_current, YTrain, XTest_current, YTest, scoring, score_f, verbose, values_TM):
     ## values_TM è una matrice contenente i valori di t e m per il train e il test

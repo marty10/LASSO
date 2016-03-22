@@ -1,13 +1,11 @@
 import abc
 from abc import ABCMeta
-
 from sklearn.linear_model.base import center_data
 from sklearn.preprocessing import PolynomialFeatures
 import numpy as np
 from Kernel import Scalar_kernel, Gaussian_kernel
 from Lasso_utils import compute_lasso
 from utility import center_test
-
 
 
 class Fit:
