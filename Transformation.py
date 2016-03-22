@@ -296,20 +296,22 @@ class Enel_directionPowerCurveTransformation(Transformation):
                     index_to_sum[f[1]].append(j)
                 for level in index_to_sum:
                     equal_levels = index_to_sum[level]
-                    sum_component_u = np.sum(x_tmp_u[:, equal_levels], axis=1)
-                    sum_component_v = np.sum(x_tmp_v[:, equal_levels], axis=1)
-                    wind_speed = np.sqrt(sum_component_u ** 2 + sum_component_v ** 2) / len(equal_levels)
+                    assert(len(equal_levels)==1)
+                    sum_component_u = np.sum(x_tmp_u[:,equal_levels], axis = 1)
+                    sum_component_v = np.sum(x_tmp_v[:,equal_levels], axis = 1)
+                    wind_speed = np.sqrt(sum_component_u**2+sum_component_v**2)/len(equal_levels)
                     power_value = self.enel_transf_power_curve(key, wind_speed, power_curve)
-                    if x_transf.shape[1] == 0:
-                        x_transf = power_value.reshape([n, 1])
+                    current_dim = x_transf.shape[1]
+                    if current_dim==0:
+                        x_transf = power_value.reshape([n,1])
                     else:
-                        x_transf = np.concatenate((x_transf, power_value.reshape([n, 1])), axis=1)
-                    for feat in unique_feat_point_level[equal_levels, 0]:
-                        vect_to_append = np.array([feat, level]).reshape(1, 2)
-                        if output_dict_[feat].shape[1] == 0:
+                        x_transf = np.concatenate((x_transf,power_value.reshape([n,1])), axis = 1)
+                    for feat in unique_feat_point_level[equal_levels,0]:
+                        vect_to_append = np.array([current_dim,level]).reshape(1,2)
+                        if output_dict_[feat].shape[1]==0:
                             output_dict_[feat] = vect_to_append
                         else:
-                            output_dict_[feat] = np.concatenate((output_dict_[feat], vect_to_append), axis=0)
+                            output_dict_[feat] = np.concatenate((output_dict_[feat], vect_to_append),axis = 0)
         return x_transf, output_dict_
 
 

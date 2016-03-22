@@ -49,7 +49,7 @@ def compute_lasso(XTrain, YTrain, XTest, YTest, score,values_TM):
 
     return new_loss,beta
 
-def compute_mse(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest, score,values_TM):
+def compute_mse(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest, score ,values_TM = []):
     model.fit(x_train_current_tmp, YTrain)
     y_pred_train = model.predict(x_train_current_tmp)
     y_pred_test = model.predict(x_test_current_tmp)
@@ -60,6 +60,12 @@ def compute_mse(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest, score
 
         abs_error_test = 100*mean_absolute_error(YTest,y_pred_test)*len(YTest)/(89.7* values_TM[1, 0] * values_TM[1,1])
         print("abs test", abs_error_test)
+
+        mse_error_train = 100*mean_squared_error(YTrain,y_pred_train)*len(YTrain)/(89.7*values_TM[0, 0] * values_TM[0, 1])
+        print("mean squared error train", mse_error_train )
+
+        mse_error_test = 100*mean_squared_error(YTest,y_pred_test)*len(YTest)/(89.7* values_TM[1, 0] * values_TM[1,1])
+        print("mean squared error test", mse_error_test )
 
     if score=="mean_squared_error":
         new_loss = mean_squared_error(YTest,y_pred_test)
