@@ -15,6 +15,9 @@ sys.argv[1:2] = [str(x) for x in sys.argv[1:2]]
 output_folder = sys.argv[1]
 threshold_dir = (int)(sys.argv[2])
 num_blocks = (int)(sys.argv[3])
+compute_mse_current = (int)(sys.argv[4])
+cycles = (int)(sys.argv[5])
+
 ####load data
 file = "ENEL_2014/Enel_dataset.npz"
 results = Result(file, "lasso")
@@ -57,8 +60,8 @@ XTrain_, YTrain_, X_mean, y_mean, X_std = center_data(XTrain_noCenter, YTrain_no
 XVal_, YVal_ = center_test(XVal_noCenter,YVal_noCenter,X_mean,y_mean,X_std)
 
 values_TM = []
-new_loss, _ = compute_lasso(XTrain_, YTrain_, XVal_, YVal_,score = "mean_squared_error", values_TM = values_TM)
-print("loss", new_loss)
+start_loss, _ = compute_lasso(XTrain_, YTrain_, XVal_, YVal_,score = "mean_squared_error", values_TM = values_TM)
+print("loss", start_loss)
 
 n_features_transf = XTrain_.shape[1]
 
@@ -84,24 +87,22 @@ r3 = np.random.RandomState(14)
 countIter = 4
 
 num_cycle = 0
-cycles = 10
 min_set = 5
 max_set = min_set+5
 max_active_set = 49
 active_set = 0
 
-compute_mse_current = 0
 lasso_cv = linear_model.LassoCV(fit_intercept=False, n_jobs = -1)
 flag_linear = 0
 score = "mean_squared_error"
-
+mse_saved = start_loss+1
 
 while num_cycle<cycles:
 
     losses = []
     betas = []
 
-    if len(saved_indexes)>=max_active_set:
+    if len(saved_indexes)>=max_active_set or mse_saved<=start_loss:
         num_cycle +=1
         print ("ciclo", num_cycle)
         saved_indexes = []
