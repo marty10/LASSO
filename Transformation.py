@@ -305,7 +305,7 @@ class Enel_directionPowerCurveTransformation(Transformation):
                     else:
                         x_transf = np.concatenate((x_transf, power_value.reshape([n, 1])), axis=1)
                     for feat in unique_feat_point_level[equal_levels, 0]:
-                        vect_to_append = np.array([unique_feat_point_level[feat, 0], level]).reshape(1, 2)
+                        vect_to_append = np.array([feat, level]).reshape(1, 2)
                         if output_dict_[feat].shape[1] == 0:
                             output_dict_[feat] = vect_to_append
                         else:
