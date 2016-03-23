@@ -10,10 +10,9 @@ import sys
 
 sys.argv[1:2] = [str(x) for x in sys.argv[1:2]]
 output_folder = sys.argv[1]
-threshold_dir = (int)(sys.argv[2])
-num_blocks = (int)(sys.argv[3])
-compute_mse_current = (int)(sys.argv[4])
-cycles = (int)(sys.argv[5])
+num_blocks = (int)(sys.argv[2])
+compute_mse_current = (int)(sys.argv[3])
+cycles = (int)(sys.argv[4])
 
 ####load data
 n_samples = 1000
