@@ -2,7 +2,7 @@ from sklearn import linear_model
 from sklearn.cross_validation import train_test_split
 from sklearn.linear_model.base import center_data
 import numpy as np
-from ExtractDataset import Dataset
+from ExtractDataset import  ArtificialDataset
 from Lasso_utils import compute_lasso, compute_mse
 from utility import generate_samples_dynamic_set, get_current_data,get_common_indexes, \
     extract_chosen_indexes_from_start, center_test
@@ -20,7 +20,7 @@ n_features = 500
 n_informative = 100
 
 #####dataset
-dataset = Dataset(n_samples,n_features, n_informative = n_informative, center_data= False)
+dataset = ArtificialDataset(n_samples,n_features, n_informative = n_informative, centerdata= False)
 XTrain = dataset.XTrain
 YTrain = dataset.YTrain
 XTest = dataset.XTest
@@ -133,7 +133,8 @@ while num_cycle<cycles:
     print("chosen indexes", chosen_indexes)
     saved_indexes = extract_chosen_indexes_from_start(saved_indexes, ordered_weights_indexes, chosen_indexes)
 
-    num_informative = saved_indexes[saved_indexes<n_informative]
+    saved_indexes_array= np.array(saved_indexes)
+    num_informative = saved_indexes_array[saved_indexes_array<n_informative]
     print("num_inf", len(num_informative), "su", len(saved_indexes))
 
     num_informative_list.append(num_informative)
@@ -155,6 +156,7 @@ while num_cycle<cycles:
     saved_indexes_list.append(saved_indexes)
 
     countIter+=1
+
 
     np.savez(output_folder+"/Enel_cross_val_blocks_artificial_dataset.npz", num_informative_list=num_informative_list,saved_indexes_list = saved_indexes_list, mses = mses, weights_list = weights_list,
              XTrain = XTrain, XTest = XTest, YTest = YTest, YTrain = YTrain, XTrain_ValNoCenter = XTrain_noCenter,

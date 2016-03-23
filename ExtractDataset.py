@@ -22,7 +22,8 @@ class Dataset:
 
 
 class ArtificialDataset(Dataset):
-    def __init__(self, n_samples, n_features, n_informative, normalize_y = False, normalize = True, centerdata = True, transformation=NullTransformation(), fit_intercept = True):
+    def __init__(self, n_samples, n_features, n_informative, normalize_y = False, normalize = True, centerdata = True,
+                 transformation=NullTransformation(), fit_intercept = True):
         self.n_samples = n_samples
         self.n_features = n_features
         X, Y, beta = datasets.make_regression(n_samples=self.n_samples, n_features=self.n_features,
