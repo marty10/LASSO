@@ -74,7 +74,7 @@ for i in range(n_features):
         model = Shooting(weights_)
         lasso = LASSOEstimator(model)
 
-        loss, beta = compute_weightedLASSO(lasso,XTrain_current,YTrain, XTest_current, YVal,scoring, score_f, verbose)
+        loss, beta = compute_weightedLASSO(lasso,XTrain_current,YTrain, XTest_current, YVal,scoring, score_f, verbose, values_TM=[])
         losses.append(loss)
 
         beta = np.abs(beta)
