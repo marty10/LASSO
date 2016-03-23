@@ -66,6 +66,7 @@ for i in range(n_features):
         print("----------------------------")
         print("iteration ", i)
 
+
         keys_sel = ordered_final_weights[:i+1]
 
         weights_ = weights[indexes]
@@ -73,16 +74,14 @@ for i in range(n_features):
         model = Shooting(weights_)
         lasso = LASSOEstimator(model)
 
-        loss, beta = compute_weightedLASSO(lasso,XTrain_current,YTrain, XTest_current, YVal,scoring, score_f, verbose, values_TM=[])
+        loss, beta = compute_weightedLASSO(lasso,XTrain_current,YTrain, XTest_current, YVal,scoring, score_f, verbose)
         losses.append(loss)
 
         beta = np.abs(beta)
         beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
         print(indexes[beta_indexes])
-        print_features_active(keys_sel, indexes[beta_indexes], dict_)
 
-        extracted_indexes.append(indexes[beta_indexes])
-        np.savez(file_name+"ranking"+ext, mses = losses, indexes = indexes_tot, extracted_indexes = extracted_indexes)
+        np.savez(file_name+"_ranking_not_levels"+ext, mses = losses, indexes = indexes_tot)
 
 print("min mse", np.min(losses), "with:", indexes_tot(np.argmin(losses)))
