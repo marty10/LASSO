@@ -26,7 +26,7 @@ class ArtificialDataset(Dataset):
                  transformation=NullTransformation(), fit_intercept = True):
         self.n_samples = n_samples
         self.n_features = n_features
-        X, Y, beta = datasets.make_regression(n_samples=self.n_samples, n_features=self.n_features,
+        X, Y = datasets.make_regression(n_samples=self.n_samples, n_features=self.n_features,
                                                   n_informative=n_informative, shuffle=False, random_state=11)
         XTrain, XTest, YTrain, YTest = train_test_split(X, Y, test_size=0.33,random_state=0)
         self.XTrain_orig = XTrain
