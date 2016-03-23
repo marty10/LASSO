@@ -47,7 +47,7 @@ class ArtificialDataset(Dataset):
             self.XTest = XTest
             self.YTest = YTest
         self.transformation = transformation
-        self.beta = beta
+        
 
 class ArtificialNonLinearDataset(Dataset):
      def __init__(self, n_samples, n_features, interval, test_size = 0.33, normalize = True, centerdata = True, transformation=NullTransformation(), fit_intercept = True):
