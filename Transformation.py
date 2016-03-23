@@ -202,6 +202,71 @@ class Enel_directionVersoPowerCurveTransformation(Transformation):
 
 class Enel_directionPowerCurveTransformation(Transformation):
 
+    def transform_versus(self, direction_train, directions, X_speed, power_curve, Coord, Coord_turb, x_verso, x_verso_turbine,threshold_dir = 180, compute_dict=1):
+        n,p = direction_train.shape
+        turbines_number = directions.shape[1]
+        X_turbines = np.zeros([n,p])
+        count = 0
+        dict_turbs = dict.fromkeys(np.arange(0,turbines_number),np.array([[]], dtype = "int64"))
+        if compute_dict:
+            current_dict_values = np.zeros([n,3])
+            current_dict_values[:,0] = count
+            current_dict_values[:,2] = np.arange(0,n)
+        for i in range(p):
+            selected_turbs = []
+            keys = []
+            current_level = i%12
+            if compute_dict:
+                current_dict_values[:,1] = current_level
+            if current_level==0 and i!=0:
+                count+=1
+                print("punto", count)
+                if compute_dict:
+                    current_dict_values[:,0] = count
+            current_angles = direction_train[:,i].reshape([n,1])
+            point_direction = np.array(directions[count,:]).reshape([1,turbines_number])
+            current_diff = np.abs(current_angles-point_direction)
+            x_verso_current = x_verso[:, i]
+            x_verso_turbine_current = x_verso_turbine[count, :].reshape(turbines_number, 1)
+            for s in range(n):
+                x_verso_current_sample = x_verso_current[s]
+                selected_turb_same_verso = np.any(x_verso_turbine_current == x_verso_current_sample, axis=1)
+                if np.any(selected_turb_same_verso):
+                    turb_same_verso = np.where(selected_turb_same_verso)[0]
+                    min_turbs = np.min(current_diff[s, turb_same_verso])
+                    if min_turbs<threshold_dir:
+                        turb = np.intersect1d(turb_same_verso, np.where(current_diff[s, :] == min_turbs)[0])
+                        if len(turb) > 1:
+                        # chooose neareast turbine in that direction
+                            tree = create_tree(Coord_turb[turb, :])
+                            d, sel_turb = tree.query(Coord[count, :])
+                            selected_turb = turb[sel_turb]
+                            if compute_dict:
+                                key = selected_turb
+                        else:
+                            selected_turb = turb
+                            if compute_dict:
+                                key = selected_turb[0]
+                        if compute_dict:
+                            keys.append(key)
+                    else:
+                        selected_turb = -1
+                else:
+                    selected_turb = -1
+                selected_turbs.append(selected_turb)
+            if compute_dict:
+                for turb_key in np.unique(keys):
+                    position_turb = np.where(keys==turb_key)[0]
+                    if dict_turbs[turb_key].shape[1]==0:
+                        dict_turbs[turb_key] = current_dict_values[position_turb,:]
+                    else:
+                        dict_turbs[turb_key] = np.concatenate((dict_turbs[turb_key],current_dict_values[position_turb,:]), axis = 0)
+
+            wind_speed = X_speed[:, i]
+            power_values = self.enel_transf_power_curve_multiple_key(selected_turbs, wind_speed, power_curve)
+            X_turbines[:,i] = power_values
+        return X_turbines,dict_turbs
+
     def transform(self, direction_train, directions, X_speed, power_curve, Coord, Coord_turb, threshold_dir=180,compute_dict=1):
         n, p = direction_train.shape
         turbines_number = directions.shape[1]

@@ -93,14 +93,14 @@ def compute_angle(Coord, Coord_turb, directions = None):
         assert(np.logical_and(-90 <= np.all(current_angles_degree),np.all(current_angles_degree <=90)))
 
         angular_coeffs[i,:]= current_angles_degree
-        verso = compute_verso_punto_turbina(Coord_turb, point_xi, point_yi)
+        verso = compute_verso_turbina_punto(Coord_turb, point_xi, point_yi)
         verso_turb_point[i,:] = verso
 
     return angular_coeffs, verso_turb_point
 
-def compute_verso_punto_turbina(Coord_turb, point_xi, point_yi):
-    diff_versus_x = np.sign(point_xi-Coord_turb[:,0]).reshape(Coord_turb.shape[0],1)
-    diff_versus_y = np.sign(point_yi-Coord_turb[:,1]).reshape(Coord_turb.shape[0],1)
+def compute_verso_turbina_punto(Coord_turb, point_xi, point_yi):
+    diff_versus_x = np.sign(Coord_turb[:,0]-point_xi).reshape(Coord_turb.shape[0],1)
+    diff_versus_y = np.sign(Coord_turb[:,1]-point_yi).reshape(Coord_turb.shape[0],1)
 
     verso = compute_final_verso(diff_versus_x,diff_versus_y)
     return verso
@@ -117,9 +117,7 @@ def compute_final_verso(verso_u,verso_v):
 
 def compute_verso(u, v):
     verso_u = np.sign(u).reshape(len(u),1)
-    verso_u = invert_direction(verso_u)
     verso_v = np.sign(v).reshape(len(v),1)
-    verso_v = invert_direction(verso_v)
     verso = compute_final_verso(verso_u, verso_v)
     return verso
 
