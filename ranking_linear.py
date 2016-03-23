@@ -15,8 +15,6 @@ file = file_name+ext
 
 results = Result(file, "lasso")
 
-dict_ = results.extract_dict()
-
 XTrain, YTrain, XVal, YVal = results.extract_train_val()
 
 score = "mean_squared_error"
