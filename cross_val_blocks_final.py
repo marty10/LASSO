@@ -68,6 +68,7 @@ lasso_cv = linear_model.LassoCV(fit_intercept=False, n_jobs = -1)
 flag_linear = 0
 score = "mean_squared_error"
 mse_saved = start_loss+1
+num_informative_list =[]
 
 while num_cycle<cycles:
 
@@ -132,6 +133,10 @@ while num_cycle<cycles:
     print("chosen indexes", chosen_indexes)
     saved_indexes = extract_chosen_indexes_from_start(saved_indexes, ordered_weights_indexes, chosen_indexes)
 
+    num_informative = saved_indexes[saved_indexes<n_informative]
+    print("num_inf", len(num_informative), "su", len(saved_indexes))
+
+    num_informative_list.append(num_informative)
     assert(len(saved_indexes)<=max_active_set)
     x_train_saved, x_val_saved = get_current_data(XTrain_, XVal_, saved_indexes)
 
@@ -151,6 +156,6 @@ while num_cycle<cycles:
 
     countIter+=1
 
-    np.savez(output_folder+"/Enel_cross_val_blocks_artificial_dataset.npz", saved_indexes_list = saved_indexes_list, mses = mses, weights_list = weights_list,
+    np.savez(output_folder+"/Enel_cross_val_blocks_artificial_dataset.npz", num_informative_list=num_informative_list,saved_indexes_list = saved_indexes_list, mses = mses, weights_list = weights_list,
              XTrain = XTrain, XTest = XTest, YTest = YTest, YTrain = YTrain, XTrain_ValNoCenter = XTrain_noCenter,
            XValTransf_noCenter = XVal_noCenter, YTrainVal_noCenter = YTrain_noCenter, YVal_noCenter = YVal_noCenter, XTrain_Val = XTrain_, XVal = XVal_ , YVal_ = YVal_, YTrain_Val = YTrain_ )
