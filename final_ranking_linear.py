@@ -85,7 +85,7 @@ print("----------------------------")
 model = Shooting(weights)
 lasso = LASSOEstimator(model)
 
-loss, beta = compute_weightedLASSO(lasso,XTrain_Valcurrent,YTrain, XVal_current, YVal,scoring, score_f, verbose, values_TM)
+loss, beta = compute_weightedLASSO(lasso,XTrain_Valcurrent,YTrainVal, XVal_current, YVal,scoring, score_f, verbose, values_TM)
 
 beta = np.abs(beta)
 beta_indexes,beta_ordered = get_beta_div_zeros(beta)
