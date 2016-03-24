@@ -56,7 +56,7 @@ if verbose:
 ###compute LASSO
 #resultsData = Result(file_data,"lasso")
 
-values_TM = np.array([[24,281], [24,214]])
+values_TM = []
 new_loss, beta = compute_lasso(XTrain, YTrain, XTest, YTest, score = score,values_TM = values_TM)
 beta = np.abs(beta[:, 0])
 beta_indexes,beta_ordered = get_beta_div_zeros(beta)
@@ -81,8 +81,6 @@ XTrainVal, YTrainVal, XVal, YVal = results_cross_val.extract_train_val()
 XTrain_Valcurrent, XVal_current = get_current_data(XTrainVal, XVal, indexes)
 
 print("----------------------------")
-
-weights_ = weights[indexes]
 
 model = Shooting(weights_)
 lasso = LASSOEstimator(model)
