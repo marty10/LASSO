@@ -61,14 +61,9 @@ beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 index_beta = np.where(np.abs(beta)>=0.1)[0]
 index_inf = index_beta[index_beta<n_informative]
 index_not_inf = index_beta[index_beta>n_informative]
-print("loss", start_loss, "beta inf", len(index_inf), ", beta non inf",len(index_beta))
+print("loss", new_loss, "beta inf", len(index_inf), ", beta non inf",len(index_beta))
 
 real_indexes = []
-
-if verbose:
-    print("loss LASSO test", new_loss)
-    print("------------------")
-
 iter = np.argmin(mses)
 print("iter", iter)
 indexes = ordered_final_weights[:iter+1].astype("int64")
