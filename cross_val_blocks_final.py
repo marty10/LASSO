@@ -15,7 +15,7 @@ compute_mse_current = (int)(sys.argv[3])
 cycles = (int)(sys.argv[4])
 
 ####load data
-n_samples = 500
+n_samples = 300
 n_features = 500
 n_informative = 100
 
