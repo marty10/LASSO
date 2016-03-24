@@ -82,7 +82,7 @@ XTrain_Valcurrent, XVal_current = get_current_data(XTrainVal, XVal, indexes)
 
 print("----------------------------")
 
-model = Shooting(weights_)
+model = Shooting(weights)
 lasso = LASSOEstimator(model)
 
 loss, beta = compute_weightedLASSO(lasso,XTrain_Valcurrent,YTrain, XVal_current, YVal,scoring, score_f, verbose, values_TM)
