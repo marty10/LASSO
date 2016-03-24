@@ -58,6 +58,10 @@ values_TM = []
 new_loss, beta = compute_lasso(XTrain, YTrain, XTest, YTest, score = score,values_TM = values_TM)
 beta = np.abs(beta[:, 0])
 beta_indexes,beta_ordered = get_beta_div_zeros(beta)
+index_beta = np.where(np.abs(beta)>=0.1)[0]
+index_inf = index_beta[index_beta<n_informative]
+index_not_inf = index_beta[index_beta>n_informative]
+print("loss", start_loss, "beta div zero", len(index_inf), "su",len(index_beta))
 
 real_indexes = []
 
