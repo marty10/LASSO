@@ -76,6 +76,7 @@ while num_cycle<cycles:
     betas = []
 
     if len(saved_indexes)>=max_active_set or mse_saved<=start_loss:
+        start_loss = mse_saved
         print("indici salvati",len(saved_indexes))
         num_cycle +=1
         print ("ciclo", num_cycle)
