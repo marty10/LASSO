@@ -8,8 +8,8 @@ from Lasso_utils import compute_lasso, compute_weightedLASSO
 from utility import center_test, assign_weights, get_current_data, get_beta_div_zeros, \
     print_features_active,extract_level
 
-sys.argv[1:2] = [int(x) for x in sys.argv[1:2]]
-file_name = str(sys.argv[2])
+sys.argv[1:] = [str(x) for x in sys.argv[1:]]
+file_name = sys.argv[1]
 weights_all = 1
 
 score = "mean_squared_error"
