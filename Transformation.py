@@ -46,6 +46,33 @@ class Transformation:
             powers.append(power)
         return np.array(powers)
 
+class Enel_turbineTransformation(Transformation):
+    def __init__(self):
+        pass
+
+    def transform(self, X_speed, power_curve, threshold_dir=180,compute_dict=1):
+        n, p = X_speed.shape
+        turbines_number = 39
+        X_turbines = np.zeros([n, p*turbines_number])
+        count = 0
+        dict_turbs = dict.fromkeys(np.arange(0, turbines_number), np.array([[]], dtype="int64"))
+        if compute_dict:
+            current_dict_values = np.zeros([n, 3])
+            current_dict_values[:, 0] = count
+            current_dict_values[:, 2] = np.arange(0, n)
+        for i in range(p):
+            current_level = i % 12
+            if compute_dict:
+                current_dict_values[:, 1] = current_level
+            if current_level == 0 and i != 0:
+                count += 1
+                print("punto", count)
+            wind_speed = X_speed[:, i]
+            for selected_turbs in range(0,39):
+                power_values = self.enel_transf_power_curve(selected_turbs, wind_speed, power_curve)
+                X_turbines[:, i*selected_turbs] = power_values
+        return X_turbines, dict_turbs
+
 class Enel_conversionPowerCurve(Transformation):
     def __init__(self):
         pass
