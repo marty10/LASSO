@@ -24,7 +24,7 @@ folder = "ENEL_2014/"
 ext = ".npz"
 file_cross_val =  folder+file_name+ext
 
-fine_name_weights = file_name+"ranking_not_levels"+ext
+fine_name_weights = file_name+"_ranking_not_levels"+ext
 results_weighted_lasso = Result(fine_name_weights, "lasso")
 
 mses = results_weighted_lasso.extract_mses()
