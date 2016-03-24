@@ -30,13 +30,11 @@ mses = results_weighted_lasso.extract_mses()
 results_cross_val = Result(file_cross_val, "lasso")
 
 ##get transformed data
-XTrain,YTrain,XTest, YTest = results_cross_val.extract_train_test()
-
+XTrain, YTrain, XTest, YTest = results_cross_val.extract_train_test()
 
 ### centratura dei dati
 XTrain, YTrain, X_mean, y_mean, X_std = center_data(XTrain, YTrain, fit_intercept=True, normalize = True)
 XTest, YTest = center_test(XTest,YTest,X_mean,y_mean,X_std)
-
 
 ##ranking
 verbose = True
@@ -93,7 +91,9 @@ beta_indexes,beta_ordered = get_beta_div_zeros(beta)
 
 ##new indexes
 final_indexes = indexes[beta_indexes]
+print("final indexes", final_indexes)
 XTrain_current, XTest_current = get_current_data(XTrain, XTest,final_indexes)
+
 weights = assign_weights(weights_data.copy())
 weights = weights[final_indexes]
 ###compute LASSO
