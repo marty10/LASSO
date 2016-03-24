@@ -68,7 +68,8 @@ if verbose:
     print("------------------")
 
 iter = np.argmin(mses)
-indexes = ordered_final_weights[:iter].astype("int64")
+print("iter", iter)
+indexes = ordered_final_weights[:iter+1].astype("int64")
 
 if weights_all:
     weights = assign_weights(weights_data.copy())
