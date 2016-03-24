@@ -55,7 +55,6 @@ if verbose:
 
 ###compute LASSO
 #resultsData = Result(file_data,"lasso")
-dict_ = results_cross_val.extract_dict()
 
 values_TM = np.array([[24,281], [24,214]])
 new_loss, beta = compute_lasso(XTrain, YTrain, XTest, YTest, score = score,values_TM = values_TM)
