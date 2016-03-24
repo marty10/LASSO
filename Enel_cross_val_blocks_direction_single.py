@@ -17,6 +17,7 @@ threshold_dir = (int)(sys.argv[2])
 num_blocks = (int)(sys.argv[3])
 compute_mse_current = (int)(sys.argv[4])
 cycles = (int)(sys.argv[5])
+max_active_set = (int)(sys.argv[6])
 
 ####load data
 file = "ENEL_2014/Enel_dataset.npz"
@@ -86,7 +87,6 @@ countIter = 4
 num_cycle = 0
 min_set = 5
 max_set = min_set+5
-max_active_set = 49
 active_set = 0
 
 lasso_cv = linear_model.LassoCV(fit_intercept=False, n_jobs = -1)
@@ -100,6 +100,8 @@ while num_cycle<cycles:
     betas = []
 
     if len(saved_indexes)>=max_active_set or mse_saved<=start_loss:
+        if compute_mse_current:
+            start_loss = mse_saved
         print("indici salvati",len(saved_indexes))
         num_cycle +=1
         print ("ciclo", num_cycle)
