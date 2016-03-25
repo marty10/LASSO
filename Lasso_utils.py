@@ -38,9 +38,9 @@ def compute_weightedLASSO(lasso, XTrain_current, YTrain, XTest_current, YTest, s
         mse_error_train = 100.*np.sqrt(mean_squared_error(YTrain,y_pred_train)*len(YTrain)/(values_TM[0, 0] * values_TM[0, 1]))/(89.7)
         print("mean squared error train", mse_error_train )
 
-        mse_error_test = 100.*np.sqrt(mean_squared_error(YTest,y_pred_test)*len(YTest)/(values_TM[0, 0] * values_TM[0, 1]))/(89.7)
+        mse_error_test = 100.*np.sqrt(mean_squared_error(YTest,y_pred_test)*len(YTest)/(values_TM[1, 0] * values_TM[1, 1]))/(89.7)
         print("mean squared error test", mse_error_test )
-        
+
         if verbose:
             print("abs test", abs_error_test)
             print("abs train", abs_error_train)
@@ -73,7 +73,7 @@ def compute_mse(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest, score
         mse_error_train = 100.*np.sqrt(mean_squared_error(YTrain,y_pred_train)*len(YTrain)/(values_TM[0, 0] * values_TM[0, 1]))/(89.7)
         print("mean squared error train", mse_error_train )
 
-        mse_error_test = 100.*np.sqrt(mean_squared_error(YTest,y_pred_test)*len(YTest)/(values_TM[0, 0] * values_TM[0, 1]))/(89.7)
+        mse_error_test = 100.*np.sqrt(mean_squared_error(YTest,y_pred_test)*len(YTest)/(values_TM[1, 0] * values_TM[1, 1]))/(89.7)
         print("mean squared error test", mse_error_test )
 
     if score=="mean_squared_error":
