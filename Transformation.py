@@ -70,7 +70,7 @@ class Enel_turbineTransformation(Transformation):
             wind_speed = X_speed[:, i]
             for selected_turbs in range(0,39):
                 power_values = self.enel_transf_power_curve(selected_turbs, wind_speed, power_curve)
-                X_turbines[:, i*selected_turbs] = power_values
+                X_turbines[:, 39*i+selected_turbs] = power_values
         return X_turbines, dict_turbs
 
 class Enel_conversionPowerCurve(Transformation):
