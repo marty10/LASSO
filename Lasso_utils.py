@@ -1,4 +1,4 @@
-# coding: utf-8
+# coding=utf-8
 from sklearn import linear_model
 from sklearn.grid_search import GridSearchCV
 from sklearn.linear_model.coordinate_descent import _alpha_grid
@@ -7,7 +7,7 @@ import numpy as np
 
 
 def compute_weightedLASSO(lasso, XTrain_current, YTrain, XTest_current, YTest, scoring, score_f, verbose, values_TM):
-    ## values_TM è una matrice contenente i valori di t e m per il train e il test
+    # values_TM è una matrice contenente i valori di t e m per il train e il test
     alphas = _alpha_grid(XTrain_current, YTrain, fit_intercept=False)
     parameters = {"alpha": alphas}
 
@@ -42,7 +42,7 @@ def compute_weightedLASSO(lasso, XTrain_current, YTrain, XTest_current, YTest, s
 
 
 def compute_lasso(XTrain, YTrain, XTest, YTest, score,values_TM):
-    lasso_cv = linear_model.LassoCV(fit_intercept=False,  max_iter=10000, n_jobs = -1)
+    lasso_cv = linear_model.LassoCV(fit_intercept=False,  max_iter=100000, n_jobs = -1)
     lasso_cv.fit(XTrain,YTrain)
     best_alpha = lasso_cv.alpha_
 
@@ -57,16 +57,16 @@ def compute_mse(model,x_train_current_tmp,YTrain,x_test_current_tmp,YTest, score
     y_pred_test = model.predict(x_test_current_tmp)
 
     if len(values_TM)!=0:
-        abs_error_train = 100*mean_absolute_error(YTrain,y_pred_train)*len(YTrain)/(89.7*values_TM[0, 0] * values_TM[0, 1])
+        abs_error_train = 100.*mean_absolute_error(YTrain,y_pred_train)*len(YTrain)/(89.7* values_TM[1, 0] * values_TM[1,1])
         print("abs train", abs_error_train)
 
-        abs_error_test = 100*mean_absolute_error(YTest,y_pred_test)*len(YTest)/(89.7* values_TM[1, 0] * values_TM[1,1])
+        abs_error_test = 100.*mean_absolute_error(YTest,y_pred_test)*len(YTest)/(89.7* values_TM[1, 0] * values_TM[1,1])
         print("abs test", abs_error_test)
 
-        mse_error_train = 100*mean_squared_error(YTrain,y_pred_train)*len(YTrain)/(89.7*values_TM[0, 0] * values_TM[0, 1])
+        mse_error_train = 100.*np.sqrt(mean_squared_error(YTrain,y_pred_train)*len(YTrain)/(values_TM[0, 0] * values_TM[0, 1]))/(89.7)
         print("mean squared error train", mse_error_train )
 
-        mse_error_test = 100*mean_squared_error(YTest,y_pred_test)*len(YTest)/(89.7* values_TM[1, 0] * values_TM[1,1])
+        mse_error_test = 100.*np.sqrt(mean_squared_error(YTest,y_pred_test)*len(YTest)/(values_TM[0, 0] * values_TM[0, 1]))/(89.7)
         print("mean squared error test", mse_error_test )
 
     if score=="mean_squared_error":
