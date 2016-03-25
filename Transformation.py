@@ -50,28 +50,29 @@ class Enel_turbineTransformation(Transformation):
     def __init__(self):
         pass
 
-    def transform(self, X_speed, power_curve, threshold_dir=180,compute_dict=1):
+    def transform(self, X_speed, power_curve, compute_dict=1):
         n, p = X_speed.shape
         turbines_number = 39
         X_turbines = np.zeros([n, p*turbines_number])
-        count = 0
-        dict_turbs = dict.fromkeys(np.arange(0, turbines_number), np.array([[]], dtype="int64"))
-        if compute_dict:
-            current_dict_values = np.zeros([n, 3])
-            current_dict_values[:, 0] = count
-            current_dict_values[:, 2] = np.arange(0, n)
         for i in range(p):
-            current_level = i % 12
-            if compute_dict:
-                current_dict_values[:, 1] = current_level
-            if current_level == 0 and i != 0:
-                count += 1
-                print("punto", count)
             wind_speed = X_speed[:, i]
             for selected_turbs in range(0,39):
                 power_values = self.enel_transf_power_curve(selected_turbs, wind_speed, power_curve)
                 X_turbines[:, 39*i+selected_turbs] = power_values
-        return X_turbines, dict_turbs
+
+        output_dict = dict.fromkeys(np.arange(0,49),np.array([[]], dtype = "int64"))
+
+        if compute_dict:
+            k_levels = np.zeros([12*39]).astype("int64")
+        for k in np.arange(0,12):
+            k_levels[k*39:k*39+39] = k
+
+        k_levels = k_levels.reshape([len(k_levels),1])
+
+        for key in np.arange(0,49):
+            current_values = np.arange(key*39*12,key*12*39+12*39).reshape([12*39,1])
+            output_dict[key] = np.concatenate((current_values,k_levels), axis = 1)
+        return X_turbines, output_dict
 
 class Enel_conversionPowerCurve(Transformation):
     def __init__(self):
