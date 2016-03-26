@@ -31,7 +31,7 @@ def extract_level(ordered_final_weights, values):
 
 def get_beta_div_zeros(beta):
     beta_ord = np.sort(beta)[::-1]
-    beta_ordered = beta_ord[beta_ord >= 0.1]
+    beta_ordered = beta_ord[beta_ord >= 1]
     len_div_zero = len(beta_ordered)
     beta_indexes = np.argsort(np.abs(beta))[::-1][:len_div_zero]
     return beta_indexes, beta_ordered
