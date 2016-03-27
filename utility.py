@@ -12,7 +12,8 @@ def extract_point_level(indexes, dict_):
         for i in indexes:
             if i in current_value:
                 point_level = current_v[current_value==i][:,1][0]
-                output_array.append([key,point_level])
+                if [key,point_level] not in output_array:
+                    output_array.append([key,point_level])
     return output_array
 
 
