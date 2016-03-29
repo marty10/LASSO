@@ -57,11 +57,7 @@ XTrain_transf = X_transf[:XTrain.shape[0], :]
 XTest_transf = X_transf[XTrain.shape[0]:, :]
 
 ##center data
-XTrain_noCenter, XVal_noCenter, YTrain_noCenter, YVal_noCenter = train_test_split(XTrain_transf, YTrain, test_size=0.33,
-                                                                                  random_state=0)
-XTrain_, YTrain_, X_mean, y_mean, X_std = center_data(XTrain_noCenter, YTrain_noCenter, fit_intercept=True,
-                                                      normalize=True)
-XVal_, YVal_ = center_test(XVal_noCenter, YVal_noCenter, X_mean, y_mean, X_std)
+
 
 values_TM = []
 start_loss, _ = compute_lasso(XTrain_, YTrain_, XVal_, YVal_, score="mean_squared_error", values_TM=values_TM)

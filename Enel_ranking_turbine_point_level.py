@@ -9,8 +9,10 @@ import sys
 from pprint import pprint
 from utility import assign_weights_inverse
 
-sys.argv[1:] = [str(x) for x in sys.argv[1:]]
+sys.argv[1:2] = [str(x) for x in sys.argv[1:]]
 file_name = sys.argv[1]
+start = (int)(sys.argv[2])
+end = (int)(sys.argv[3])
 
 ext = ".npz"
 file = file_name+ext
@@ -75,7 +77,7 @@ indexes_tot = []
 n_features = len(ordered_final_weights)
 beta_div_zeros = []
 
-for i in range(n_features):
+for i in range(start, end+1):
 
         indexes = []
         for k in ordered_final_weights[:i+1]:
@@ -120,7 +122,7 @@ for i in range(n_features):
         pprint (extract_point_level(indexes[beta_indexes], dict_))
         beta_div_zeros.append(indexes[beta_indexes])
 
-        np.savez(file_name+"ranking_point_level"+ext, mses = losses, indexes = indexes_tot, beta_div_zeros = beta_div_zeros)
+        np.savez(file_name+"ranking_point_level"+str(start)+"_"+str(end)+ext, mses = losses, indexes = indexes_tot, beta_div_zeros = beta_div_zeros)
 
 print("min mse", np.min(losses), "with:", indexes_tot(np.argmin(losses)))
 
