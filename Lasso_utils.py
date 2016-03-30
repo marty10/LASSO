@@ -33,7 +33,7 @@ def compute_weightedLASSO(lasso, XTrain_current, YTrain, XTest_current, YTest, s
         print("mae test",100*mean_absolute_error(YTest,y_pred_test)/89.7)
 
         print("mse train",100*np.sqrt(mean_squared_error(YTrain,y_pred_train))/89.7)
-        print("mse test",100*np.sqrt(mean_squared_error(YTrain,y_pred_train))/89.7)
+        print("mse test",100*np.sqrt(mean_squared_error(YTest,y_pred_test))/89.7)
 
     ##values[0] = 24, values[1] = 281, values[2] = 214
     if len(values_TM)!=0:
