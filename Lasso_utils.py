@@ -29,6 +29,12 @@ def compute_weightedLASSO(lasso, XTrain_current, YTrain, XTest_current, YTest, s
     if verbose:
         print("mse_train "+lasso.__class__.__name__,mse_train)
         print ("mse_test weights "+lasso.__class__.__name__,mse_test)
+        print("mae train",100*mean_absolute_error(YTrain,y_pred_train)/89.7)
+        print("mae test",100*mean_absolute_error(YTest,y_pred_test)/89.7)
+
+        print("mse train",100*np.sqrt(mean_squared_error(YTrain,y_pred_train))/89.7)
+        print("mse test",100*np.sqrt(mean_squared_error(YTrain,y_pred_train))/89.7)
+
     ##values[0] = 24, values[1] = 281, values[2] = 214
     if len(values_TM)!=0:
         abs_error_train = 100*mean_absolute_error(YTrain,y_pred_train)*len(YTrain)/(89.7 * values_TM[0, 0] * values_TM[0, 1])
