@@ -13,7 +13,7 @@ import sys
 
 sys.argv[1:2] = [str(x) for x in sys.argv[1:]]
 file_name = sys.argv[1]
-iter = (int)(sys.argv[2])
+#iter = (int)(sys.argv[2])
 
 
 score = "mean_squared_error"
@@ -32,6 +32,8 @@ results_cross_val = Result(file_cross_val, "lasso")
 results_weighted_lasso = Result(fine_name_weights, "lasso")
 
 mses = results_weighted_lasso.extract_mses()
+iter = np.argmin(mses)
+print("iter chosen", iter,"with", mses[iter])
 #mses_int = list(map(int, mses))
 #min_mse = np.min(mses_int)
 #iter_min = np.where(mses_int==min_mse)[0]
