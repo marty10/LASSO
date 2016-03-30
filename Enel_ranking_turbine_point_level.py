@@ -122,7 +122,7 @@ for i in range(start, end+1):
         pprint (extract_point_level(indexes[beta_indexes], dict_))
         beta_div_zeros.append(indexes[beta_indexes])
 
-        np.savez(file_name+"ranking_point_level"+str(start)+"_"+str(end)+ext, mses = losses, indexes = indexes_tot, beta_div_zeros = beta_div_zeros)
+        np.savez(file_name+"ranking_point_level"+ext, mses = losses, indexes = indexes_tot, beta_div_zeros = beta_div_zeros)
 
 print("min mse", np.min(losses), "with:", indexes_tot(np.argmin(losses)))
 
