@@ -50,7 +50,7 @@ mses = results_weighted_lasso.extract_mses()
 #print ("iter chosen:",iter, "with mse:",mses_int[iter])
 #print("--------------")
 
-indexes_beta_min = results_weighted_lasso.extract_beta_div_zeros()[iter]
+indexes_beta = results_weighted_lasso.extract_beta_div_zeros()[iter]
 #indexes_beta = indexes_beta_min[current_iter]
 
 
