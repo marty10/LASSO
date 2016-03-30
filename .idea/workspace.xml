@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7cc0c753-e9e6-4f8d-8f08-622b14ea6592" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Lasso_utils.py" afterPath="$PROJECT_DIR$/Lasso_utils.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Enel_final_ranking_point_level.py" afterPath="$PROJECT_DIR$/Enel_final_ranking_point_level.py" />
     </list>
     <ignored path="tesi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -63,11 +64,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Lasso_utils.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Lasso_utils.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Lasso_utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.77324265">
+            <state vertical-scroll-proportion="0.0">
               <caret line="35" column="73" selection-start-line="35" selection-start-column="73" selection-end-line="35" selection-end-column="73" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Enel_final_ranking_point_level.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Enel_final_ranking_point_level.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.57369614">
+              <caret line="46" column="1" selection-start-line="46" selection-start-column="1" selection-end-line="46" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -171,7 +182,6 @@
         <option value="$PROJECT_DIR$/Enel_ranking_turbine.py" />
         <option value="$PROJECT_DIR$/Enel_ranking_turbine_point_level.py" />
         <option value="$PROJECT_DIR$/Transformation.py" />
-        <option value="$PROJECT_DIR$/Enel_final_ranking_point_level.py" />
         <option value="$PROJECT_DIR$/Enel_cross_val_blocks_directionPerSampleSingleAndAll.py" />
         <option value="$PROJECT_DIR$/enel_analyzeDirectionPerSampleSingleAll.py" />
         <option value="$PROJECT_DIR$/Fit.py" />
@@ -183,6 +193,7 @@
         <option value="$PROJECT_DIR$/../../PycharmProjects/tesi/utility.py" />
         <option value="$PROJECT_DIR$/Enel_cross_val_blocks_directionPerSampleSingleAndAllLevel.py" />
         <option value="$PROJECT_DIR$/Lasso_utils.py" />
+        <option value="$PROJECT_DIR$/Enel_final_ranking_point_level.py" />
       </list>
     </option>
   </component>
@@ -896,13 +907,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Enel_final_ranking_point_level.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="45" column="29" selection-start-line="45" selection-start-column="29" selection-end-line="45" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Enel_utils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1037,8 +1041,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Lasso_utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.77324265">
+        <state vertical-scroll-proportion="0.0">
           <caret line="35" column="73" selection-start-line="35" selection-start-column="73" selection-end-line="35" selection-end-column="73" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Enel_final_ranking_point_level.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.57369614">
+          <caret line="46" column="1" selection-start-line="46" selection-start-column="1" selection-end-line="46" selection-end-column="1" />
           <folding />
         </state>
       </provider>

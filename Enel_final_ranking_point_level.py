@@ -13,6 +13,7 @@ import sys
 
 sys.argv[1:] = [str(x) for x in sys.argv[1:]]
 file_name = sys.argv[1]
+iter = sys.argv[2]
 
 
 score = "mean_squared_error"
@@ -43,7 +44,7 @@ print(indexes_beta_min.shape)
 print("--------------")
 len_mylist = (list)(map(len, indexes_beta_min))
 current_iter = len_mylist.index(min(len_mylist))
-iter = iter_min[current_iter]
+#iter = iter_min[current_iter]
 
 print ("iter chosen:",iter, "with mse:",mses_int[iter])
 print("--------------")
