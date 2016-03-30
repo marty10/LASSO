@@ -11,9 +11,9 @@ from utility import center_test, assign_weights, get_current_data, get_beta_div_
     print_features_active,extract_level, extract_point_level
 import sys
 
-sys.argv[1:] = [str(x) for x in sys.argv[1:]]
+sys.argv[1:2] = [str(x) for x in sys.argv[1:]]
 file_name = sys.argv[1]
-iter = sys.argv[2]
+iter = (int)(sys.argv[2])
 
 
 score = "mean_squared_error"
@@ -32,25 +32,26 @@ results_cross_val = Result(file_cross_val, "lasso")
 results_weighted_lasso = Result(fine_name_weights, "lasso")
 
 mses = results_weighted_lasso.extract_mses()
-mses_int = list(map(int, mses))
-min_mse = np.min(mses_int)
-iter_min = np.where(mses_int==min_mse)[0]
+#mses_int = list(map(int, mses))
+#min_mse = np.min(mses_int)
+#iter_min = np.where(mses_int==min_mse)[0]
 
-indexes_beta_min = results_weighted_lasso.extract_beta_div_zeros()[iter_min]
-print(indexes_beta_min)
-print("-----------")
-print(indexes_beta_min.shape)
+#indexes_beta_min = results_weighted_lasso.extract_beta_div_zeros()[iter_min]
+#print(indexes_beta_min)
+#print("-----------")
+#print(indexes_beta_min.shape)
 
-print("--------------")
-len_mylist = (list)(map(len, indexes_beta_min))
-current_iter = len_mylist.index(min(len_mylist))
+#print("--------------")
+#len_mylist = (list)(map(len, indexes_beta_min))
+#current_iter = len_mylist.index(min(len_mylist))
 #iter = iter_min[current_iter]
 
-print ("iter chosen:",iter, "with mse:",mses_int[iter])
-print("--------------")
 
+#print ("iter chosen:",iter, "with mse:",mses_int[iter])
+#print("--------------")
 
-indexes_beta = indexes_beta_min[current_iter]
+indexes_beta_min = results_weighted_lasso.extract_beta_div_zeros()[iter]
+#indexes_beta = indexes_beta_min[current_iter]
 
 
 XTrain, XTest = results_cross_val.extract_data_transf()

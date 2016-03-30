@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7cc0c753-e9e6-4f8d-8f08-622b14ea6592" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Enel_ranking_turbine_point_level.py" afterPath="$PROJECT_DIR$/Enel_ranking_turbine_point_level.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Enel_final_ranking_point_level.py" afterPath="$PROJECT_DIR$/Enel_final_ranking_point_level.py" />
     </list>
     <ignored path="tesi.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -43,10 +43,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Enel_ranking_turbine_point_level.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Enel_ranking_turbine_point_level.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Enel_ranking_turbine_point_level.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7505669">
+            <state vertical-scroll-proportion="0.0">
               <caret line="124" column="48" selection-start-line="124" selection-start-column="48" selection-end-line="124" selection-end-column="48" />
               <folding />
             </state>
@@ -73,11 +73,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Enel_final_ranking_point_level.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Enel_final_ranking_point_level.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Enel_final_ranking_point_level.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="46" column="30" selection-start-line="46" selection-start-column="30" selection-end-line="46" selection-end-column="30" />
+            <state vertical-scroll-proportion="0.27437642">
+              <caret line="52" column="71" selection-start-line="52" selection-start-column="71" selection-end-line="52" selection-end-column="71" />
               <folding />
             </state>
           </provider>
@@ -191,8 +191,8 @@
         <option value="$PROJECT_DIR$/../../PycharmProjects/tesi/utility.py" />
         <option value="$PROJECT_DIR$/Enel_cross_val_blocks_directionPerSampleSingleAndAllLevel.py" />
         <option value="$PROJECT_DIR$/Lasso_utils.py" />
-        <option value="$PROJECT_DIR$/Enel_final_ranking_point_level.py" />
         <option value="$PROJECT_DIR$/Enel_ranking_turbine_point_level.py" />
+        <option value="$PROJECT_DIR$/Enel_final_ranking_point_level.py" />
       </list>
     </option>
   </component>
@@ -1038,18 +1038,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Enel_final_ranking_point_level.py">
+    <entry file="file://$PROJECT_DIR$/Enel_ranking_turbine_point_level.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="46" column="30" selection-start-line="46" selection-start-column="30" selection-end-line="46" selection-end-column="30" />
+          <caret line="124" column="48" selection-start-line="124" selection-start-column="48" selection-end-line="124" selection-end-column="48" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Enel_ranking_turbine_point_level.py">
+    <entry file="file://$PROJECT_DIR$/Enel_final_ranking_point_level.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7505669">
-          <caret line="124" column="48" selection-start-line="124" selection-start-column="48" selection-end-line="124" selection-end-column="48" />
+        <state vertical-scroll-proportion="0.27437642">
+          <caret line="52" column="71" selection-start-line="52" selection-start-column="71" selection-end-line="52" selection-end-column="71" />
           <folding />
         </state>
       </provider>
