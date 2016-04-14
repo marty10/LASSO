@@ -86,7 +86,7 @@ class Shooting(Algorithm):
         if verbose:
             print(' iter | loss ')
             history = [0.0] * self.max_iter
-        for it in xrange(self.max_iter):
+        for it in range(self.max_iter):
             beta_old = np.copy(model.beta)
             for j in range(len(model.beta)):
                 beta_j = model.beta[j]
