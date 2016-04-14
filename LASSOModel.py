@@ -86,16 +86,16 @@ class Shooting(Algorithm):
         if verbose:
             print(' iter | loss ')
             history = [0.0] * self.max_iter
-        for it in range(self.max_iter):
+        for it in xrange(self.max_iter):
             beta_old = np.copy(model.beta)
             for j in range(len(model.beta)):
                 beta_j = model.beta[j]
                 x_j2 = X2[j, j]
-                s_j = 2*(XY[j] - X2B[j] + x_j2 * beta_j)
+                s_j = (XY[j] - X2B[j] + x_j2 * beta_j)
                 if s_j - lasso_lambda[j] > 0:
-                    beta_j = (s_j - lasso_lambda[j]) / 2*x_j2
+                    beta_j = (s_j - lasso_lambda[j]) / x_j2
                 elif s_j + lasso_lambda[j] < 0:
-                    beta_j = (s_j + lasso_lambda[j]) / 2*x_j2
+                    beta_j = (s_j + lasso_lambda[j]) / x_j2
                 else:
                     beta_j = 0
                 model.beta[j] = beta_j
@@ -142,7 +142,7 @@ class ADMM(Algorithm):
         if verbose:
             print(' iter | loss ')
             history = [0.0] * self.max_iter
-        for it in range(self.max_iter):
+        for it in xrange(self.max_iter):
             # x-update
             q = xTy + self.rho * (z - u)  # temporary value
 
@@ -300,7 +300,7 @@ class ShootingModified(Algorithm):
         if verbose:
             print(' iter | loss ')
             history = [0.0] * self.max_iter
-        for it in range(self.max_iter):
+        for it in xrange(self.max_iter):
             beta_old = np.copy(model.beta)
             for j in range(len(model.beta)):
                 beta_j = model.beta[j]
